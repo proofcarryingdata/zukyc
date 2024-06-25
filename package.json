@@ -1,5 +1,5 @@
 {
-  "name": "with-yarn",
+  "name": "zukyc",
   "private": true,
   "workspaces": [
     "apps/*",
