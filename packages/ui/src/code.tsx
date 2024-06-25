@@ -1,6 +1,6 @@
 export function Code({
   children,
-  className,
+  className
 }: {
   children: React.ReactNode;
   className?: string;

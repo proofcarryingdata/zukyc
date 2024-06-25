@@ -8,7 +8,7 @@ export default function Home() {
       <h1 className="my-3">Welcome to Zukyc!</h1>
       <ul>
         <li>
-          <Link href={"/issuer"}>Issuer</Link>
+          <Link href={"/id-pod-issuer"}>ID POD issuer</Link>
         </li>
       </ul>
       <br />

@@ -1,0 +1,20 @@
+{
+  "trailingComma": "none",
+  "singleQuote": false,
+  "tailWidth": 2,
+  "overrides": [
+    {
+      "files": "*.hbs",
+      "options": {
+        "parser": "html"
+      }
+    },
+    {  
+      "files": "*.tsx?",
+      "options": {
+        "singleQuote": false
+      }
+    }
+  ]
+}
+  
