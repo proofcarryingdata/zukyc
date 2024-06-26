@@ -1,0 +1,25 @@
+{
+  "name": "issuer-server",
+  "version": "0.0.0",
+  "private": true,
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "npx nodemon",
+    "build": "npx tsc",
+    "start": "NODE_OPTIONS=--max_old_space_size=4096 NODE_ENV=production PORT=8080 npx tsc && node dist/index.js",
+    "lint": "eslint \"**/*.ts{,x}\"",
+    "test": "echo \"Error: no test specified\""
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.14.9",
+    "dotenv": "^16.4.5",
+    "nodemon": "^3.1.4",
+    "typescript": "^5.5.2"
+  }
+}
