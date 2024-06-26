@@ -1,7 +1,7 @@
 {
   "trailingComma": "none",
   "singleQuote": false,
-  "tailWidth": 2,
+  "tabWidth": 2,
   "overrides": [
     {
       "files": "*.hbs",
@@ -9,7 +9,7 @@
         "parser": "html"
       }
     },
-    {  
+    {
       "files": "*.tsx?",
       "options": {
         "singleQuote": false
@@ -17,4 +17,3 @@
     }
   ]
 }
-  
