@@ -11,7 +11,7 @@ const main = async () => {
   const app: Express = express();
   app.use(cors());
   app.use(express.json());
-  const port = process.env.PORT || 3001;
+  const port = process.env.PORT || 3003;
 
   app.get("/", (req: Request, res: Response) => {
     res.send("Zukyc Server");
@@ -29,17 +29,18 @@ const main = async () => {
 
     // If verified, issue pods
     // For more info, see https://github.com/proofcarryingdata/zupass/blob/main/examples/pod-gpc-example/src/podExample.ts
-    const podEntries: PODEntries = {
-      firstName: { type: "string", value: inputs.firstName },
-      lastName: { type: "string", value: inputs.lastName },
-      age: { type: "int", value: inputs.age },
-      semaphoreId: {
-        type: "cryptographic",
-        value: inputs.semaphoreCommitment
-      }
-    };
-    const pod = POD.sign(podEntries, EDDSA_PRIVATE_KEY);
-    console.log(JSON.stringify(pod.content.asEntries));
+    const pod = POD.sign(
+      {
+        firstName: { type: "string", value: inputs.firstName },
+        lastName: { type: "string", value: inputs.lastName },
+        age: { type: "int", value: inputs.age },
+        owner: {
+          type: "cryptographic",
+          value: inputs.semaphoreCommitment
+        }
+      } satisfies PODEntries,
+      EDDSA_PRIVATE_KEY
+    );
     const serializedPOD = pod.serialize();
     res.status(200).json({ pod: serializedPOD });
   });

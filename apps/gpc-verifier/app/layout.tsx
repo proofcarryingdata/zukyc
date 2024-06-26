@@ -5,7 +5,7 @@ import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Zukyc",
+  title: "Zukyc GPC Verifier",
   description: "POD & GPC examples"
 };
 
