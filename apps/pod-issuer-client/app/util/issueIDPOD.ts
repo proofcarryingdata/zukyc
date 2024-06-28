@@ -5,11 +5,16 @@ export async function issueIDPOD(
   setResponse: Dispatch<IIssueIDPODResponse>
 ) {
   try {
-    const response = await fetch("google.com", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...args })
-    });
+    console.log(args);
+    // TODO: should not hard code this url
+    const response = await fetch(
+      "https://zukyc-issuer-server-5rnm8my7p-0xparc.vercel.app/issue",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...args })
+      }
+    );
     const data = await response.json();
 
     setResponse({

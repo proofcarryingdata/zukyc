@@ -13,13 +13,13 @@ export default function Gov() {
   } = useForm();
 
   const issuePOD = useCallback((data: FieldValues) => {
+    console.log(data.firstName);
     issueIDPOD(
       {
         firstName: "momo",
-        lastName: "cepe",
-        age: "5",
-        semaphoreCommitment:
-          "20678173846970013074503328347969772967068641559987694204142893318934390154021"
+        lastName: data.lastName,
+        age: data.age,
+        semaphoreCommitment: data.semaphoreCommitment
       },
       setResponse
     );

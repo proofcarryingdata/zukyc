@@ -25,24 +25,38 @@ const main = async () => {
       semaphoreCommitment: string;
     } = req.body;
 
-    // TODO: validate the inputs here
+    if (
+      !inputs.firstName ||
+      !inputs.lastName ||
+      !inputs.age ||
+      !inputs.semaphoreCommitment
+    ) {
+      throw new Error("Missing query parameter");
+    }
 
-    // If valid, issue pods
-    // For more info, see https://github.com/proofcarryingdata/zupass/blob/main/examples/pod-gpc-example/src/podExample.ts
-    const pod = POD.sign(
-      {
-        firstName: { type: "string", value: inputs.firstName },
-        lastName: { type: "string", value: inputs.lastName },
-        age: { type: "int", value: BigInt(inputs.age) },
-        owner: {
-          type: "cryptographic",
-          value: BigInt(inputs.semaphoreCommitment)
-        }
-      } satisfies PODEntries,
-      EDDSA_PRIVATE_KEY
-    );
-    const serializedPOD = pod.serialize();
-    res.status(200).json({ pod: serializedPOD });
+    // TODO: more inputs validation
+
+    try {
+      // If valid, issue pods
+      // For more info, see https://github.com/proofcarryingdata/zupass/blob/main/examples/pod-gpc-example/src/podExample.ts
+      const pod = POD.sign(
+        {
+          firstName: { type: "string", value: inputs.firstName },
+          lastName: { type: "string", value: inputs.lastName },
+          age: { type: "int", value: BigInt(inputs.age) },
+          owner: {
+            type: "cryptographic",
+            value: BigInt(inputs.semaphoreCommitment)
+          }
+        } satisfies PODEntries,
+        EDDSA_PRIVATE_KEY
+      );
+      const serializedPOD = pod.serialize();
+      res.status(200).json({ pod: serializedPOD });
+    } catch (e) {
+      console.error(e);
+      res.status(500).send("Error issue ID POD");
+    }
   });
 
   app.listen(port, () => {
