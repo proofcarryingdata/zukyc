@@ -1,15 +1,15 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
-import cors from "cors";
 import { POD, PODEntries } from "@pcd/pod";
 
 dotenv.config();
 
-const EDDSA_PRIVATE_KEY = process.env.EDDSA_PRIVATE_KEY || "";
+const EDDSA_PRIVATE_KEY =
+  process.env.EDDSA_PRIVATE_KEY ||
+  "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
 
 const main = async () => {
   const app: Express = express();
-  app.use(cors());
   app.use(express.json());
   const port = process.env.PORT || 3003;
 
@@ -21,22 +21,22 @@ const main = async () => {
     const inputs: {
       firstName: string;
       lastName: string;
-      age: bigint;
-      semaphoreCommitment: bigint;
+      age: string;
+      semaphoreCommitment: string;
     } = req.body;
 
-    // Verify the inputs here
+    // TODO: validate the inputs here
 
-    // If verified, issue pods
+    // If valid, issue pods
     // For more info, see https://github.com/proofcarryingdata/zupass/blob/main/examples/pod-gpc-example/src/podExample.ts
     const pod = POD.sign(
       {
         firstName: { type: "string", value: inputs.firstName },
         lastName: { type: "string", value: inputs.lastName },
-        age: { type: "int", value: inputs.age },
+        age: { type: "int", value: BigInt(inputs.age) },
         owner: {
           type: "cryptographic",
-          value: inputs.semaphoreCommitment
+          value: BigInt(inputs.semaphoreCommitment)
         }
       } satisfies PODEntries,
       EDDSA_PRIVATE_KEY
