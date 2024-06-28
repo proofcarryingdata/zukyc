@@ -22,7 +22,7 @@ export default function Prover() {
 
   return (
     <main className="p-10 m-0 flex flex-col gap-6 h-screen max-h-screen">
-      <h1 className="text-lg font-bold">ZooKyc</h1>
+      <h1 className="text-xl font-bold">ZooKyc</h1>
       <div className="flex flex-col">
         <span>GPC prover, paste in PODS, generate proof</span>
         <span>TODO: more description, link to code...</span>

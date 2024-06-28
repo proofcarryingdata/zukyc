@@ -17,7 +17,7 @@ export default function Verifier() {
     <main className="p-6 m-0 flex flex-col gap-4 h-screen max-h-screen">
       <h1 className="text-xl font-bold">ZooBank</h1>
 
-      <div>
+      <div className="flex flex-col">
         <h2 className="text-lg">To apply for a loan</h2>
         <p>
           You need to prove that you have a valid ID, and your monthly salary is
