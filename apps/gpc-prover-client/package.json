@@ -12,10 +12,10 @@
     "@pcd/gpc": "^0.0.3",
     "@pcd/pod": "^0.1.2",
     "@semaphore-protocol/identity": "^3.15.2",
-    "fastfile": "git+https://github.com/iden3/fastfile.git",
     "next": "^14.1.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "rollup-plugin-node-polyfills": "^0.2.1"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^14.1.1",
@@ -28,8 +28,5 @@
     "eslint": "^8.57.0",
     "tailwindcss": "^3.4.4",
     "typescript": "^5.3.3"
-  },
-  "resolutions": {
-    "@pcd/gpcircuits/**/fastfile": "git+https://github.com/iden3/fastfile.git"
   }
 }
