@@ -5,16 +5,12 @@ export async function issueIDPOD(
   setResponse: Dispatch<IIssueIDPODResponse>
 ) {
   try {
-    console.log(args);
     // TODO: should not hard code this url
-    const response = await fetch(
-      "https://zukyc-issuer-server-90is3mzup-0xparc.vercel.app/issue",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...args })
-      }
-    );
+    const response = await fetch("http://localhost:3003/issue", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...args })
+    });
     const data = await response.json();
 
     setResponse({

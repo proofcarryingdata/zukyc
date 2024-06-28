@@ -75,7 +75,19 @@ export default function Prover() {
 
         <div className="flex flex-col gap-6 w-1/2">
           <div className="flex flex-col">
-            <span>Proof:</span>
+            <div className="flex flex-1 gap-1 items-center">
+              <span>Proof:</span>
+              {proofResult && (
+                <button
+                  className="p-2 m-1 text-sm bg-transparent border-none hover:bg-gray-100"
+                  onClick={() => {
+                    navigator.clipboard.writeText(proofResult?.proof);
+                  }}
+                >
+                  📋
+                </button>
+              )}
+            </div>
             <textarea
               className="border-none"
               readOnly
@@ -85,7 +97,19 @@ export default function Prover() {
           </div>
 
           <div className="flex flex-col">
-            <span>Config:</span>
+            <div className="flex flex-1 gap-1 items-center">
+              <span>Config:</span>
+              {proofResult && (
+                <button
+                  className="p-2 m-1 text-sm bg-transparent border-none hover:bg-gray-100"
+                  onClick={() => {
+                    navigator.clipboard.writeText(proofResult?.config);
+                  }}
+                >
+                  📋
+                </button>
+              )}
+            </div>
             <textarea
               className="border-none"
               readOnly
@@ -95,7 +119,19 @@ export default function Prover() {
           </div>
 
           <div className="flex flex-col">
-            <span>Claims:</span>
+            <div className="flex flex-1 gap-1 items-center">
+              <span>Claims:</span>
+              {proofResult && (
+                <button
+                  className="p-2 m-1 text-sm bg-transparent border-none hover:bg-gray-100"
+                  onClick={() => {
+                    navigator.clipboard.writeText(proofResult?.claims);
+                  }}
+                >
+                  📋
+                </button>
+              )}
+            </div>
             <textarea
               className="border-none"
               readOnly

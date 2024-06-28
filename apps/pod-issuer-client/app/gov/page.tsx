@@ -79,7 +79,20 @@ export default function Gov() {
       </form>
 
       <div className="flex flex-col">
-        <h2 className="text-lg">ID POD</h2>
+        <div className="flex flex-1 gap-1 items-center">
+          <h2 className="text-lg">ID POD</h2>
+          {response?.serializedPOD && (
+            <button
+              className="p-2 m-1 text-sm bg-transparent border-none hover:bg-gray-100"
+              onClick={() => {
+                navigator.clipboard.writeText(response?.serializedPOD);
+              }}
+            >
+              📋
+            </button>
+          )}
+        </div>
+
         {response?.success ? (
           <textarea
             className="border-none"

@@ -15,7 +15,7 @@ export default function Verifier() {
 
   return (
     <main className="p-6 m-0 flex flex-col gap-4 h-screen max-h-screen">
-      <h1 className="text-xl font-bold">ZooBank</h1>
+      <h1 className="text-xl font-bold">ZooLender</h1>
 
       <div className="flex flex-col">
         <h2 className="text-lg">To apply for a loan</h2>

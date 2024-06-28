@@ -16,10 +16,22 @@ const GenerateIdentity = () => {
     <div>
       <button onClick={newIdentity}>Generate New Identity</button>
       <div className="flex flex-col">
-        <span>
-          This is your private identity secret (Semaphore private identity),
-          please keep it safe
-        </span>
+        <div className="flex flex-1 gap-1 items-center">
+          <span>
+            This is your private identity secret (Semaphore private identity),
+            please keep it safe
+          </span>
+          {identity && (
+            <button
+              className="p-2 m-1 text-sm bg-transparent border-none hover:bg-gray-100"
+              onClick={() => {
+                navigator.clipboard.writeText(identity?.toString());
+              }}
+            >
+              📋
+            </button>
+          )}
+        </div>
         <textarea
           className="border-none"
           readOnly
@@ -29,10 +41,22 @@ const GenerateIdentity = () => {
       </div>
 
       <div className="flex flex-col">
-        <span>
-          This is your public identifier (Semaphore identity commitment), you
-          can use it at govement or deel websites to generate PODs
-        </span>
+        <div className="flex flex-1 gap-1 items-center">
+          <span>
+            This is your public identifier (Semaphore identity commitment), you
+            can use it at govement or deel websites to generate PODs
+          </span>
+          {identity && (
+            <button
+              className="p-2 m-1 text-sm bg-transparent border-none hover:bg-gray-100"
+              onClick={() => {
+                navigator.clipboard.writeText(identity?.commitment.toString());
+              }}
+            >
+              📋
+            </button>
+          )}
+        </div>
         <textarea
           className="border-none"
           readOnly
