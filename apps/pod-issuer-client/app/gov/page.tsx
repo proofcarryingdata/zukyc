@@ -1,9 +1,11 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useForm, FieldValues } from "react-hook-form";
+import { issueIDPOD, IIssueIDPODResponse } from "@/util/issueIDPOD";
 
 export default function Gov() {
+  const [response, setResponse] = useState<IIssueIDPODResponse>();
   const {
     register,
     handleSubmit,
@@ -11,7 +13,16 @@ export default function Gov() {
   } = useForm();
 
   const issuePOD = useCallback((data: FieldValues) => {
-    console.log(data);
+    issueIDPOD(
+      {
+        firstName: "momo",
+        lastName: "cepe",
+        age: "5",
+        semaphoreCommitment:
+          "20678173846970013074503328347969772967068641559987694204142893318934390154021"
+      },
+      setResponse
+    );
   }, []);
 
   return (
@@ -53,12 +64,12 @@ export default function Gov() {
         {errors.age && <p>Age is required. Please enter number for age.</p>}
 
         <input
-          {...register("identityCommitment", { required: true })}
+          {...register("semaphoreCommitment", { required: true })}
           type="text"
           className="form-input px-4 py-3 rounded"
           placeholder="Public identifier (Semaphore identity commiment)"
         />
-        {errors.identityCommitment && (
+        {errors.semaphoreCommitment && (
           <p>Please enter your public identifier</p>
         )}
         <input
@@ -69,13 +80,17 @@ export default function Gov() {
       </form>
 
       <div className="flex flex-col">
-        <span>ID POD</span>
-        <textarea
-          className="border-none"
-          readOnly
-          rows={10}
-          value={"ID POD Here"}
-        />
+        <h2 className="text-lg">ID POD</h2>
+        {response?.success ? (
+          <textarea
+            className="border-none"
+            readOnly
+            rows={10}
+            value={response?.serializedPOD}
+          />
+        ) : (
+          <p className="text-red-500">{response?.error}</p>
+        )}
       </div>
     </main>
   );
