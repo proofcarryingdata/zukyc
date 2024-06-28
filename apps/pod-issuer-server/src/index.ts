@@ -1,5 +1,6 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 import { POD, PODEntries } from "@pcd/pod";
 
 dotenv.config();
@@ -10,6 +11,7 @@ const EDDSA_PRIVATE_KEY =
 
 const main = async () => {
   const app: Express = express();
+  app.use(cors());
   app.use(express.json());
   const port = process.env.PORT || 3003;
 

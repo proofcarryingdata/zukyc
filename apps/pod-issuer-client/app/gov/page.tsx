@@ -13,10 +13,9 @@ export default function Gov() {
   } = useForm();
 
   const issuePOD = useCallback((data: FieldValues) => {
-    console.log(data.firstName);
     issueIDPOD(
       {
-        firstName: "momo",
+        firstName: data.firstName,
         lastName: data.lastName,
         age: data.age,
         semaphoreCommitment: data.semaphoreCommitment
@@ -40,7 +39,7 @@ export default function Gov() {
         className="flex flex-col gap-2"
       >
         <input
-          {...(register("firstName"), { required: true })}
+          {...register("firstName", { required: true })}
           type="text"
           className="form-input px-4 py-3 rounded"
           placeholder="First name"
