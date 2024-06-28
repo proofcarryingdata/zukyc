@@ -1,28 +1,43 @@
+import { Dispatch } from "react";
 import { POD } from "@pcd/pod";
 import {
   GPCProofConfig,
   GPCProofInputs,
   gpcArtifactDownloadURL,
-  gpcProve
+  gpcProve,
+  serializeGPCBoundConfig,
+  serializeGPCRevealedClaims
 } from "@pcd/gpc";
 import { Identity } from "@semaphore-protocol/identity";
 
-const generateProof = async (serializedIDPOD: string) => {
+export type ProofResult = {
+  proof: string;
+  config: string;
+  claims: string;
+};
+
+// TODO: use Paystub pod
+export const generateProof = async (
+  serializedIDPOD: string,
+  identity: Identity,
+  setProofResult: Dispatch<ProofResult>
+) => {
   try {
-    if (!serializedIDPOD) return;
+    if (!serializedIDPOD) {
+      throw new Error("ID POD field cannot be empty!");
+    }
 
     const idPOD = POD.deserialize(serializedIDPOD);
 
+    // A GPCConfig specifies what we want to prove about one or more PODs.  It's
+    // intended to be reusable to generate multiple proofs.
     const proofConfig: GPCProofConfig = {
       pods: {
-        // I'm calling this POD "weapon", but that's an arbitray name assigned
-        // in config, not cryptographically verified.
         id: {
           entries: {
-            // I'm proving the presence of an entry called "age"
-            // and hide its value.
+            // prove the presence of an entry called "age" and hide its value.
             age: { isRevealed: false },
-            // I'm proving the presence of an entry called "owner".  I'm not
+            // Prove the presence of an entry called "owner". I'm not
             // revealing it, but will be proving I own the corresponding
             // Semaphore identity secrets.
             owner: { isRevealed: false, isOwnerID: true }
@@ -31,12 +46,9 @@ const generateProof = async (serializedIDPOD: string) => {
       }
     };
 
-    // TODO: cannot generate like this.
-    const semaphoreIdentity = new Identity(
-      '["329061722381819402313027227353491409557029289040211387019699013780657641967", "99353161014976810914716773124042455250852206298527174581112949561812190422"]'
-    );
-    console.log(semaphoreIdentity.commitment);
-
+    // To generate a proof I need to pair a config with a set of inputs, including
+    // the POD(s) to prove about.  Inputs can also enable extra security features
+    // of the proof.
     const proofInputs: GPCProofInputs = {
       pods: {
         // The name "id" here matches this POD with the config above.
@@ -46,8 +58,9 @@ const generateProof = async (serializedIDPOD: string) => {
         // Here I provide my private identity info.  It's never revealed in the
         // proof, but used to prove the correctness of the `owner` entry as
         // specified in the config.
-        // Note: the most recent version of Identity type definition does not match here.
-        semaphoreV3: semaphoreIdentity,
+        // Note: we have to use "@semaphore-protocol/identity": "^3.15.2",
+        // the most recent version changed the semphoreIdentity definition.
+        semaphoreV3: identity,
         // I can optionally ask to generate a nullifier, which is tied to my
         // identity and to the external nullifier value here.  This can be used
         // to avoid exploits like double-voting.
@@ -58,15 +71,24 @@ const generateProof = async (serializedIDPOD: string) => {
       // one possible way to do that.
       watermark: { type: "int", value: BigInt(Date.now()) }
     };
+
     const artifactsURL = gpcArtifactDownloadURL("unpkg", "prod", undefined);
-    console.log("In browser we'd download artifacts from", artifactsURL);
-    const result = await gpcProve(proofConfig, proofInputs, artifactsURL);
-    console.log(result.proof);
-    console.log(result.boundConfig);
-    console.log(result.revealedClaims);
-    return result;
+    console.log("download artifacts from", artifactsURL);
+
+    const { proof, boundConfig, revealedClaims } = await gpcProve(
+      proofConfig,
+      proofInputs,
+      artifactsURL
+    );
+
+    const serializedProof = {
+      proof: JSON.stringify(proof),
+      config: serializeGPCBoundConfig(boundConfig),
+      claims: serializeGPCRevealedClaims(revealedClaims)
+    };
+    setProofResult(serializedProof);
   } catch (e) {
-    console.log(e);
+    alert(e);
   }
 };
 
