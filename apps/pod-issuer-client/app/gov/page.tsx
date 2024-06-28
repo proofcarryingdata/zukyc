@@ -63,7 +63,10 @@ export default function Gov() {
         {errors.age && <p>Age is required. Please enter number for age.</p>}
 
         <input
-          {...register("semaphoreCommitment", { required: true })}
+          {...register("semaphoreCommitment", {
+            required: true,
+            pattern: /\d+/
+          })}
           type="text"
           className="form-input px-4 py-3 rounded"
           placeholder="Public identifier (Semaphore identity commiment)"
