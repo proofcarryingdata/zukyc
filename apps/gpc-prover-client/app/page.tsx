@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 import { generateProof, ProofResult } from "@/util/generateProof";
 import { Identity } from "@semaphore-protocol/identity";
 import GenerateIdentity from "@/components/GenerateIdentity";
@@ -22,7 +22,7 @@ export default function Prover() {
 
   return (
     <main className="p-10 m-0 flex flex-col gap-6 h-screen max-h-screen">
-      <h1 className="text-lg font-bold">Zukyc</h1>
+      <h1 className="text-lg font-bold">ZooKyc</h1>
       <div className="flex flex-col">
         <span>GPC prover, paste in PODS, generate proof</span>
         <span>TODO: more description, link to code...</span>
@@ -47,7 +47,9 @@ export default function Prover() {
       <div className="flex gap-10">
         <div className="flex flex-col gap-6 w-1/2">
           <div className="flex flex-col">
-            <span>Get your ID POD from the government website</span>
+            <span>
+              Get your ID POD from <a>the government website</a>
+            </span>
             <textarea
               rows={10}
               value={idPODStr}
@@ -57,7 +59,9 @@ export default function Prover() {
           </div>
 
           <div className="flex flex-col">
-            <span>Get your Paystub POD from the deel website</span>
+            <span>
+              Get your Paystub POD from <a>the deel website</a>
+            </span>
             <textarea
               rows={10}
               value={paystubPODStr}
@@ -75,7 +79,7 @@ export default function Prover() {
             <textarea
               className="border-none"
               readOnly
-              rows={8}
+              rows={10}
               value={proofResult?.proof}
             />
           </div>
@@ -85,7 +89,7 @@ export default function Prover() {
             <textarea
               className="border-none"
               readOnly
-              rows={8}
+              rows={4}
               value={proofResult?.config}
             />
           </div>
@@ -95,7 +99,7 @@ export default function Prover() {
             <textarea
               className="border-none"
               readOnly
-              rows={8}
+              rows={6}
               value={proofResult?.claims}
             />
           </div>
