@@ -5,12 +5,17 @@ export async function issueIDPOD(
   setResponse: Dispatch<IIssueIDPODResponse>
 ) {
   try {
-    // TODO: should not hard code this url
-    const response = await fetch("http://localhost:3003/issue", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...args })
-    });
+    if (!process.env.NEXT_PUBLIC_POD_ISSUER_SERVER_URL)
+      throw new Error("NEXT_PUBLIC_POD_ISSUER_SERVER_URL not set");
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_POD_ISSUER_SERVER_URL}/issue`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...args })
+      }
+    );
     const data = await response.json();
 
     setResponse({

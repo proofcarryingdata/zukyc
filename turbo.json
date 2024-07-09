@@ -13,5 +13,7 @@
       "cache": false,
       "persistent": true
     }
-  }
+  },
+  "globalEnv": ["NEXT_PUBLIC_POD_ISSUER_SERVER_URL"],
+  "globalPassThroughEnv": ["PORT", "NEXT_PUBLIC_POD_ISSUER_SERVER_URL"]
 }
