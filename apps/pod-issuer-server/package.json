@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "npx nodemon",
-    "build": "npx tsc",
+    "build": "rimraf dist && npx tsc",
     "start": "NODE_OPTIONS=--max_old_space_size=4096 NODE_ENV=production PORT=8080 npx tsc && node dist/index.js",
     "lint": "eslint \"**/*.ts{,x}\"",
-    "test": "echo \"Error: no test specified\""
+    "test": "echo \"Error: no test specified\"",
+    "prepare": "cd ../.. && husky install apps/pod-issuer-server/.husky"
   },
   "dependencies": {
     "@pcd/pod": "^0.1.2",
@@ -19,7 +20,9 @@
     "@types/express": "^4.17.21",
     "@types/node": "^20.14.9",
     "dotenv": "^16.4.5",
+    "husky": "^8.0.0",
     "nodemon": "^3.1.4",
+    "rimraf": "^6.0.0",
     "typescript": "^5.5.2"
   }
 }
