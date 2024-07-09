@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+cd apps/pod-issuer-server
+yarn build && git add dist
