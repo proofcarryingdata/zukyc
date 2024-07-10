@@ -1,15 +1,11 @@
 import { Dispatch } from "react";
-import { POD } from "@pcd/pod";
 import {
-  GPCProofConfig,
-  GPCProofInputs,
   GPCProof,
   gpcArtifactDownloadURL,
   gpcVerify,
   deserializeGPCBoundConfig,
   deserializeGPCRevealedClaims
 } from "@pcd/gpc";
-import { Identity } from "@semaphore-protocol/identity";
 
 export const verifyProof = async (
   proof: string,
