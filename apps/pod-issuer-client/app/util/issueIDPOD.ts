@@ -9,7 +9,7 @@ export async function issueIDPOD(
       throw new Error("NEXT_PUBLIC_POD_ISSUER_SERVER_URL not set");
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_POD_ISSUER_SERVER_URL}/issue`,
+      `${process.env.NEXT_PUBLIC_POD_ISSUER_SERVER_URL}/gov/issue`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -31,9 +31,7 @@ export async function issueIDPOD(
 }
 
 export interface IIssueIDPODArgs {
-  firstName: string;
-  lastName: string;
-  age: string;
+  idNumber: string;
   semaphoreCommitment: string;
 }
 

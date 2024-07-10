@@ -1,23 +1,39 @@
 "use client";
 
-import { useCallback, useState } from "react";
-import { useForm, FieldValues } from "react-hook-form";
+import { useCallback, useEffect, useState } from "react";
+import { FieldValues } from "react-hook-form";
 import { issueIDPOD, IIssueIDPODResponse } from "@/util/issueIDPOD";
+import { DEMO_EMAIL, DEMO_PASSWORD } from "@/util/constants";
+import Login from "@/gov/components/Login";
+import InfoForm from "@/gov/components/InfoForm";
 
 export default function Gov() {
+  const [user, setUser] = useState<string | undefined>();
   const [response, setResponse] = useState<IIssueIDPODResponse>();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors }
-  } = useForm();
+
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem("user");
+    if (loggedInUser) {
+      setUser(loggedInUser);
+    }
+  }, []);
+
+  const login = useCallback((data: FieldValues) => {
+    // For demo purposes, only allow DEMO_EMAIL and DEMO_PASSWORD
+    // TODO: verify on server
+    if (data.email === DEMO_EMAIL && data.password === DEMO_PASSWORD) {
+      setUser(data.email);
+      localStorage.setItem("user", data.email);
+      return;
+    }
+
+    alert("Incorrect email and password. Please try again.");
+  }, []);
 
   const issuePOD = useCallback((data: FieldValues) => {
     issueIDPOD(
       {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        age: data.age,
+        idNumber: data.id,
         semaphoreCommitment: data.semaphoreCommitment
       },
       setResponse
@@ -25,66 +41,24 @@ export default function Gov() {
   }, []);
 
   return (
-    <main className="p-6 m-0 flex flex-col gap-4 h-screen max-h-screen">
+    <main className="p-6 m-0 flex flex-col gap-4">
       <h1 className="text-xl font-bold">ZooGov</h1>
-      <h2 className="text-lg">Govenment ID POD issuer</h2>
-      <p>
-        Imagine this is a govenment website, you can login or upload your ID,
-        and then the govenment will issue you an ID POD.
-      </p>
-      <p>Here for demo, we'll just ask you to input your information below.</p>
+      <h2 className="text-lg font-bold">Govenment ID POD issuer</h2>
 
-      <form
-        onSubmit={handleSubmit((data) => issuePOD(data))}
-        className="flex flex-col gap-2"
-      >
-        <input
-          {...register("firstName", { required: true })}
-          type="text"
-          className="form-input px-4 py-3 rounded"
-          placeholder="First name"
-        />
-        {errors.firstName && <p>First name is required.</p>}
+      {typeof user === "undefined" && <Login onLogin={login} />}
 
-        <input
-          {...register("lastName", { required: true })}
-          type="text"
-          className="form-input px-4 py-3 rounded"
-          placeholder="Last name"
-        />
-        {errors.lastName && <p>Last name is required.</p>}
+      {typeof user !== "undefined" && !response?.success && (
+        <InfoForm onSubmitInfo={issuePOD} />
+      )}
 
-        <input
-          {...register("age", { required: true, pattern: /\d+/ })}
-          type="number"
-          className="form-input px-4 py-3 rounded"
-          placeholder="Age"
-        />
-        {errors.age && <p>Age is required. Please enter number for age.</p>}
+      {response?.success && (
+        <div className="flex flex-col gap-2">
+          <h2 className="text-lg text-green-500">
+            We have successfully verified your information.
+          </h2>
 
-        <input
-          {...register("semaphoreCommitment", {
-            required: true,
-            pattern: /\d+/
-          })}
-          type="text"
-          className="form-input px-4 py-3 rounded"
-          placeholder="Public identifier (Semaphore identity commiment)"
-        />
-        {errors.semaphoreCommitment && (
-          <p>Please enter your public identifier</p>
-        )}
-        <input
-          type="submit"
-          className="bg-gray-200 hover:bg-gray-300 form-input px-4 py-3 rounded"
-          value="Issue ID POD"
-        />
-      </form>
-
-      <div className="flex flex-col">
-        <div className="flex flex-1 gap-1 items-center">
-          <h2 className="text-lg">ID POD</h2>
-          {response?.serializedPOD && (
+          <div className="flex flex-1 gap-1 items-center">
+            <h2 className="text-lg">Here is your ID POD</h2>
             <button
               className="p-2 m-1 text-sm bg-transparent border-none hover:bg-gray-100"
               onClick={() => {
@@ -93,20 +67,20 @@ export default function Gov() {
             >
               📋
             </button>
-          )}
-        </div>
+          </div>
 
-        {response?.success ? (
           <textarea
             className="border-none"
             readOnly
             rows={10}
             value={response?.serializedPOD}
           />
-        ) : (
-          <p className="text-red-500">{response?.error}</p>
-        )}
-      </div>
+        </div>
+      )}
+
+      {response?.error && (
+        <p className="font-bold text-red-500">{response?.error}</p>
+      )}
     </main>
   );
 }

@@ -3,7 +3,7 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "env": ["PORT"],
+      "env": ["PORT", "GOV_EDDSA_PRIVATE_KEY", "DEEL_EDDSA_PRIVATE_KEY"],
       "outputs": ["dist/**"],
       "cache": true
     }

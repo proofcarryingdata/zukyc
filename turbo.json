@@ -15,5 +15,10 @@
     }
   },
   "globalEnv": ["NEXT_PUBLIC_POD_ISSUER_SERVER_URL"],
-  "globalPassThroughEnv": ["PORT", "NEXT_PUBLIC_POD_ISSUER_SERVER_URL"]
+  "globalPassThroughEnv": [
+    "PORT",
+    "GOV_EDDSA_PRIVATE_KEY",
+    "DEEL_EDDSA_PRIVATE_KEY",
+    "NEXT_PUBLIC_POD_ISSUER_SERVER_URL"
+  ]
 }
