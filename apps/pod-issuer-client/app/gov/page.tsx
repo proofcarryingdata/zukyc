@@ -2,9 +2,9 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { FieldValues } from "react-hook-form";
-import { issueIDPOD, IIssueIDPODResponse } from "@/util/issueIDPOD";
+import { issueIDPOD, IIssueIDPODResponse } from "@/gov/util/issueIDPOD";
 import { DEMO_EMAIL, DEMO_PASSWORD } from "@/util/constants";
-import Login from "@/gov/components/Login";
+import Login from "@/shared/components/Login";
 import InfoForm from "@/gov/components/InfoForm";
 
 export default function Gov() {

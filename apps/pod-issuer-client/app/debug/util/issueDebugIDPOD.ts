@@ -1,21 +1,26 @@
 import { Dispatch } from "react";
 
-export async function issueIDPOD(
-  args: IIssueIDPODArgs,
-  setResponse: Dispatch<IIssueIDPODResponse>
+export async function issueDebugIDPOD(
+  args: IIssueDebugIDPODArgs,
+  setResponse: Dispatch<IIssueDebugIDPODResponse>
 ) {
   try {
     if (!process.env.NEXT_PUBLIC_POD_ISSUER_SERVER_URL)
       throw new Error("NEXT_PUBLIC_POD_ISSUER_SERVER_URL not set");
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_POD_ISSUER_SERVER_URL}/gov/issue`,
+      `${process.env.NEXT_PUBLIC_POD_ISSUER_SERVER_URL}/debug/issue`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...args })
       }
     );
+
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
     const data = await response.json();
 
     setResponse({
@@ -30,12 +35,15 @@ export async function issueIDPOD(
   }
 }
 
-export interface IIssueIDPODArgs {
+export interface IIssueDebugIDPODArgs {
   idNumber: string;
+  firstName: string;
+  lastName: string;
+  age: string;
   semaphoreCommitment: string;
 }
 
-export type IIssueIDPODResponse =
+export type IIssueDebugIDPODResponse =
   | {
       success: true;
       error?: never;
