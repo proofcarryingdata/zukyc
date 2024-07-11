@@ -26,7 +26,7 @@ gov.post("/issue", (req, res) => {
             idNumber: { type: "string", value: inputs.idNumber },
             firstName: { type: "string", value: constants_1.DEMO_FIRSTNAME },
             lastName: { type: "string", value: constants_1.DEMO_LASTNAME },
-            age: { type: "int", value: BigInt(constants_1.DEMO_AGE) },
+            dateOfBirth: { type: "string", value: constants_1.DEMO_DATE_OF_BIRTH },
             owner: {
                 type: "cryptographic",
                 value: BigInt(inputs.semaphoreCommitment)

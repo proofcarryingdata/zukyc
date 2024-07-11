@@ -4,7 +4,7 @@ import {
   DEMO_ID_NUMBER,
   DEMO_FIRSTNAME,
   DEMO_LASTNAME,
-  DEMO_AGE
+  DEMO_DATE_OF_BIRTH
 } from "../util/constants";
 
 const gov = express.Router();
@@ -34,7 +34,7 @@ gov.post("/issue", (req: Request, res: Response) => {
         idNumber: { type: "string", value: inputs.idNumber },
         firstName: { type: "string", value: DEMO_FIRSTNAME },
         lastName: { type: "string", value: DEMO_LASTNAME },
-        age: { type: "int", value: BigInt(DEMO_AGE) },
+        dateOfBirth: { type: "string", value: DEMO_DATE_OF_BIRTH },
         owner: {
           type: "cryptographic",
           value: BigInt(inputs.semaphoreCommitment)
