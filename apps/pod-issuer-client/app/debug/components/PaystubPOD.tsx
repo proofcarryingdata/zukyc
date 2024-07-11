@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { useForm, FieldValues } from "react-hook-form";
+import { useForm, Controller, FieldValues } from "react-hook-form";
+import { NumericFormat } from "react-number-format";
 import {
   issueDebugPaystubPOD,
   IissueDebugPaystubPODResponse
@@ -10,12 +11,14 @@ import {
 export default function PaystubPOD() {
   const [response, setResponse] = useState<IissueDebugPaystubPODResponse>();
   const {
+    control,
     register,
     handleSubmit,
     formState: { errors }
   } = useForm();
 
   const issuePaystubPOD = useCallback((data: FieldValues) => {
+    // TODO: check endDate after startDate, dates in range
     issueDebugPaystubPOD(
       {
         firstName: data.firstName,
@@ -24,7 +27,7 @@ export default function PaystubPOD() {
         startDate: data.startDate,
         endDate: data.endDate,
         paymentFrequency: data.paymentFrequency,
-        salary: data.salary,
+        salary: data.salary.toString(),
         semaphoreCommitment: data.semaphoreCommitment
       },
       setResponse
@@ -107,25 +110,43 @@ export default function PaystubPOD() {
           <p className="text-red-500">Payment frequency is required.</p>
         )}
 
-        <input
-          {...register("salary", { required: true, pattern: /\d+/ })}
-          type="number"
-          className="form-input px-4 py-3 rounded"
-          placeholder="Salary"
+        <Controller
+          name="salary"
+          control={control}
+          rules={{ required: true }}
+          render={({ field: { ref, onChange } }) => (
+            <NumericFormat
+              thousandSeparator=","
+              decimalSeparator="."
+              prefix="$ "
+              decimalScale={2}
+              getInputRef={ref}
+              onValueChange={(values) => {
+                onChange(values.floatValue);
+              }}
+            />
+          )}
         />
         {errors.salary && <p className="text-red-500">Salary is required.</p>}
 
         <input
           {...register("semaphoreCommitment", {
             required: true,
-            pattern: /\d+/
+            pattern: {
+              value: /\d+/,
+              message:
+                "Entered value does not match semaphore commitment format"
+            }
           })}
           type="text"
           className="form-input px-4 py-3 rounded"
           placeholder="Public identifier (Semaphore identity commiment)"
         />
         {errors.semaphoreCommitment && (
-          <p className="text-red-500">Please enter your public identifier.</p>
+          <p className="text-red-500">
+            {(errors.semaphoreCommitment.message as string) ||
+              "Public identifier is required."}
+          </p>
         )}
 
         <input

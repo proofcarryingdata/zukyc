@@ -44,7 +44,11 @@ const InfoForm = ({
           className="form-input px-4 py-3 rounded"
           placeholder="Driver's license or ID card number"
         />
-        {errors.id && <p className="text-red-500">ID number is required.</p>}
+        {errors.id && (
+          <p className="text-red-500">
+            {(errors.id.message as string) || "ID number is required."}
+          </p>
+        )}
 
         <div className="flex items-center">
           <h2 className="text-lg">Upload your driver's license or ID card</h2>
@@ -65,14 +69,21 @@ const InfoForm = ({
         <input
           {...register("semaphoreCommitment", {
             required: true,
-            pattern: /\d+/
+            pattern: {
+              value: /\d+/,
+              message:
+                "Entered value does not match semaphore commitment format"
+            }
           })}
           type="text"
           className="form-input px-4 py-3 rounded"
           placeholder="Public identifier (Semaphore identity commiment)"
         />
         {errors.semaphoreCommitment && (
-          <p className="text-red-500">Please enter your public identifier.</p>
+          <p className="text-red-500">
+            {(errors.semaphoreCommitment.message as string) ||
+              "Public identifier is required."}
+          </p>
         )}
 
         <input

@@ -16,6 +16,7 @@ export default function IDPOD() {
   } = useForm();
 
   const issueIDPOD = useCallback((data: FieldValues) => {
+    // TODO: change age to DOB, check in range
     issueDebugIDPOD(
       {
         idNumber: data.id,
@@ -47,7 +48,11 @@ export default function IDPOD() {
           className="form-input px-4 py-3 rounded"
           placeholder="Driver's license or ID card number"
         />
-        {errors.id && <p className="text-red-500">ID number is required.</p>}
+        {errors.id && (
+          <p className="text-red-500">
+            {(errors.id.message as string) || "ID number is required."}
+          </p>
+        )}
 
         <input
           {...register("firstName", { required: true })}
@@ -55,7 +60,9 @@ export default function IDPOD() {
           className="form-input px-4 py-3 rounded"
           placeholder="First name"
         />
-        {errors.firstName && <p>First name is required.</p>}
+        {errors.firstName && (
+          <p className="text-red-500">First name is required.</p>
+        )}
 
         <input
           {...register("lastName", { required: true })}
@@ -63,7 +70,9 @@ export default function IDPOD() {
           className="form-input px-4 py-3 rounded"
           placeholder="Last name"
         />
-        {errors.lastName && <p>Last name is required.</p>}
+        {errors.lastName && (
+          <p className="text-red-500">Last name is required.</p>
+        )}
 
         <input
           {...register("age", { required: true, pattern: /\d+/ })}
@@ -71,19 +80,30 @@ export default function IDPOD() {
           className="form-input px-4 py-3 rounded"
           placeholder="Age"
         />
-        {errors.age && <p>Age is required. Please enter number for age.</p>}
+        {errors.age && (
+          <p className="text-red-500">
+            Age is required. Please enter number for age.
+          </p>
+        )}
 
         <input
           {...register("semaphoreCommitment", {
             required: true,
-            pattern: /\d+/
+            pattern: {
+              value: /\d+/,
+              message:
+                "Entered value does not match semaphore commitment format"
+            }
           })}
           type="text"
           className="form-input px-4 py-3 rounded"
           placeholder="Public identifier (Semaphore identity commiment)"
         />
         {errors.semaphoreCommitment && (
-          <p className="text-red-500">Please enter your public identifier.</p>
+          <p className="text-red-500">
+            {(errors.semaphoreCommitment.message as string) ||
+              "Public identifier is required."}
+          </p>
         )}
 
         <input
