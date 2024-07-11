@@ -35,8 +35,8 @@ export const generateProof = async (
       pods: {
         id: {
           entries: {
-            // prove the presence of an entry called "age" and hide its value.
-            age: { isRevealed: false },
+            // prove the presence of an entry called "dateOfBirth" and hide its value.
+            dateOfBirth: { isRevealed: false },
             // Prove the presence of an entry called "owner". I'm not
             // revealing it, but will be proving I own the corresponding
             // Semaphore identity secrets.

@@ -8,26 +8,25 @@ import {
 } from "@pcd/gpc";
 
 export const verifyProof = async (
-  proof: string,
-  config: string,
-  claims: string,
+  proofStr: string,
   setVerified: Dispatch<boolean>
 ) => {
   try {
-    if (!proof || !config || !claims) {
-      throw new Error("Proof, config, and claims cannot be empty!");
+    if (!proofStr) {
+      throw new Error("Proof cannot be empty!");
     }
 
-    const vProof = JSON.parse(proof) as GPCProof;
-    const vConfig = deserializeGPCBoundConfig(config);
-    const vClaims = deserializeGPCRevealedClaims(claims);
+    const proofObj = JSON.parse(proofStr);
+    const vProof = proofObj.proof as GPCProof;
+    const vConfig = deserializeGPCBoundConfig(proofObj.config);
+    const vClaims = deserializeGPCRevealedClaims(proofObj.claims);
 
     const artifactsURL = gpcArtifactDownloadURL("unpkg", "prod", undefined);
     console.log("download artifacts from", artifactsURL);
 
     const isValid = await gpcVerify(vProof, vConfig, vClaims, artifactsURL);
     if (!isValid) {
-      throw new Error("The proof is not valid. No 🐸!");
+      throw new Error("Your proof is not valid. Please try again.");
     }
 
     // TODO: more checking needs to be done here
