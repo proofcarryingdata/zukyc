@@ -30,7 +30,7 @@ export default function IDPOD() {
   }, []);
 
   return (
-    <>
+    <div className="flex flex-col gap-2 grow">
       <h2 className="text-lg font-bold">Issue ID POD</h2>
       <form
         onSubmit={handleSubmit((data) => issueIDPOD(data))}
@@ -139,6 +139,6 @@ export default function IDPOD() {
       {response?.error && (
         <p className="font-bold text-red-500">{response?.error}</p>
       )}
-    </>
+    </div>
   );
 }

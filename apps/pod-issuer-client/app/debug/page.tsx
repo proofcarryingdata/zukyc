@@ -17,8 +17,10 @@ export default function Debug() {
         as inputs to gpc prover and see what happens.
       </p>
 
-      <IDPOD />
-      <PaystubPOD />
+      <div className="flex gap-6">
+        <IDPOD />
+        <PaystubPOD />
+      </div>
     </main>
   );
 }

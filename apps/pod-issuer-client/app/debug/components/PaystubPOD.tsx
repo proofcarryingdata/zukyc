@@ -35,7 +35,7 @@ export default function PaystubPOD() {
   }, []);
 
   return (
-    <>
+    <div className="flex flex-col gap-2 grow">
       <h2 className="text-lg font-bold">Issue Paystub POD</h2>
       <form
         onSubmit={handleSubmit((data) => issuePaystubPOD(data))}
@@ -182,6 +182,6 @@ export default function PaystubPOD() {
       {response?.error && (
         <p className="font-bold text-red-500">{response?.error}</p>
       )}
-    </>
+    </div>
   );
 }
