@@ -18,6 +18,7 @@ gov.post("/issue", (req: Request, res: Response) => {
 
   if (!inputs.idNumber || !inputs.semaphoreCommitment) {
     res.status(400).send("Missing query parameter");
+    return;
   }
 
   if (inputs.idNumber === DEMO_ID_NUMBER) {
@@ -25,6 +26,7 @@ gov.post("/issue", (req: Request, res: Response) => {
   } else {
     // In practice, Check database to see if the id number belongs to this user
     res.status(403).send("Invalid ID number");
+    return;
   }
 
   try {

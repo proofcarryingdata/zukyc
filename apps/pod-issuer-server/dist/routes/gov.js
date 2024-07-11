@@ -12,6 +12,7 @@ gov.post("/issue", (req, res) => {
     const inputs = req.body;
     if (!inputs.idNumber || !inputs.semaphoreCommitment) {
         res.status(400).send("Missing query parameter");
+        return;
     }
     if (inputs.idNumber === constants_1.DEMO_ID_NUMBER) {
         // TODO: check if it is demo user
@@ -19,6 +20,7 @@ gov.post("/issue", (req, res) => {
     else {
         // In practice, Check database to see if the id number belongs to this user
         res.status(403).send("Invalid ID number");
+        return;
     }
     try {
         // For more info, see https://github.com/proofcarryingdata/zupass/blob/main/examples/pod-gpc-example/src/podExample.ts

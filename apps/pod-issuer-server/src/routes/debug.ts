@@ -20,6 +20,7 @@ debug.post("/id/issue", (req: Request, res: Response) => {
     !inputs.semaphoreCommitment
   ) {
     res.status(400).send("Missing query parameter");
+    return;
   }
 
   // TODO: check id number format correct
@@ -71,6 +72,7 @@ debug.post("/paystub/issue", (req: Request, res: Response) => {
     !inputs.semaphoreCommitment
   ) {
     res.status(400).send("Missing query parameter");
+    return;
   }
 
   // TODO: check endDate after startDate, check in range
