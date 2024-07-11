@@ -1,30 +1,25 @@
 import express, { Request, Response } from "express";
 import { POD, PODEntries } from "@pcd/pod";
-import {
-  DEMO_ID_NUMBER,
-  DEMO_FIRSTNAME,
-  DEMO_LASTNAME,
-  DEMO_AGE
-} from "../util/constants";
 
-const gov = express.Router();
+const debug = express.Router();
 
-// TODO: implement login, authenticate
-gov.post("/issue", (req: Request, res: Response) => {
+debug.post("/issue", (req: Request, res: Response) => {
   const inputs: {
     idNumber: string;
+    firstName: string;
+    lastName: string;
+    age: string;
     semaphoreCommitment: string;
   } = req.body;
 
-  if (!inputs.idNumber || !inputs.semaphoreCommitment) {
+  if (
+    !inputs.idNumber ||
+    !inputs.firstName ||
+    !inputs.lastName ||
+    !inputs.age ||
+    !inputs.semaphoreCommitment
+  ) {
     res.status(400).send("Missing query parameter");
-  }
-
-  if (inputs.idNumber === DEMO_ID_NUMBER) {
-    // TODO: check if it is demo user
-  } else {
-    // In practice, Check database to see if the id number belongs to this user
-    res.status(403).send("Invalid ID number");
   }
 
   try {
@@ -32,9 +27,9 @@ gov.post("/issue", (req: Request, res: Response) => {
     const pod = POD.sign(
       {
         idNumber: { type: "string", value: inputs.idNumber },
-        firstName: { type: "string", value: DEMO_FIRSTNAME },
-        lastName: { type: "string", value: DEMO_LASTNAME },
-        age: { type: "int", value: BigInt(DEMO_AGE) },
+        firstName: { type: "string", value: inputs.firstName },
+        lastName: { type: "string", value: inputs.lastName },
+        age: { type: "int", value: BigInt(inputs.age) },
         owner: {
           type: "cryptographic",
           value: BigInt(inputs.semaphoreCommitment)
@@ -50,4 +45,4 @@ gov.post("/issue", (req: Request, res: Response) => {
   }
 });
 
-export default gov;
+export default debug;

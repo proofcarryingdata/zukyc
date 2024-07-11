@@ -8,11 +8,13 @@ export default function Home() {
       <h1 className="text-xl font-bold">POD Issuers</h1>
       <ul>
         <li>
-          <Link href={"/gov"}>Govenment - ID POD issuer</Link>
+          <Link href={"/gov"}>ZooGov - Govenment ID POD issuer</Link>
         </li>
         <li>
-          {" "}
-          <Link href={"/deel"}>Deel - Paystub POD issuer</Link>
+          <Link href={"/deel"}>ZooDeel - Paystub POD issuer</Link>
+        </li>
+        <li>
+          <Link href={"/debug"}>ZooAdmin - For debugging</Link>
         </li>
       </ul>
       <br />
