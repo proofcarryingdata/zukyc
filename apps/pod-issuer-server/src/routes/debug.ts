@@ -3,7 +3,7 @@ import { POD, PODEntries } from "@pcd/pod";
 
 const debug = express.Router();
 
-debug.post("/issue", (req: Request, res: Response) => {
+debug.post("/id/issue", (req: Request, res: Response) => {
   const inputs: {
     idNumber: string;
     firstName: string;

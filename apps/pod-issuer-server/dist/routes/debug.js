@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const pod_1 = require("@pcd/pod");
 const debug = express_1.default.Router();
-debug.post("/issue", (req, res) => {
+debug.post("/id/issue", (req, res) => {
     const inputs = req.body;
     if (!inputs.idNumber ||
         !inputs.firstName ||

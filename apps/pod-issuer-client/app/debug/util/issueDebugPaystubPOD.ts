@@ -1,15 +1,15 @@
 import { Dispatch } from "react";
 
-export async function issueDebugIDPOD(
-  args: IIssueDebugIDPODArgs,
-  setResponse: Dispatch<IIssueDebugIDPODResponse>
+export async function issueDebugPaystubPOD(
+  args: IissueDebugPaystubPODArgs,
+  setResponse: Dispatch<IissueDebugPaystubPODResponse>
 ) {
   try {
     if (!process.env.NEXT_PUBLIC_POD_ISSUER_SERVER_URL)
       throw new Error("NEXT_PUBLIC_POD_ISSUER_SERVER_URL not set");
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_POD_ISSUER_SERVER_URL}/debug/id/issue`,
+      `${process.env.NEXT_PUBLIC_POD_ISSUER_SERVER_URL}/debug/paystub/issue`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -35,15 +35,18 @@ export async function issueDebugIDPOD(
   }
 }
 
-export interface IIssueDebugIDPODArgs {
-  idNumber: string;
+export interface IissueDebugPaystubPODArgs {
   firstName: string;
   lastName: string;
-  age: string;
+  employer: string;
+  startDate: string;
+  endDate: string | null;
+  paymentFrequency: string;
+  salary: string;
   semaphoreCommitment: string;
 }
 
-export type IIssueDebugIDPODResponse =
+export type IissueDebugPaystubPODResponse =
   | {
       success: true;
       error?: never;
