@@ -14,6 +14,7 @@ debug.post("/id/issue", (req, res) => {
         !inputs.dateOfBirth ||
         !inputs.semaphoreCommitment) {
         res.status(400).send("Missing query parameter");
+        return;
     }
     // TODO: check id number format correct
     // TODO: DOB, check in range
@@ -48,6 +49,7 @@ debug.post("/paystub/issue", (req, res) => {
         !inputs.salary ||
         !inputs.semaphoreCommitment) {
         res.status(400).send("Missing query parameter");
+        return;
     }
     // TODO: check endDate after startDate, check in range
     // TODO: check paymentFrequency is valid
