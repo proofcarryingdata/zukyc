@@ -16,13 +16,13 @@ export default function IDPOD() {
   } = useForm();
 
   const issueIDPOD = useCallback((data: FieldValues) => {
-    // TODO: change age to DOB, check in range
+    // TODO: check DOB range, check semaphoreCommitment format
     issueDebugIDPOD(
       {
         idNumber: data.id,
         firstName: data.firstName,
         lastName: data.lastName,
-        age: data.age,
+        dateOfBirth: data.dateOfBirth,
         semaphoreCommitment: data.semaphoreCommitment
       },
       setResponse
@@ -74,17 +74,17 @@ export default function IDPOD() {
           <p className="text-red-500">Last name is required.</p>
         )}
 
-        <input
-          {...register("age", { required: true, pattern: /\d+/ })}
-          type="number"
-          className="form-input px-4 py-3 rounded"
-          placeholder="Age"
-        />
-        {errors.age && (
-          <p className="text-red-500">
-            Age is required. Please enter number for age.
-          </p>
-        )}
+        <div className="form-group flex gap-20 items-center">
+          <label htmlFor="dateOfBirth">Date of birth</label>
+          <input
+            {...register("dateOfBirth", { required: true })}
+            type="date"
+            className="form-input px-4 py-3 rounded grow"
+          />
+          {errors.dateOfBirthe && (
+            <p className="text-red-500">Date of birth is required.</p>
+          )}
+        </div>
 
         <input
           {...register("semaphoreCommitment", {

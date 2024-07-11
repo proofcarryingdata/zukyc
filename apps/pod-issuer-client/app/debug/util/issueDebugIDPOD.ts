@@ -39,7 +39,7 @@ export interface IIssueDebugIDPODArgs {
   idNumber: string;
   firstName: string;
   lastName: string;
-  age: string;
+  dateOfBirth: string;
   semaphoreCommitment: string;
 }
 

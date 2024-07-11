@@ -8,7 +8,7 @@ debug.post("/id/issue", (req: Request, res: Response) => {
     idNumber: string;
     firstName: string;
     lastName: string;
-    age: string;
+    dateOfBirth: string;
     semaphoreCommitment: string;
   } = req.body;
 
@@ -16,14 +16,14 @@ debug.post("/id/issue", (req: Request, res: Response) => {
     !inputs.idNumber ||
     !inputs.firstName ||
     !inputs.lastName ||
-    !inputs.age ||
+    !inputs.dateOfBirth ||
     !inputs.semaphoreCommitment
   ) {
     res.status(400).send("Missing query parameter");
   }
 
   // TODO: check id number format correct
-  // TODO: change age to DOB, check in range
+  // TODO: DOB, check in range
   // TODO: check semaphoreCommitment correct
 
   try {
@@ -33,7 +33,7 @@ debug.post("/id/issue", (req: Request, res: Response) => {
         idNumber: { type: "string", value: inputs.idNumber },
         firstName: { type: "string", value: inputs.firstName },
         lastName: { type: "string", value: inputs.lastName },
-        age: { type: "int", value: BigInt(inputs.age) },
+        dateOfBirth: { type: "string", value: inputs.dateOfBirth },
         owner: {
           type: "cryptographic",
           value: BigInt(inputs.semaphoreCommitment)

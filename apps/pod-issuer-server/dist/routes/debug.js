@@ -11,12 +11,12 @@ debug.post("/id/issue", (req, res) => {
     if (!inputs.idNumber ||
         !inputs.firstName ||
         !inputs.lastName ||
-        !inputs.age ||
+        !inputs.dateOfBirth ||
         !inputs.semaphoreCommitment) {
         res.status(400).send("Missing query parameter");
     }
     // TODO: check id number format correct
-    // TODO: change age to DOB, check in range
+    // TODO: DOB, check in range
     // TODO: check semaphoreCommitment correct
     try {
         // For more info, see https://github.com/proofcarryingdata/zupass/blob/main/examples/pod-gpc-example/src/podExample.ts
@@ -24,7 +24,7 @@ debug.post("/id/issue", (req, res) => {
             idNumber: { type: "string", value: inputs.idNumber },
             firstName: { type: "string", value: inputs.firstName },
             lastName: { type: "string", value: inputs.lastName },
-            age: { type: "int", value: BigInt(inputs.age) },
+            dateOfBirth: { type: "string", value: inputs.dateOfBirth },
             owner: {
                 type: "cryptographic",
                 value: BigInt(inputs.semaphoreCommitment)
