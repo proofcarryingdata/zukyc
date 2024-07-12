@@ -1,5 +1,5 @@
 import { Tooltip } from "react-tooltip";
-import useIdentity from "@/util/useIdentity";
+import useIdentity from "@/hooks/useIdentity";
 
 const SemaphoreID = () => {
   const { identity, newIdentity } = useIdentity();

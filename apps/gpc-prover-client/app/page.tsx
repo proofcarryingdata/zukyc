@@ -2,12 +2,12 @@
 
 import { useCallback, useState } from "react";
 import { generateProof, ProofResult } from "@/util/generateProof";
-import useIdentity from "@/util/useIdentity";
+import useIdentity from "@/hooks/useIdentity";
 import SemaphoreID from "@/components/SemaphoreID";
+import PODs from "@/components/PODs";
 
 export default function Prover() {
-  const [idPODStr, setIDPODStr] = useState("");
-  const [paystubPODStr, setPaystubPODStr] = useState("");
+  const [idPODStr] = useState("");
   const [proofResult, setProofResult] = useState<ProofResult>();
 
   const { identity } = useIdentity();
@@ -29,33 +29,10 @@ export default function Prover() {
       </div>
 
       <SemaphoreID />
+      <PODs />
 
       <div className="flex gap-10">
-        <div className="flex flex-col gap-6 w-1/2">
-          <div className="flex flex-col">
-            <span>
-              Get your ID POD from <a>ZooGov website</a>
-            </span>
-            <textarea
-              rows={10}
-              value={idPODStr}
-              placeholder="Past your ID POD here!"
-              onChange={(e) => setIDPODStr(e.target.value.trim())}
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <span>
-              Get your Paystub POD from <a>ZooDeel website</a>
-            </span>
-            <textarea
-              rows={10}
-              value={paystubPODStr}
-              placeholder="Past your Paystub POD here!"
-              onChange={(e) => setPaystubPODStr(e.target.value.trim())}
-            />
-          </div>
-
+        <div className="flex flex-col">
           <button onClick={generate}>Generate Proof</button>
         </div>
 
