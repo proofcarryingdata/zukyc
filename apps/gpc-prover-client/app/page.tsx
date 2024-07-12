@@ -2,53 +2,39 @@
 
 import { useCallback, useState } from "react";
 import { generateProof, ProofResult } from "@/util/generateProof";
-import { Identity } from "@semaphore-protocol/identity";
-import GenerateIdentity from "@/components/GenerateIdentity";
+import useIdentity from "@/util/useIdentity";
+import SemaphoreID from "@/components/SemaphoreID";
 
 export default function Prover() {
-  const [identityStr, setIdentityStr] = useState("");
   const [idPODStr, setIDPODStr] = useState("");
   const [paystubPODStr, setPaystubPODStr] = useState("");
   const [proofResult, setProofResult] = useState<ProofResult>();
 
+  const { identity } = useIdentity();
+
   const generate = useCallback(() => {
-    if (!identityStr) {
-      alert("Private identity secret field cannot be empty!");
+    if (!identity) {
+      alert("Identity cannot be empty!");
       return;
     }
-    const identity = new Identity(identityStr);
     generateProof(idPODStr, identity, setProofResult);
-  }, [identityStr, idPODStr, setProofResult, generateProof]);
+  }, [identity, idPODStr, setProofResult, generateProof]);
 
   return (
-    <main className="p-10 m-0 flex flex-col gap-6 h-screen max-h-screen">
+    <main className="p-10 m-0 flex flex-col gap-6">
       <h1 className="text-xl font-bold">ZooKyc</h1>
       <div className="flex flex-col">
         <span>GPC prover, paste in PODS, generate proof</span>
         <span>TODO: more description, link to code...</span>
       </div>
 
-      <div className="flex flex-col">
-        <span>
-          Paste in your private identity secret (Semaphore private identity)
-        </span>
-        <span>
-          If you don't have one, click the Generate New Identity button below
-        </span>
-        <textarea
-          rows={1}
-          value={identityStr}
-          placeholder="Past your private identity secret here!"
-          onChange={(e) => setIdentityStr(e.target.value.trim())}
-        />
-      </div>
-      <GenerateIdentity />
+      <SemaphoreID />
 
       <div className="flex gap-10">
         <div className="flex flex-col gap-6 w-1/2">
           <div className="flex flex-col">
             <span>
-              Get your ID POD from <a>the government website</a>
+              Get your ID POD from <a>ZooGov website</a>
             </span>
             <textarea
               rows={10}
@@ -60,7 +46,7 @@ export default function Prover() {
 
           <div className="flex flex-col">
             <span>
-              Get your Paystub POD from <a>the deel website</a>
+              Get your Paystub POD from <a>ZooDeel website</a>
             </span>
             <textarea
               rows={10}
