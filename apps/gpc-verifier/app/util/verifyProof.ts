@@ -4,6 +4,7 @@ import {
   GPCProof,
   gpcArtifactDownloadURL,
   gpcVerify,
+  deserializeGPCBoundConfig,
   deserializeGPCRevealedClaims,
   PODMembershipLists
 } from "@pcd/gpc";
@@ -27,7 +28,8 @@ export const verifyProof = async (
     // Here we would like to use the circuitIdentifier returned by gpcProve.
     const vConfig = {
       ...boundConfig,
-      circuitIdentifier: proofObj.circuitIdentifier
+      circuitIdentifier: deserializeGPCBoundConfig(proofObj.config)
+        .circuitIdentifier
     };
 
     // Make sure the membershipLists in the revealed claims matches

@@ -5,12 +5,13 @@ import {
   deserializeGPCProofConfig,
   gpcArtifactDownloadURL,
   gpcProve,
+  serializeGPCBoundConfig,
   serializeGPCRevealedClaims
 } from "@pcd/gpc";
 import { Identity } from "@semaphore-protocol/identity";
 
 export type ProofResult = {
-  circuitIdentifier: string;
+  config: string;
   proof: string;
   claims: string;
 };
@@ -73,7 +74,7 @@ export const generateProof = async (
     );
 
     const serializedProof = {
-      circuitIdentifier: boundConfig.circuitIdentifier,
+      config: serializeGPCBoundConfig(boundConfig),
       proof: JSON.stringify(proof),
       claims: serializeGPCRevealedClaims(revealedClaims)
     };
