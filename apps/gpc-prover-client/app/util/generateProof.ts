@@ -70,7 +70,6 @@ export const generateProof = async (
       artifactsURL
     );
 
-    console.log(serializeGPCBoundConfig(boundConfig));
     const serializedProof = {
       circuitIdentifier: boundConfig.circuitIdentifier,
       proof: JSON.stringify(proof),

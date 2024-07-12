@@ -7,7 +7,7 @@ const useProofConfig = () => {
       pods: {
         govID: {
           entries: {
-            // prove the presence of an entry called "dateOfBirth" and hide its value.
+            // Prove the presence of an entry called "dateOfBirth" and hide its value.
             dateOfBirth: { isRevealed: false },
             // Prove the presence of an entry called "owner". I'm not
             // revealing it, but will be proving I own the corresponding

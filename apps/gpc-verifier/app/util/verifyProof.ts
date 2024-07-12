@@ -37,12 +37,26 @@ export const verifyProof = async (
       throw new Error("Your proof is not valid. Please try again.");
     }
 
+    // Check the PODs are signed by a trusted authorities with known public keys.
+    if (
+      vClaims.pods.govID?.signerPublicKey !==
+      process.env.NEXT_PUBLIC_GOV_EDDSA_PUBLIC_KEY
+    ) {
+      throw new Error("Please make sure your ID POD is signed by ZooGov");
+    }
+
+    if (
+      vClaims.pods.paystubPOD?.signerPublicKey !==
+      process.env.NEXT_PUBLIC_DEEL_EDDSA_PUBLIC_KEY
+    ) {
+      throw new Error("Please make sure your ID POD is signed by ZooDeel");
+    }
+
     // TODO: more checking needs to be done here
 
     setVerified(isValid);
   } catch (e) {
-    alert("Error verify proof");
-    console.log(JSON.stringify(e));
+    alert(e);
   }
 };
 

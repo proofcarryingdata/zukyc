@@ -29,7 +29,7 @@ deel.post("/issue", (req, res) => {
                 type: "cryptographic",
                 value: BigInt(inputs.semaphoreCommitment)
             }
-        }, process.env.GOV_EDDSA_PRIVATE_KEY);
+        }, process.env.DEEL_EDDSA_PRIVATE_KEY);
         const serializedPOD = pod.serialize();
         res.status(200).json({ pod: serializedPOD });
     }

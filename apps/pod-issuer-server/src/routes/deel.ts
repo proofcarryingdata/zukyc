@@ -41,7 +41,7 @@ deel.post("/issue", (req: Request, res: Response) => {
           value: BigInt(inputs.semaphoreCommitment)
         }
       } satisfies PODEntries,
-      process.env.GOV_EDDSA_PRIVATE_KEY!
+      process.env.DEEL_EDDSA_PRIVATE_KEY!
     );
     const serializedPOD = pod.serialize();
     res.status(200).json({ pod: serializedPOD });
