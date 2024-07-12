@@ -5,7 +5,7 @@ const useProofConfig = () => {
   return useMemo(() => {
     const proofConfig: GPCProofConfig = {
       pods: {
-        id: {
+        govID: {
           entries: {
             // prove the presence of an entry called "dateOfBirth" and hide its value.
             dateOfBirth: { isRevealed: false },

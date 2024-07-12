@@ -1,25 +1,26 @@
 import { Dispatch } from "react";
 import { POD } from "@pcd/pod";
 import {
-  GPCProofConfig,
   GPCProofInputs,
+  deserializeGPCProofConfig,
   gpcArtifactDownloadURL,
   gpcProve,
-  serializeGPCBoundConfig,
   serializeGPCRevealedClaims
 } from "@pcd/gpc";
 import { Identity } from "@semaphore-protocol/identity";
 
 export type ProofResult = {
+  circuitIdentifier: string;
   proof: string;
-  config: string;
   claims: string;
 };
 
 // TODO: use Paystub pod
 export const generateProof = async (
-  serializedIDPOD: string,
   identity: Identity,
+  serializedIDPOD: string,
+  serializedPaystubPOD: string,
+  serializedProofConfig: string,
   setProofResult: Dispatch<ProofResult>
 ) => {
   try {
@@ -28,31 +29,18 @@ export const generateProof = async (
     }
 
     const idPOD = POD.deserialize(serializedIDPOD);
+    const paytsubPOD = POD.deserialize(serializedPaystubPOD);
 
-    // A GPCConfig specifies what we want to prove about one or more PODs.  It's
-    // intended to be reusable to generate multiple proofs.
-    const proofConfig: GPCProofConfig = {
-      pods: {
-        id: {
-          entries: {
-            // prove the presence of an entry called "dateOfBirth" and hide its value.
-            dateOfBirth: { isRevealed: false },
-            // Prove the presence of an entry called "owner". I'm not
-            // revealing it, but will be proving I own the corresponding
-            // Semaphore identity secrets.
-            owner: { isRevealed: false, isOwnerID: true }
-          }
-        }
-      }
-    };
+    const proofConfig = deserializeGPCProofConfig(serializedProofConfig);
 
     // To generate a proof I need to pair a config with a set of inputs, including
     // the POD(s) to prove about.  Inputs can also enable extra security features
     // of the proof.
     const proofInputs: GPCProofInputs = {
       pods: {
-        // The name "id" here matches this POD with the config above.
-        id: idPOD
+        // The name "govID" here matches this POD with the config above.
+        govID: idPOD
+        // paystub: paytsubPOD
       },
       owner: {
         // Here I provide my private identity info.  It's never revealed in the
@@ -82,13 +70,14 @@ export const generateProof = async (
     );
 
     const serializedProof = {
+      circuitIdentifier: boundConfig.circuitIdentifier,
       proof: JSON.stringify(proof),
-      config: serializeGPCBoundConfig(boundConfig),
       claims: serializeGPCRevealedClaims(revealedClaims)
     };
     setProofResult(serializedProof);
   } catch (e) {
-    alert(e);
+    alert("Error generate proof");
+    console.log(JSON.stringify(e));
   }
 };
 
