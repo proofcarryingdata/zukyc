@@ -41,8 +41,7 @@ export interface IissueDebugPaystubPODArgs {
   employer: string;
   startDate: string;
   endDate: string | null;
-  paymentFrequency: string;
-  salary: string;
+  annualSalary: number;
   semaphoreCommitment: string;
 }
 

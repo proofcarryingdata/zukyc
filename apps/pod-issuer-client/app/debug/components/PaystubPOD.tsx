@@ -26,8 +26,7 @@ export default function PaystubPOD() {
         employer: data.employer,
         startDate: data.startDate,
         endDate: data.endDate,
-        paymentFrequency: data.paymentFrequency,
-        salary: data.salary.toString(),
+        annualSalary: parseInt(data.annualSalary),
         semaphoreCommitment: data.semaphoreCommitment
       },
       setResponse
@@ -93,41 +92,28 @@ export default function PaystubPOD() {
           {errors.endDate && <p className="text-red-500">Invalid end date.</p>}
         </div>
 
-        <select
-          {...register("paymentFrequency", { required: true })}
-          className="form-input px-4 py-3 rounded"
-          defaultValue=""
-        >
-          <option value="" disabled>
-            Select payment frequency
-          </option>
-          <option value="Monthly">Monthly</option>
-          <option value="Semimonthly">Semimonthly</option>
-          <option value="Biweekly">Biweekly</option>
-          <option value="Weekly">Weekly</option>
-        </select>
-        {errors.paymentFrequency && (
-          <p className="text-red-500">Payment frequency is required.</p>
-        )}
-
-        <Controller
-          name="salary"
-          control={control}
-          rules={{ required: true }}
-          render={({ field: { ref, onChange } }) => (
-            <NumericFormat
-              thousandSeparator=","
-              decimalSeparator="."
-              prefix="$ "
-              decimalScale={2}
-              getInputRef={ref}
-              onValueChange={(values) => {
-                onChange(values.floatValue);
-              }}
-            />
+        <div className="form-group flex gap-3 items-center justify-between">
+          <label htmlFor="annualSalary">Annual salary</label>
+          <Controller
+            name="annualSalary"
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { ref, onChange } }) => (
+              <NumericFormat
+                thousandSeparator=","
+                prefix="$ "
+                decimalScale={0}
+                getInputRef={ref}
+                onValueChange={(values) => {
+                  onChange(values.floatValue);
+                }}
+              />
+            )}
+          />
+          {errors.annualSalary && (
+            <p className="text-red-500">Annual salary is required.</p>
           )}
-        />
-        {errors.salary && <p className="text-red-500">Salary is required.</p>}
+        </div>
 
         <input
           {...register("semaphoreCommitment", {

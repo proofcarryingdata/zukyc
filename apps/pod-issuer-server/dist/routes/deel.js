@@ -23,8 +23,7 @@ deel.post("/issue", (req, res) => {
             employer: { type: "string", value: constants_1.DEMO_EMPLOYER },
             startDate: { type: "string", value: constants_1.DEMO_START_DATE },
             endDate: { type: "string", value: constants_1.DEMO_END_DATE },
-            paymentFrequency: { type: "string", value: constants_1.DEMO_PAYMENT_FREQUENCY },
-            salary: { type: "string", value: constants_1.DEMO_SALARY },
+            annualSalary: { type: "int", value: BigInt(constants_1.DEMO_ANNUAL_SALARY) },
             owner: {
                 type: "cryptographic",
                 value: BigInt(inputs.semaphoreCommitment)

@@ -8,4 +8,4 @@ export const DEMO_EMPLOYER = "ZooPark";
 export const DEMO_START_DATE = "2023-12-1";
 export const DEMO_END_DATE = "2024-12-1";
 export const DEMO_PAYMENT_FREQUENCY = "Biweekly";
-export const DEMO_SALARY = "6000";
+export const DEMO_ANNUAL_SALARY = "30000";

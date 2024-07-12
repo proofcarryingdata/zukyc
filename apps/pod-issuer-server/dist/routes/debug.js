@@ -45,15 +45,13 @@ debug.post("/paystub/issue", (req, res) => {
         !inputs.lastName ||
         !inputs.employer ||
         !inputs.startDate ||
-        !inputs.paymentFrequency ||
-        !inputs.salary ||
+        !inputs.annualSalary ||
         !inputs.semaphoreCommitment) {
         res.status(400).send("Missing query parameter");
         return;
     }
     // TODO: check endDate after startDate, check in range
-    // TODO: check paymentFrequency is valid
-    // TODO: check salary is valid
+    // TODO: check annual salary is valid
     // TODO: check semaphoreCommitment correct
     try {
         // For more info, see https://github.com/proofcarryingdata/zupass/blob/main/examples/pod-gpc-example/src/podExample.ts
@@ -63,8 +61,7 @@ debug.post("/paystub/issue", (req, res) => {
             employer: { type: "string", value: inputs.employer },
             startDate: { type: "string", value: inputs.startDate },
             // endDate: { type: "string", value: inputs.endDate! },
-            paymentFrequency: { type: "string", value: inputs.paymentFrequency },
-            salary: { type: "string", value: inputs.salary },
+            annualSalary: { type: "int", value: BigInt(inputs.annualSalary) },
             owner: {
                 type: "cryptographic",
                 value: BigInt(inputs.semaphoreCommitment)

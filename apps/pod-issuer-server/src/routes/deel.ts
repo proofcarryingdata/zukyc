@@ -6,8 +6,7 @@ import {
   DEMO_EMPLOYER,
   DEMO_START_DATE,
   DEMO_END_DATE,
-  DEMO_PAYMENT_FREQUENCY,
-  DEMO_SALARY
+  DEMO_ANNUAL_SALARY
 } from "../util/constants";
 
 const deel = express.Router();
@@ -34,8 +33,7 @@ deel.post("/issue", (req: Request, res: Response) => {
         employer: { type: "string", value: DEMO_EMPLOYER },
         startDate: { type: "string", value: DEMO_START_DATE },
         endDate: { type: "string", value: DEMO_END_DATE },
-        paymentFrequency: { type: "string", value: DEMO_PAYMENT_FREQUENCY },
-        salary: { type: "string", value: DEMO_SALARY },
+        annualSalary: { type: "int", value: BigInt(DEMO_ANNUAL_SALARY) },
         owner: {
           type: "cryptographic",
           value: BigInt(inputs.semaphoreCommitment)

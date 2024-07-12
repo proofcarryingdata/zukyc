@@ -35,7 +35,7 @@ export default function Verifier() {
           You have at least one year of consistent employment with your current
           employer;
         </li>
-        <li>Your monthly income is at least $2000;</li>
+        <li>Your annual salary is at least $20,000;</li>
       </ul>
 
       <p>

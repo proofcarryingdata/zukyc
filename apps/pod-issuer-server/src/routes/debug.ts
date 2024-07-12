@@ -57,8 +57,7 @@ debug.post("/paystub/issue", (req: Request, res: Response) => {
     employer: string;
     startDate: string;
     endDate: string | null;
-    paymentFrequency: string;
-    salary: string;
+    annualSalary: string;
     semaphoreCommitment: string;
   } = req.body;
 
@@ -67,8 +66,7 @@ debug.post("/paystub/issue", (req: Request, res: Response) => {
     !inputs.lastName ||
     !inputs.employer ||
     !inputs.startDate ||
-    !inputs.paymentFrequency ||
-    !inputs.salary ||
+    !inputs.annualSalary ||
     !inputs.semaphoreCommitment
   ) {
     res.status(400).send("Missing query parameter");
@@ -76,8 +74,7 @@ debug.post("/paystub/issue", (req: Request, res: Response) => {
   }
 
   // TODO: check endDate after startDate, check in range
-  // TODO: check paymentFrequency is valid
-  // TODO: check salary is valid
+  // TODO: check annual salary is valid
   // TODO: check semaphoreCommitment correct
 
   try {
@@ -89,8 +86,7 @@ debug.post("/paystub/issue", (req: Request, res: Response) => {
         employer: { type: "string", value: inputs.employer },
         startDate: { type: "string", value: inputs.startDate },
         // endDate: { type: "string", value: inputs.endDate! },
-        paymentFrequency: { type: "string", value: inputs.paymentFrequency },
-        salary: { type: "string", value: inputs.salary },
+        annualSalary: { type: "int", value: BigInt(inputs.annualSalary) },
         owner: {
           type: "cryptographic",
           value: BigInt(inputs.semaphoreCommitment)
