@@ -23,7 +23,8 @@ export const verifyProof = async (
     const proofObj = JSON.parse(proofStr);
     const vProof = JSON.parse(proofObj.proof) as GPCProof;
 
-    // gpcBindConfig might not always pick the same circuit as gpcProve,
+    // Use the boundConfig we provided.
+    // However, gpcBindConfig might not always pick the same circuit as gpcProve,
     // since it doesn't know the size of the inputs.
     // Here we would like to use the circuitIdentifier returned by gpcProve.
     const vConfig = {
@@ -55,10 +56,19 @@ export const verifyProof = async (
       throw new Error("Please make sure your ID POD is signed by ZooGov");
     }
     if (
-      vClaims.pods.paystubPOD?.signerPublicKey !==
+      vClaims.pods.paystub?.signerPublicKey !==
       process.env.NEXT_PUBLIC_DEEL_EDDSA_PUBLIC_KEY
     ) {
       throw new Error("Please make sure your ID POD is signed by ZooDeel");
+    }
+
+    if (
+      vClaims.pods.govID?.entries?.firstName?.value !==
+      vClaims.pods.paystub?.entries?.firstName?.value
+    ) {
+      throw new Error(
+        "The firstName in ID POD doesn't match the firstName in Paystub POD"
+      );
     }
 
     // TODO: more checking needs to be done here

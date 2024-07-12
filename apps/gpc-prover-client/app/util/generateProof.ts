@@ -46,7 +46,7 @@ export const generateProof = async (
         paystub: paytsubPOD
       },
       owner: {
-        // Here I provide my private identity info.  It's never revealed in the
+        // Here I provide my private identity info. It's never revealed in the
         // proof, but used to prove the correctness of the `owner` entry as
         // specified in the config.
         // Note: we have to use "@semaphore-protocol/identity": "^3.15.2",

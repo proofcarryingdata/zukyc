@@ -19,16 +19,28 @@ const useProofConfig = () => {
             // Prove the presence of an entry called "idNumber", hide its value,
             // and also prove that it is not a member of the sanctionsList.
             idNumber: { isRevealed: false, isNotMemberOf: "sanctionsList" },
-            // Prove the presence of an entry called "dateOfBirth" and hide its value.
+            // Prove the presence of an entry called "firstName", reveal its value.
+            firstName: { isRevealed: true },
+            // Prove the presence of an entry called "lastName", hide its value.
+            lastName: { isRevealed: false },
+            // Prove the presence of an entry called "dateOfBirth", hide its value.
             dateOfBirth: { isRevealed: false },
-            // Prove the presence of an entry called "owner". I'm not
-            // revealing it, but will be proving I own the corresponding
-            // Semaphore identity secrets.
+            // Prove the presence of an entry called "owner", hide its value, and prove
+            // that I own the corresponding Semaphore identity secrets.
             owner: { isRevealed: false, isOwnerID: true }
           }
         },
         paystub: {
           entries: {
+            // Prove the presence of an entry called "firstName", reveal its value.
+            firstName: { isRevealed: true },
+            // Prove the presence of an entry called "lastName", hide its value, and
+            // prove that it equals to the firstName in the govID POD.
+            lastName: { isRevealed: false, equalsEntry: "govID.lastName" },
+            // Prove the presence of an entry called "employer", hide its value.
+            employer: { isRevealed: false },
+            // Prove the presence of an entry called "owner", hide its value, and prove
+            // that I own the corresponding Semaphore identity secrets.
             owner: { isRevealed: false, isOwnerID: true }
           }
         }
