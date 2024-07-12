@@ -5,7 +5,6 @@ import {
   deserializeGPCProofConfig,
   gpcArtifactDownloadURL,
   gpcProve,
-  serializeGPCBoundConfig,
   serializeGPCRevealedClaims
 } from "@pcd/gpc";
 import { Identity } from "@semaphore-protocol/identity";
@@ -21,7 +20,7 @@ export const generateProof = async (
   identity: Identity,
   serializedIDPOD: string,
   serializedPaystubPOD: string,
-  serializedProofConfig: string,
+  serializedConfig: string,
   setProofResult: Dispatch<ProofResult>
 ) => {
   try {
@@ -32,7 +31,9 @@ export const generateProof = async (
     const idPOD = POD.deserialize(serializedIDPOD);
     const paytsubPOD = POD.deserialize(serializedPaystubPOD);
 
-    const proofConfig = deserializeGPCProofConfig(serializedProofConfig);
+    const config = JSON.parse(serializedConfig);
+    const proofConfig = deserializeGPCProofConfig(config.proofConfig);
+    const membershipLists = config.membershipLists;
 
     // To generate a proof I need to pair a config with a set of inputs, including
     // the POD(s) to prove about.  Inputs can also enable extra security features
@@ -40,8 +41,8 @@ export const generateProof = async (
     const proofInputs: GPCProofInputs = {
       pods: {
         // The name "govID" here matches this POD with the config above.
-        govID: idPOD
-        // paystub: paytsubPOD
+        govID: idPOD,
+        paystub: paytsubPOD
       },
       owner: {
         // Here I provide my private identity info.  It's never revealed in the
@@ -55,6 +56,7 @@ export const generateProof = async (
         // to avoid exploits like double-voting.
         externalNullifier: { type: "string", value: "attack round 3" }
       },
+      membershipLists,
       // Watermark gets carried in the proof and can be used to ensure the same
       // proof isn't reused outside of its intended context.  A timestamp is
       // one possible way to do that.
@@ -78,7 +80,7 @@ export const generateProof = async (
     setProofResult(serializedProof);
   } catch (e) {
     alert("Error generate proof");
-    console.log(JSON.stringify(e));
+    console.log(e);
   }
 };
 

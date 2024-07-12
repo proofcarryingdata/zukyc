@@ -1,15 +1,16 @@
 import { Dispatch } from "react";
 import {
-  GPCProofConfig,
+  GPCBoundConfig,
   GPCProof,
-  gpcBindConfig,
   gpcArtifactDownloadURL,
   gpcVerify,
-  deserializeGPCRevealedClaims
+  deserializeGPCRevealedClaims,
+  PODMembershipLists
 } from "@pcd/gpc";
 
 export const verifyProof = async (
-  config: GPCProofConfig,
+  boundConfig: GPCBoundConfig,
+  membershipLists: PODMembershipLists,
   proofStr: string,
   setVerified: Dispatch<boolean>
 ) => {
@@ -19,20 +20,27 @@ export const verifyProof = async (
     }
 
     const proofObj = JSON.parse(proofStr);
-
-    // The config here has to be the same proof config as we provided.
-    const { boundConfig } = gpcBindConfig(config);
-    // The circuit identifier specifies the ZK circuit which was used to
-    // generate the proof, and must also be used to verify the proof.
-    boundConfig.circuitIdentifier = proofObj.circuitIdentifier;
-
     const vProof = JSON.parse(proofObj.proof) as GPCProof;
-    const vClaims = deserializeGPCRevealedClaims(proofObj.claims);
+
+    // gpcBindConfig might not always pick the same circuit as gpcProve,
+    // since it doesn't know the size of the inputs.
+    // Here we would like to use the circuitIdentifier returned by gpcProve.
+    const vConfig = {
+      ...boundConfig,
+      circuitIdentifier: proofObj.circuitIdentifier
+    };
+
+    // Make sure the membershipLists in the revealed claims matches
+    // the lists we provided.
+    const vClaims = {
+      ...deserializeGPCRevealedClaims(proofObj.claims),
+      membershipLists
+    };
 
     const artifactsURL = gpcArtifactDownloadURL("unpkg", "prod", undefined);
     console.log("download artifacts from", artifactsURL);
 
-    const isValid = await gpcVerify(vProof, boundConfig, vClaims, artifactsURL);
+    const isValid = await gpcVerify(vProof, vConfig, vClaims, artifactsURL);
     if (!isValid) {
       throw new Error("Your proof is not valid. Please try again.");
     }
@@ -44,7 +52,6 @@ export const verifyProof = async (
     ) {
       throw new Error("Please make sure your ID POD is signed by ZooGov");
     }
-
     if (
       vClaims.pods.paystubPOD?.signerPublicKey !==
       process.env.NEXT_PUBLIC_DEEL_EDDSA_PUBLIC_KEY

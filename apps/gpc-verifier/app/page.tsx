@@ -29,6 +29,7 @@ export default function Verifier() {
       <ul className="list-inside list-disc">
         <p>You need to prove that</p>
         <li>You have a valid govenment-issued ID;</li>
+        <li>You are not in the sanctions list;</li>
         <li>You are at least 18 years old;</li>
         <li>
           You have at least one year of consistent employment with your current
