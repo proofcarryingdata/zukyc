@@ -20,16 +20,14 @@ deel.post("/issue", (req, res) => {
         const pod = pod_1.POD.sign({
             firstName: { type: "string", value: constants_1.DEMO_FIRSTNAME },
             lastName: { type: "string", value: constants_1.DEMO_LASTNAME },
-            employer: { type: "string", value: constants_1.DEMO_EMPLOYER },
+            currentEmployer: { type: "string", value: constants_1.DEMO_CURRENT_EMPLOYER },
             startDate: { type: "string", value: constants_1.DEMO_START_DATE },
-            endDate: { type: "string", value: constants_1.DEMO_END_DATE },
-            paymentFrequency: { type: "string", value: constants_1.DEMO_PAYMENT_FREQUENCY },
-            salary: { type: "string", value: constants_1.DEMO_SALARY },
+            annualSalary: { type: "int", value: BigInt(constants_1.DEMO_ANNUAL_SALARY) },
             owner: {
                 type: "cryptographic",
                 value: BigInt(inputs.semaphoreCommitment)
             }
-        }, process.env.GOV_EDDSA_PRIVATE_KEY);
+        }, process.env.DEEL_EDDSA_PRIVATE_KEY);
         const serializedPOD = pod.serialize();
         res.status(200).json({ pod: serializedPOD });
     }

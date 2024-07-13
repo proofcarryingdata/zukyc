@@ -22,7 +22,7 @@ export default function IDPOD() {
         idNumber: data.id,
         firstName: data.firstName,
         lastName: data.lastName,
-        dateOfBirth: data.dateOfBirth,
+        age: data.age,
         semaphoreCommitment: data.semaphoreCommitment
       },
       setResponse
@@ -75,15 +75,13 @@ export default function IDPOD() {
         )}
 
         <div className="form-group flex gap-20 items-center">
-          <label htmlFor="dateOfBirth">Date of birth</label>
+          <label htmlFor="age">Age</label>
           <input
-            {...register("dateOfBirth", { required: true })}
-            type="date"
+            {...register("age", { required: true })}
+            type="number"
             className="form-input px-4 py-3 rounded grow"
           />
-          {errors.dateOfBirthe && (
-            <p className="text-red-500">Date of birth is required.</p>
-          )}
+          {errors.age && <p className="text-red-500">Age is required.</p>}
         </div>
 
         <input

@@ -1,14 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DEMO_SALARY = exports.DEMO_PAYMENT_FREQUENCY = exports.DEMO_END_DATE = exports.DEMO_START_DATE = exports.DEMO_EMPLOYER = exports.DEMO_DATE_OF_BIRTH = exports.DEMO_LASTNAME = exports.DEMO_FIRSTNAME = exports.DEMO_ID_NUMBER = exports.DEMO_PASSWORD = exports.DEMO_EMAIL = void 0;
+exports.DEMO_ANNUAL_SALARY = exports.DEMO_START_DATE = exports.DEMO_CURRENT_EMPLOYER = exports.DEMO_AGE = exports.DEMO_LASTNAME = exports.DEMO_FIRSTNAME = exports.DEMO_ID_NUMBER = exports.DEMO_PASSWORD = exports.DEMO_EMAIL = void 0;
 exports.DEMO_EMAIL = "gerry.raffy@gmail.com";
 exports.DEMO_PASSWORD = "zoogiraffe";
 exports.DEMO_ID_NUMBER = "G1234567";
 exports.DEMO_FIRSTNAME = "Gerry";
 exports.DEMO_LASTNAME = "Raffy";
-exports.DEMO_DATE_OF_BIRTH = "1998-6-21";
-exports.DEMO_EMPLOYER = "ZooPark";
+exports.DEMO_AGE = "28";
+exports.DEMO_CURRENT_EMPLOYER = "ZooPark";
 exports.DEMO_START_DATE = "2023-12-1";
-exports.DEMO_END_DATE = "2024-12-1";
-exports.DEMO_PAYMENT_FREQUENCY = "Biweekly";
-exports.DEMO_SALARY = "6000";
+exports.DEMO_ANNUAL_SALARY = "30000";

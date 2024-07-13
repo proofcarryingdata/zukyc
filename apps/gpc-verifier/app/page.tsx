@@ -29,12 +29,9 @@ export default function Verifier() {
       <ul className="list-inside list-disc">
         <p>You need to prove that</p>
         <li>You have a valid govenment-issued ID;</li>
+        <li>You are not in the sanctions list;</li>
         <li>You are at least 18 years old;</li>
-        <li>
-          You have at least one year of consistent employment with your current
-          employer;
-        </li>
-        <li>Your monthly income is at least $2000;</li>
+        <li>Your annual salary is at least $20,000;</li>
       </ul>
 
       <p>
@@ -57,7 +54,7 @@ export default function Verifier() {
             📋
           </button>
         </div>
-        <textarea rows={4} value={proofConfig.serializedConfig} readOnly />
+        <textarea rows={24} value={proofConfig.prettifiedConfig} readOnly />
       </div>
 
       <h3 className="font-bold">Step 2: verify your proof</h3>

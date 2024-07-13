@@ -6,11 +6,11 @@ const VerifyProof = () => {
   const [proofStr, setProofStr] = useState("");
   const [verified, setVerified] = useState(false);
 
-  const { config } = useProofConfig();
+  const { boundConfig, membershipLists } = useProofConfig();
 
   const verify = useCallback(() => {
-    verifyProof(config, proofStr, setVerified);
-  }, [config, proofStr, setVerified]);
+    verifyProof(boundConfig, membershipLists, proofStr, setVerified);
+  }, [boundConfig, proofStr, membershipLists, setVerified]);
 
   return (
     <>

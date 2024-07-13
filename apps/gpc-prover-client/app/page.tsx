@@ -70,12 +70,12 @@ export default function Prover() {
             </div>
 
             <div className="flex flex-col">
-              <p>Circuit Identifier:</p>
+              <p>Config:</p>
               <textarea
                 className="border-none"
                 readOnly
-                rows={1}
-                value={proofResult?.circuitIdentifier}
+                rows={4}
+                value={proofResult?.config}
               />
               <p>Proof:</p>
               <textarea

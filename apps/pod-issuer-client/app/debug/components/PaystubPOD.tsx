@@ -18,16 +18,14 @@ export default function PaystubPOD() {
   } = useForm();
 
   const issuePaystubPOD = useCallback((data: FieldValues) => {
-    // TODO: check endDate after startDate, dates in range
+    // TODO: check start dates in range
     issueDebugPaystubPOD(
       {
         firstName: data.firstName,
         lastName: data.lastName,
-        employer: data.employer,
+        currentEmployer: data.currentEmployer,
         startDate: data.startDate,
-        endDate: data.endDate,
-        paymentFrequency: data.paymentFrequency,
-        salary: data.salary.toString(),
+        annualSalary: parseInt(data.annualSalary),
         semaphoreCommitment: data.semaphoreCommitment
       },
       setResponse
@@ -62,13 +60,13 @@ export default function PaystubPOD() {
         )}
 
         <input
-          {...register("employer", { required: true })}
+          {...register("currentEmployer", { required: true })}
           type="text"
           className="form-input px-4 py-3 rounded"
-          placeholder="Employer"
+          placeholder="Current employer"
         />
-        {errors.employer && (
-          <p className="text-red-500">Employer is required.</p>
+        {errors.currentEmployer && (
+          <p className="text-red-500">Current employer is required.</p>
         )}
 
         <div className="form-group flex gap-20 items-center">
@@ -83,51 +81,28 @@ export default function PaystubPOD() {
           )}
         </div>
 
-        <div className="form-group flex gap-3 items-center">
-          <label htmlFor="endDate">End date (optional)</label>
-          <input
-            {...register("endDate")}
-            type="date"
-            className="form-input px-4 py-3 rounded grow"
+        <div className="form-group flex gap-3 items-center justify-between">
+          <label htmlFor="annualSalary">Annual salary</label>
+          <Controller
+            name="annualSalary"
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { ref, onChange } }) => (
+              <NumericFormat
+                thousandSeparator=","
+                prefix="$ "
+                decimalScale={0}
+                getInputRef={ref}
+                onValueChange={(values) => {
+                  onChange(values.floatValue);
+                }}
+              />
+            )}
           />
-          {errors.endDate && <p className="text-red-500">Invalid end date.</p>}
-        </div>
-
-        <select
-          {...register("paymentFrequency", { required: true })}
-          className="form-input px-4 py-3 rounded"
-          defaultValue=""
-        >
-          <option value="" disabled>
-            Select payment frequency
-          </option>
-          <option value="Monthly">Monthly</option>
-          <option value="Semimonthly">Semimonthly</option>
-          <option value="Biweekly">Biweekly</option>
-          <option value="Weekly">Weekly</option>
-        </select>
-        {errors.paymentFrequency && (
-          <p className="text-red-500">Payment frequency is required.</p>
-        )}
-
-        <Controller
-          name="salary"
-          control={control}
-          rules={{ required: true }}
-          render={({ field: { ref, onChange } }) => (
-            <NumericFormat
-              thousandSeparator=","
-              decimalSeparator="."
-              prefix="$ "
-              decimalScale={2}
-              getInputRef={ref}
-              onValueChange={(values) => {
-                onChange(values.floatValue);
-              }}
-            />
+          {errors.annualSalary && (
+            <p className="text-red-500">Annual salary is required.</p>
           )}
-        />
-        {errors.salary && <p className="text-red-500">Salary is required.</p>}
+        </div>
 
         <input
           {...register("semaphoreCommitment", {

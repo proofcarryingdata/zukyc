@@ -38,11 +38,9 @@ export async function issueDebugPaystubPOD(
 export interface IissueDebugPaystubPODArgs {
   firstName: string;
   lastName: string;
-  employer: string;
+  currentEmployer: string;
   startDate: string;
-  endDate: string | null;
-  paymentFrequency: string;
-  salary: string;
+  annualSalary: number;
   semaphoreCommitment: string;
 }
 
