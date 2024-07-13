@@ -3,9 +3,8 @@ import { POD, PODEntries } from "@pcd/pod";
 import {
   DEMO_FIRSTNAME,
   DEMO_LASTNAME,
-  DEMO_EMPLOYER,
+  DEMO_CURRENT_EMPLOYER,
   DEMO_START_DATE,
-  DEMO_END_DATE,
   DEMO_ANNUAL_SALARY
 } from "../util/constants";
 
@@ -30,9 +29,8 @@ deel.post("/issue", (req: Request, res: Response) => {
       {
         firstName: { type: "string", value: DEMO_FIRSTNAME },
         lastName: { type: "string", value: DEMO_LASTNAME },
-        employer: { type: "string", value: DEMO_EMPLOYER },
+        currentEmployer: { type: "string", value: DEMO_CURRENT_EMPLOYER },
         startDate: { type: "string", value: DEMO_START_DATE },
-        endDate: { type: "string", value: DEMO_END_DATE },
         annualSalary: { type: "int", value: BigInt(DEMO_ANNUAL_SALARY) },
         owner: {
           type: "cryptographic",

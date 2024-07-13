@@ -20,9 +20,8 @@ deel.post("/issue", (req, res) => {
         const pod = pod_1.POD.sign({
             firstName: { type: "string", value: constants_1.DEMO_FIRSTNAME },
             lastName: { type: "string", value: constants_1.DEMO_LASTNAME },
-            employer: { type: "string", value: constants_1.DEMO_EMPLOYER },
+            currentEmployer: { type: "string", value: constants_1.DEMO_CURRENT_EMPLOYER },
             startDate: { type: "string", value: constants_1.DEMO_START_DATE },
-            endDate: { type: "string", value: constants_1.DEMO_END_DATE },
             annualSalary: { type: "int", value: BigInt(constants_1.DEMO_ANNUAL_SALARY) },
             owner: {
                 type: "cryptographic",

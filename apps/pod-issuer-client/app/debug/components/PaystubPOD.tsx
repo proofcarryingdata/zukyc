@@ -18,14 +18,13 @@ export default function PaystubPOD() {
   } = useForm();
 
   const issuePaystubPOD = useCallback((data: FieldValues) => {
-    // TODO: check endDate after startDate, dates in range
+    // TODO: check start dates in range
     issueDebugPaystubPOD(
       {
         firstName: data.firstName,
         lastName: data.lastName,
-        employer: data.employer,
+        currentEmployer: data.currentEmployer,
         startDate: data.startDate,
-        endDate: data.endDate,
         annualSalary: parseInt(data.annualSalary),
         semaphoreCommitment: data.semaphoreCommitment
       },
@@ -61,13 +60,13 @@ export default function PaystubPOD() {
         )}
 
         <input
-          {...register("employer", { required: true })}
+          {...register("currentEmployer", { required: true })}
           type="text"
           className="form-input px-4 py-3 rounded"
-          placeholder="Employer"
+          placeholder="Current employer"
         />
-        {errors.employer && (
-          <p className="text-red-500">Employer is required.</p>
+        {errors.currentEmployer && (
+          <p className="text-red-500">Current employer is required.</p>
         )}
 
         <div className="form-group flex gap-20 items-center">
@@ -80,16 +79,6 @@ export default function PaystubPOD() {
           {errors.startDate && (
             <p className="text-red-500">Start date is required.</p>
           )}
-        </div>
-
-        <div className="form-group flex gap-3 items-center">
-          <label htmlFor="endDate">End date (optional)</label>
-          <input
-            {...register("endDate")}
-            type="date"
-            className="form-input px-4 py-3 rounded grow"
-          />
-          {errors.endDate && <p className="text-red-500">Invalid end date.</p>}
         </div>
 
         <div className="form-group flex gap-3 items-center justify-between">

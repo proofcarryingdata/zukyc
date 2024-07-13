@@ -71,8 +71,6 @@ export const verifyProof = async (
       );
     }
 
-    // TODO: more checking needs to be done here
-
     setVerified(isValid);
   } catch (e) {
     alert(e);

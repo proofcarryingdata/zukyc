@@ -8,7 +8,7 @@ debug.post("/id/issue", (req: Request, res: Response) => {
     idNumber: string;
     firstName: string;
     lastName: string;
-    dateOfBirth: string;
+    age: number;
     semaphoreCommitment: string;
   } = req.body;
 
@@ -16,7 +16,7 @@ debug.post("/id/issue", (req: Request, res: Response) => {
     !inputs.idNumber ||
     !inputs.firstName ||
     !inputs.lastName ||
-    !inputs.dateOfBirth ||
+    !inputs.age ||
     !inputs.semaphoreCommitment
   ) {
     res.status(400).send("Missing query parameter");
@@ -34,7 +34,7 @@ debug.post("/id/issue", (req: Request, res: Response) => {
         idNumber: { type: "string", value: inputs.idNumber },
         firstName: { type: "string", value: inputs.firstName },
         lastName: { type: "string", value: inputs.lastName },
-        dateOfBirth: { type: "string", value: inputs.dateOfBirth },
+        age: { type: "int", value: BigInt(inputs.age) },
         owner: {
           type: "cryptographic",
           value: BigInt(inputs.semaphoreCommitment)
@@ -54,9 +54,8 @@ debug.post("/paystub/issue", (req: Request, res: Response) => {
   const inputs: {
     firstName: string;
     lastName: string;
-    employer: string;
+    currentEmployer: string;
     startDate: string;
-    endDate: string | null;
     annualSalary: string;
     semaphoreCommitment: string;
   } = req.body;
@@ -64,7 +63,7 @@ debug.post("/paystub/issue", (req: Request, res: Response) => {
   if (
     !inputs.firstName ||
     !inputs.lastName ||
-    !inputs.employer ||
+    !inputs.currentEmployer ||
     !inputs.startDate ||
     !inputs.annualSalary ||
     !inputs.semaphoreCommitment
@@ -73,7 +72,7 @@ debug.post("/paystub/issue", (req: Request, res: Response) => {
     return;
   }
 
-  // TODO: check endDate after startDate, check in range
+  // TODO: check startDate in range
   // TODO: check annual salary is valid
   // TODO: check semaphoreCommitment correct
 
@@ -83,9 +82,8 @@ debug.post("/paystub/issue", (req: Request, res: Response) => {
       {
         firstName: { type: "string", value: inputs.firstName },
         lastName: { type: "string", value: inputs.lastName },
-        employer: { type: "string", value: inputs.employer },
+        currentEmployer: { type: "string", value: inputs.currentEmployer },
         startDate: { type: "string", value: inputs.startDate },
-        // endDate: { type: "string", value: inputs.endDate! },
         annualSalary: { type: "int", value: BigInt(inputs.annualSalary) },
         owner: {
           type: "cryptographic",

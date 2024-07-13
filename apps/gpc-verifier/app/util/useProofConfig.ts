@@ -23,8 +23,10 @@ const useProofConfig = () => {
             firstName: { isRevealed: true },
             // Prove the presence of an entry called "lastName", hide its value.
             lastName: { isRevealed: false },
-            // Prove the presence of an entry called "dateOfBirth", hide its value.
-            dateOfBirth: { isRevealed: false },
+            // Prove the presence of an entry called "age", hide its value.
+            // and prove that it is in the range of { min: 18, max: POD_INT_MAX }
+            // TODO: inRange
+            age: { isRevealed: false },
             // Prove the presence of an entry called "owner", hide its value, and prove
             // that I own the corresponding Semaphore identity secrets.
             owner: { isRevealed: false, isOwnerID: true }
@@ -37,8 +39,16 @@ const useProofConfig = () => {
             // Prove the presence of an entry called "lastName", hide its value, and
             // prove that it equals to the firstName in the govID POD.
             lastName: { isRevealed: false, equalsEntry: "govID.lastName" },
-            // Prove the presence of an entry called "employer", hide its value.
-            employer: { isRevealed: false },
+            // There's an entry "currentEmployer" in the paystub POD, because it is
+            // not specified here, it will be ignored, meaning the proof says nothiing
+            // about the entry, and the entry won't be in the revealed claims.
+            // currentEmployer: {}
+            // Prove the presence of an entry called "startDate", reveal its value.
+            startDate: { isRevealed: true },
+            // Prove the presence of an entry called "annualSalary", hide its value,
+            // and prove that it is in the range of { min: 20000, max: POD_INT_MAX }
+            // TODO: inRange
+            annualSalary: { isRevealed: false },
             // Prove the presence of an entry called "owner", hide its value, and prove
             // that I own the corresponding Semaphore identity secrets.
             owner: { isRevealed: false, isOwnerID: true }
@@ -67,10 +77,21 @@ const useProofConfig = () => {
       membershipLists
     });
 
+    // For display
+    const prettifiedConfig = JSON.stringify(
+      {
+        proofConfig,
+        membershipLists
+      },
+      null,
+      2
+    );
+
     return {
       boundConfig,
       membershipLists,
-      serializedConfig
+      serializedConfig,
+      prettifiedConfig
     };
   }, []);
 };
