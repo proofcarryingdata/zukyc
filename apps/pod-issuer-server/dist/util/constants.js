@@ -8,5 +8,5 @@ exports.DEMO_FIRSTNAME = "Gerry";
 exports.DEMO_LASTNAME = "Raffy";
 exports.DEMO_AGE = "28";
 exports.DEMO_CURRENT_EMPLOYER = "ZooPark";
-exports.DEMO_START_DATE = "2023-12-1";
+exports.DEMO_START_DATE = "2019-4-1";
 exports.DEMO_ANNUAL_SALARY = "30000";

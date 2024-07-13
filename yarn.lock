@@ -1063,6 +1063,20 @@
   resolved "https://registry.yarnpkg.com/@ungap/structured-clone/-/structured-clone-1.2.0.tgz#756641adb587851b5ccb3e095daf27ae581c8406"
   integrity sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==
 
+"@upstash/redis@^1.31.3":
+  version "1.32.0"
+  resolved "https://registry.yarnpkg.com/@upstash/redis/-/redis-1.32.0.tgz#26a2a072e159444fdf2f405063093a532dc98e05"
+  integrity sha512-KBzCjOgF9mhNcV4HTz7U8g7QTdLVEKi1sSe/97u0E+HkzdPmDt3j9lIPIHEUJz6RrdVH6s4HW4JcPvMLC7w3ew==
+  dependencies:
+    crypto-js "^4.2.0"
+
+"@vercel/kv@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@vercel/kv/-/kv-2.0.0.tgz#a0baa12563946cb35cee23d638b68f0fbbf76172"
+  integrity sha512-zdVrhbzZBYo5d1Hfn4bKtqCeKf0FuzW8rSHauzQVMUgv1+1JOwof2mWcBuI+YMJy8s0G0oqAUfQ7HgUDzb8EbA==
+  dependencies:
+    "@upstash/redis" "^1.31.3"
+
 "@vercel/style-guide@^5.2.0":
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/@vercel/style-guide/-/style-guide-5.2.0.tgz#8e09fb48065bc6133add67ff2bc7a219d228fb46"
@@ -1804,6 +1818,11 @@ cross-spawn@^7.0.0, cross-spawn@^7.0.2, cross-spawn@^7.0.3:
     path-key "^3.1.0"
     shebang-command "^2.0.0"
     which "^2.0.1"
+
+crypto-js@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-4.2.0.tgz#4d931639ecdfd12ff80e8186dba6af2c2e856631"
+  integrity sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==
 
 cssesc@^3.0.0:
   version "3.0.0"

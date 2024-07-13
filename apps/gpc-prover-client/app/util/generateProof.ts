@@ -16,7 +16,6 @@ export type ProofResult = {
   claims: string;
 };
 
-// TODO: use Paystub pod
 export const generateProof = async (
   identity: Identity,
   serializedIDPOD: string,
@@ -25,37 +24,52 @@ export const generateProof = async (
   setProofResult: Dispatch<ProofResult>
 ) => {
   try {
+    if (!identity) {
+      throw new Error("Identity field cannot be empty!");
+    }
+
     if (!serializedIDPOD) {
       throw new Error("ID POD field cannot be empty!");
+    }
+
+    if (!serializedPaystubPOD) {
+      throw new Error("Paystub POD field cannot be empty!");
+    }
+
+    if (!serializedConfig) {
+      throw new Error("Proof configuration field cannot be empty!");
     }
 
     const idPOD = POD.deserialize(serializedIDPOD);
     const paytsubPOD = POD.deserialize(serializedPaystubPOD);
 
     const config = JSON.parse(serializedConfig);
+    // https://docs.pcd.team/functions/_pcd_gpc.deserializeGPCProofConfig.html
     const proofConfig = deserializeGPCProofConfig(config.proofConfig);
     const membershipLists = config.membershipLists;
 
-    // To generate a proof I need to pair a config with a set of inputs, including
-    // the POD(s) to prove about.  Inputs can also enable extra security features
-    // of the proof.
+    // https://docs.pcd.team/types/_pcd_gpc.GPCProofInputs.html
+    // To generate a proof we need to pair the config with a set of inputs, including
+    // the PODs to prove about. Inputs can also enable extra security features of the proof.
     const proofInputs: GPCProofInputs = {
       pods: {
-        // The name "govID" here matches this POD with the config above.
+        // The name "govID" here matches this POD with the config.
         govID: idPOD,
+        // The name "paystub" here matches this POD with the config.
         paystub: paytsubPOD
       },
       owner: {
-        // Here I provide my private identity info. It's never revealed in the
+        // The user's private identity info. It's never revealed in the
         // proof, but used to prove the correctness of the `owner` entry as
         // specified in the config.
-        // Note: we have to use "@semaphore-protocol/identity": "^3.15.2",
-        // the most recent version changed the semphoreIdentity definition.
+        // Note: we have to use semaphoreV3, e.g. "@semaphore-protocol/identity": "^3.15.2",
+        // the most recent version V4 changed the semphoreIdentity definition.
         semaphoreV3: identity,
-        // I can optionally ask to generate a nullifier, which is tied to my
-        // identity and to the external nullifier value here.  This can be used
-        // to avoid exploits like double-voting.
-        externalNullifier: { type: "string", value: "attack round 3" }
+        // We can optionally ask to generate a nullifier, which is tied to the user's
+        // identity and to the external nullifier value here. This can be used
+        // to identify duplicate proofs without de-anonymizing.
+        // Here, We don't want the same user to get more than one loan.
+        externalNullifier: { type: "string", value: "ZooLender loan" }
       },
       membershipLists,
       // Watermark gets carried in the proof and can be used to ensure the same

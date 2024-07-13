@@ -8,6 +8,7 @@ import {
   deserializeGPCRevealedClaims,
   PODMembershipLists
 } from "@pcd/gpc";
+import { tryRecordNullifierHash } from "@/util/persistence";
 
 export const verifyProof = async (
   boundConfig: GPCBoundConfig,
@@ -48,6 +49,10 @@ export const verifyProof = async (
       throw new Error("Your proof is not valid. Please try again.");
     }
 
+    // Note that `gpcVerify` only checks that the inputs are valid with
+    // respect to each other.  We still need to check that everything is as
+    // we expect.
+
     // Check the PODs are signed by a trusted authorities with known public keys.
     if (
       vClaims.pods.govID?.signerPublicKey !==
@@ -61,6 +66,22 @@ export const verifyProof = async (
     ) {
       throw new Error("Please make sure your ID POD is signed by ZooDeel");
     }
+
+    // Checks the nullifer, make sure the proof hasn't been used before
+    if (vClaims.owner?.externalNullifier.value !== "ZooLender loan") {
+      throw new Error(
+        "Invalid external nullifier value, make sure it is ZooLender loan"
+      );
+    }
+    const nullifierHash = BigInt(vClaims.owner?.nullifierHash).toString();
+    console.log(nullifierHash);
+    if (!(await tryRecordNullifierHash(nullifierHash))) {
+      throw new Error(
+        "This proof has already been used before. You cannot get more than one loan."
+      );
+    }
+
+    // watermark
 
     // Do more checks with the revealed claims
     if (
