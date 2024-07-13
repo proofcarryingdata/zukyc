@@ -31,6 +31,10 @@ export default function Verifier() {
         <li>You have a valid govenment-issued ID;</li>
         <li>You are not in the sanctions list;</li>
         <li>You are at least 18 years old;</li>
+        <li>
+          You have at least one year of consistent employment with your current
+          employer;
+        </li>
         <li>Your annual salary is at least $20,000;</li>
       </ul>
 
@@ -42,19 +46,38 @@ export default function Verifier() {
         to generate a proof.
       </p>
 
+      {/* 
+        Here, we ask the user to copy paste the serialized proofConfig and membershipLists
+        to the prover, and after the prover generates the proof, copy paste the proof back
+        to this verifier.
+        In practice, the prover could be inside a wallet or ZuPass. An UI improvement would
+        be to request the prover to generate a proof by sending the proofConfig and membershipLists
+        directly, and then the prover send back the generated proof. So we can elimiate the copy
+        paste.
+      */}
       <div className="flex flex-col">
         <div className="flex items-center">
           <p>And here is the corresponding proof configuration:</p>
           <button
             className="p-2 m-1 text-sm bg-transparent border-none hover:bg-gray-100"
             onClick={() => {
-              navigator.clipboard.writeText(proofConfig.serializedConfig);
+              navigator.clipboard.writeText(
+                JSON.stringify({
+                  proofConfig: proofConfig.serializedConfig,
+                  membershipLists: proofConfig.membershipLists
+                })
+              );
             }}
           >
             📋
           </button>
         </div>
         <textarea rows={24} value={proofConfig.prettifiedConfig} readOnly />
+        <textarea
+          rows={10}
+          value={JSON.stringify(proofConfig.membershipLists, null, 2)}
+          readOnly
+        />
       </div>
 
       <h3 className="font-bold">Step 2: verify your proof</h3>

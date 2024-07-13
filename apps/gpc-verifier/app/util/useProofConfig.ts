@@ -25,7 +25,7 @@ const useProofConfig = () => {
             lastName: { isRevealed: false },
             // Prove the presence of an entry called "age", hide its value.
             // and prove that it is in the range of { min: 18, max: POD_INT_MAX }
-            // TODO: inRange
+            // TODO: inRange: { min: 18, max: POD_INT_MAX }
             age: { isRevealed: false },
             // Prove the presence of an entry called "owner", hide its value, and prove
             // that I own the corresponding Semaphore identity secrets.
@@ -47,7 +47,7 @@ const useProofConfig = () => {
             startDate: { isRevealed: true },
             // Prove the presence of an entry called "annualSalary", hide its value,
             // and prove that it is in the range of { min: 20000, max: POD_INT_MAX }
-            // TODO: inRange
+            // TODO: inRange: { min: 20000, max: POD_INT_MAX }
             annualSalary: { isRevealed: false },
             // Prove the presence of an entry called "owner", hide its value, and prove
             // that I own the corresponding Semaphore identity secrets.
@@ -61,6 +61,12 @@ const useProofConfig = () => {
     // Checks, binds, and canonicalizes a GPCProofConfig so it can be reused for multiple proofs.
     const { boundConfig } = gpcBindConfig(proofConfig);
 
+    // https://docs.pcd.team/functions/_pcd_gpc.serializeGPCProofConfig.html
+    // serializes GPCProofConfig to a string in a full-fidelity format, so we can send this
+    // to the prover.
+    const serializedConfig = serializeGPCProofConfig(proofConfig);
+    const prettifiedConfig = serializeGPCProofConfig(proofConfig, 2);
+
     // https://docs.pcd.team/types/_pcd_gpc.PODMembershipLists.html
     // There's an isNotMemberOf check for govID POD entry idNumber in the proofConfig.
     // This lists has to be both in the proof inputs and the revealed claims.
@@ -72,26 +78,11 @@ const useProofConfig = () => {
       ]
     };
 
-    const serializedConfig = JSON.stringify({
-      proofConfig: serializeGPCProofConfig(proofConfig),
-      membershipLists
-    });
-
-    // For display
-    const prettifiedConfig = JSON.stringify(
-      {
-        proofConfig,
-        membershipLists
-      },
-      null,
-      2
-    );
-
     return {
       boundConfig,
-      membershipLists,
       serializedConfig,
-      prettifiedConfig
+      prettifiedConfig,
+      membershipLists
     };
   }, []);
 };

@@ -62,12 +62,23 @@ export const verifyProof = async (
       throw new Error("Please make sure your ID POD is signed by ZooDeel");
     }
 
+    // Do more checks with the revealed claims
     if (
       vClaims.pods.govID?.entries?.firstName?.value !==
       vClaims.pods.paystub?.entries?.firstName?.value
     ) {
       throw new Error(
         "The firstName in ID POD doesn't match the firstName in Paystub POD"
+      );
+    }
+
+    const oneYearAfter = new Date(
+      vClaims.pods.paystub?.entries?.startDate?.value as string
+    );
+    oneYearAfter.setFullYear(oneYearAfter.getFullYear() + 1);
+    if (oneYearAfter > new Date()) {
+      throw new Error(
+        "You haven't been with your current employer for at least a year"
       );
     }
 
