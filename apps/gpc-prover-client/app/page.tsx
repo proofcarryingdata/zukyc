@@ -11,7 +11,7 @@ export default function Prover() {
   const [configStr, setConfigStr] = useState("");
   const [proofResult, setProofResult] = useState<ProofResult>();
 
-  const { identity } = useIdentity();
+  const identity = useIdentity();
   const { idPODStr, paystubPODStr } = usePODs();
 
   const generate = useCallback(() => {
@@ -33,8 +33,10 @@ export default function Prover() {
     <main className="p-10 m-0 flex flex-col gap-6">
       <h1 className="text-xl font-bold">ZooKyc</h1>
       <div className="flex flex-col">
-        <span>GPC prover, paste in PODS, generate proof</span>
-        <span>TODO: more description, link to code...</span>
+        <span>
+          ZooKyc manages your identity, PODs (e.g. ID POD and paystub POD), and
+          generate proofs upon requests.
+        </span>
       </div>
 
       <SemaphoreID />
@@ -43,11 +45,14 @@ export default function Prover() {
       <div className="flex flex-col gap-4 p-4 border rounded border-slate-400">
         <h2 className="text-lg font-bold">Generate proof</h2>
         <div className="flex flex-col gap-2">
-          <span>Proof configuration</span>
+          <span>
+            Proof request (including proof config, and optionally membership
+            lists, external nullifier and watermark)
+          </span>
           <textarea
-            rows={4}
+            rows={10}
             value={configStr}
-            placeholder="Past your proof configuration here!"
+            placeholder="Past your proof request here!"
             onChange={(e) => setConfigStr(e.target.value.trim())}
           />
         </div>

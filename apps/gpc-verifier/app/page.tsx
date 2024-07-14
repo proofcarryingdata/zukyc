@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import useProofConfig from "@/util/useProofConfig";
+import { useSerializedProofRequest } from "@/util/useProofRequest";
 import VerifyProof from "@/components/VerifyProof";
 
 export default function Verifier() {
@@ -18,7 +18,7 @@ export default function Verifier() {
     return true;
   }, []);
 
-  const proofConfig = useProofConfig();
+  const proofRequest = useSerializedProofRequest();
 
   return (
     <main className="p-6 m-0 mb-16 flex flex-col gap-4">
@@ -38,14 +38,6 @@ export default function Verifier() {
         <li>Your annual salary is at least $20,000;</li>
       </ul>
 
-      <p>
-        You can use{" "}
-        <a className="text-blue-500" href="#" onClick={onOpenPopup}>
-          ZooKyc
-        </a>{" "}
-        to generate a proof.
-      </p>
-
       {/* 
         Here, we ask the user to copy paste the serialized proofConfig and membershipLists
         to the prover, and after the prover generates the proof, copy paste the proof back
@@ -56,28 +48,25 @@ export default function Verifier() {
         paste.
       */}
       <div className="flex flex-col">
+        <p>And below is the corresponding proof request.</p>
         <div className="flex items-center">
-          <p>And here is the corresponding proof configuration:</p>
+          <p>
+            You can copy and paste it to{" "}
+            <a className="text-blue-500" href="#" onClick={onOpenPopup}>
+              ZooKyc
+            </a>{" "}
+            to generate a proof.
+          </p>
           <button
             className="p-2 m-1 text-sm bg-transparent border-none hover:bg-gray-100"
             onClick={() => {
-              navigator.clipboard.writeText(
-                JSON.stringify({
-                  proofConfig: proofConfig.serializedConfig,
-                  membershipLists: proofConfig.membershipLists
-                })
-              );
+              navigator.clipboard.writeText(proofRequest.serialized);
             }}
           >
             📋
           </button>
         </div>
-        <textarea rows={24} value={proofConfig.prettifiedConfig} readOnly />
-        <textarea
-          rows={10}
-          value={JSON.stringify(proofConfig.membershipLists, null, 2)}
-          readOnly
-        />
+        <textarea rows={24} value={proofRequest.prettified} readOnly />
       </div>
 
       <h3 className="font-bold">Step 2: verify your proof</h3>

@@ -2,7 +2,7 @@ import { Tooltip } from "react-tooltip";
 import useIdentity from "@/hooks/useIdentity";
 
 const SemaphoreID = () => {
-  const { identity, newIdentity } = useIdentity();
+  const identity = useIdentity();
 
   return (
     <div className="flex flex-col gap-2 p-4 border rounded border-slate-400">
@@ -63,10 +63,6 @@ const SemaphoreID = () => {
           rows={1}
           value={identity?.toString()}
         />
-      </div>
-
-      <div>
-        <button onClick={newIdentity}>Generate New Identity</button>
       </div>
     </div>
   );

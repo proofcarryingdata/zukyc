@@ -13,6 +13,8 @@ import { tryRecordNullifierHash } from "@/util/persistence";
 export const verifyProof = async (
   boundConfig: GPCBoundConfig,
   membershipLists: PODMembershipLists,
+  externalNullifier: string,
+  watermark: string,
   proofStr: string,
   setVerified: Dispatch<boolean>
 ) => {
@@ -67,32 +69,26 @@ export const verifyProof = async (
       throw new Error("Please make sure your ID POD is signed by ZooDeel");
     }
 
-    // Checks the nullifer, make sure the proof hasn't been used before
-    if (vClaims.owner?.externalNullifier.value !== "ZooLender loan") {
+    // Checks the nullifer, we don't want the same user to get more than one loan.
+    if (vClaims.owner?.externalNullifier.value !== externalNullifier) {
       throw new Error(
-        "Invalid external nullifier value, make sure it is ZooLender loan"
+        `Invalid external nullifier value, make sure it is ${externalNullifier}`
       );
     }
     const nullifierHash = BigInt(vClaims.owner?.nullifierHash).toString();
     console.log(nullifierHash);
     if (!(await tryRecordNullifierHash(nullifierHash))) {
       throw new Error(
-        "This proof has already been used before. You cannot get more than one loan."
+        "We've got a proof from you before. You cannot get more than one loan."
       );
     }
 
-    // watermark
+    // Checks the watermark, it should be what we passed in
+    if (vClaims.watermark?.value !== watermark) {
+      throw new Error("Watermark does not match");
+    }
 
     // Do more checks with the revealed claims
-    if (
-      vClaims.pods.govID?.entries?.firstName?.value !==
-      vClaims.pods.paystub?.entries?.firstName?.value
-    ) {
-      throw new Error(
-        "The firstName in ID POD doesn't match the firstName in Paystub POD"
-      );
-    }
-
     const oneYearAfter = new Date(
       vClaims.pods.paystub?.entries?.startDate?.value as string
     );
