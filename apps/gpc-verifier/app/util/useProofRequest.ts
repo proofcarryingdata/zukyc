@@ -106,7 +106,7 @@ export const useProofRequest = () => {
       externalNullifier,
       watermark
     };
-  }, []);
+  }, [boundConfig, externalNullifier, watermark]);
 };
 
 export const useSerializedProofRequest = () => {
@@ -138,5 +138,5 @@ export const useSerializedProofRequest = () => {
       serialized,
       prettified
     };
-  }, []);
+  }, [externalNullifier, watermark]);
 };

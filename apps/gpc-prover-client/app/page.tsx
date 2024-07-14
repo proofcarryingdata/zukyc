@@ -3,12 +3,12 @@
 import { useCallback, useState } from "react";
 import { generateProof, ProofResult } from "@/util/generateProof";
 import useIdentity from "@/hooks/useIdentity";
-import usePODs from "@/hooks/usePODs";
 import SemaphoreID from "@/components/SemaphoreID";
 import PODs from "@/components/PODs";
+import usePODs from "@/hooks/usePODs";
 
 export default function Prover() {
-  const [configStr, setConfigStr] = useState("");
+  const [requestStr, setRequestStr] = useState("");
   const [proofResult, setProofResult] = useState<ProofResult>();
 
   const identity = useIdentity();
@@ -19,15 +19,15 @@ export default function Prover() {
       alert("Identity cannot be empty!");
       return;
     }
-    generateProof(identity, idPODStr, paystubPODStr, configStr, setProofResult);
-  }, [
-    identity,
-    idPODStr,
-    paystubPODStr,
-    configStr,
-    setProofResult,
-    generateProof
-  ]);
+    console.log(idPODStr);
+    generateProof(
+      identity,
+      idPODStr,
+      paystubPODStr,
+      requestStr,
+      setProofResult
+    );
+  }, [identity, idPODStr, paystubPODStr, requestStr]);
 
   return (
     <main className="p-10 m-0 flex flex-col gap-6">
@@ -51,9 +51,9 @@ export default function Prover() {
           </span>
           <textarea
             rows={10}
-            value={configStr}
+            value={requestStr}
             placeholder="Past your proof request here!"
-            onChange={(e) => setConfigStr(e.target.value.trim())}
+            onChange={(e) => setRequestStr(e.target.value.trim())}
           />
         </div>
         <div>

@@ -14,7 +14,7 @@ const useIdentity = () => {
       setIdentity(id);
       localStorage.setItem("semaphoreID", id.toString());
     }
-  }, [setIdentity]);
+  }, []);
 
   return identity;
 };

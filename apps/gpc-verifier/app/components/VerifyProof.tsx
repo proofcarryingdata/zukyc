@@ -18,7 +18,7 @@ const VerifyProof = () => {
       proofStr,
       setVerified
     );
-  }, [proofStr, setVerified]);
+  }, [boundConfig, membershipLists, externalNullifier, watermark, proofStr]);
 
   return (
     <>

@@ -1,14 +1,7 @@
 import usePODs from "@/hooks/usePODs";
 
 const PODs = () => {
-  const {
-    idPODStr,
-    setIDPODStr,
-    saveIDPOD,
-    paystubPODStr,
-    setPaystubPODStr,
-    savePaystubPOD
-  } = usePODs();
+  const { idPODStr, setIdPODStr, paystubPODStr, setPaystubPODStr } = usePODs();
 
   return (
     <div className="flex flex-col gap-4 p-4 border rounded border-slate-400">
@@ -31,11 +24,8 @@ const PODs = () => {
           rows={10}
           value={idPODStr}
           placeholder="Past your ID POD here!"
-          onChange={(e) => setIDPODStr(e.target.value.trim())}
+          onChange={(e) => setIdPODStr(e.target.value.trim())}
         />
-        <div>
-          <button onClick={saveIDPOD}>Save ID POD</button>
-        </div>
       </div>
 
       <div className="flex flex-col gap-2">
@@ -55,9 +45,6 @@ const PODs = () => {
           placeholder="Past your Paystub POD here!"
           onChange={(e) => setPaystubPODStr(e.target.value.trim())}
         />
-        <div>
-          <button onClick={savePaystubPOD}>Save Paystub POD</button>
-        </div>
       </div>
     </div>
   );
