@@ -1,13 +1,12 @@
-import Chance from "chance";
 import express, { Request, Response } from "express";
 import { expressjwt, Request as JWTRequest } from "express-jwt";
 import jwt from "jsonwebtoken";
 import { POD, PODEntries } from "@pcd/pod";
 import {
-  getUserByEmail,
+  getDeelUserByEmail,
   getPaystubPODByEmail,
   savePaystubPOD
-} from "../util/persistence";
+} from "../stores/deel";
 
 const deel = express.Router();
 
@@ -69,20 +68,11 @@ deel.post(
       return;
     }
 
-    const user = getUserByEmail(email);
+    const user = getDeelUserByEmail(email);
     if (user === null) {
       res.status(404).send("User not found");
       return;
     }
-
-    // radomly generate these fields
-    // In paractice, we can look them up in the database
-    const chance = new Chance();
-    const startDate = chance.birthday({
-      string: true,
-      type: "child"
-    }) as string;
-    const annualSalary = chance.integer({ min: 20000, max: 1000000 });
 
     try {
       // For more info, see https://github.com/proofcarryingdata/zupass/blob/main/examples/pod-gpc-example/src/podExample.ts
@@ -91,8 +81,8 @@ deel.post(
           firstName: { type: "string", value: user.firstName },
           lastName: { type: "string", value: user.lastName },
           currentEmployer: { type: "string", value: "ZooPark" },
-          startDate: { type: "string", value: startDate },
-          annualSalary: { type: "int", value: BigInt(annualSalary) },
+          startDate: { type: "string", value: user.startDate },
+          annualSalary: { type: "int", value: BigInt(user.annualSalary) },
           owner: {
             type: "cryptographic",
             value: BigInt(inputs.semaphoreCommitment)

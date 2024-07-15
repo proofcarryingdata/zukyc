@@ -1,3 +1,5 @@
+import Chance from "chance";
+import _ from "lodash";
 import { createClient } from "@vercel/kv";
 
 const podIssuerKV = createClient({
@@ -6,33 +8,43 @@ const podIssuerKV = createClient({
   automaticDeserialization: false
 });
 
-export type User = {
+const chance = new Chance();
+
+export type DeelUser = {
   email: string;
   // hashedpassword: string;
   firstName: string;
   lastName: string;
+  startDate: string;
+  annualSalary: number;
 };
 
-export function getUserByEmail(email: string): User | null {
+export function getDeelUserByEmail(email: string): DeelUser | null {
+  // randomly generate DeelUser fields
   // In practice, look up the user in the database
   const names = email.replace(/@zoo.com$/, "").split(".");
-  if (names.length != 2) {
+  if (names.length < 1) {
     return null;
   }
+
+  if (names.length === 1) {
+    const lastName = chance.last();
+    names.push(lastName);
+  }
+
+  const startDate = chance.birthday({
+    string: true,
+    type: "child"
+  }) as string;
+  const annualSalary = chance.integer({ min: 20000, max: 1000000 });
+
   return {
     email,
-    firstName: names[0],
-    lastName: names[1]
+    firstName: _.upperFirst(names[0]),
+    lastName: _.upperFirst(names[1]),
+    startDate,
+    annualSalary
   };
-}
-
-export async function getIDPODByEmail(email: string): Promise<string | null> {
-  const key = `id-${email}`;
-  return await podIssuerKV.get<string>(key);
-}
-
-export async function saveIDPOD(email: string, serializedPOD: string) {
-  await podIssuerKV.set(`id-${email}`, serializedPOD);
 }
 
 export async function getPaystubPODByEmail(

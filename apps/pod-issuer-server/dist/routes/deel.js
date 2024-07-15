@@ -3,12 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const chance_1 = __importDefault(require("chance"));
 const express_1 = __importDefault(require("express"));
 const express_jwt_1 = require("express-jwt");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const pod_1 = require("@pcd/pod");
-const persistence_1 = require("../util/persistence");
+const deel_1 = require("../stores/deel");
 const deel = express_1.default.Router();
 deel.post("/login", (req, res) => {
     const inputs = req.body;
@@ -46,39 +45,31 @@ deel.post("/issue", (0, express_jwt_1.expressjwt)({
         return;
     }
     // We already issued ID POD for this user, return the POD
-    const pod = await (0, persistence_1.getPaystubPODByEmail)(email);
+    const pod = await (0, deel_1.getPaystubPODByEmail)(email);
     if (pod !== null) {
         res.status(200).json({ pod });
         return;
     }
-    const user = (0, persistence_1.getUserByEmail)(email);
+    const user = (0, deel_1.getDeelUserByEmail)(email);
     if (user === null) {
         res.status(404).send("User not found");
         return;
     }
-    // radomly generate these fields
-    // In paractice, we can look them up in the database
-    const chance = new chance_1.default();
-    const startDate = chance.birthday({
-        string: true,
-        type: "child"
-    });
-    const annualSalary = chance.integer({ min: 20000, max: 1000000 });
     try {
         // For more info, see https://github.com/proofcarryingdata/zupass/blob/main/examples/pod-gpc-example/src/podExample.ts
         const pod = pod_1.POD.sign({
             firstName: { type: "string", value: user.firstName },
             lastName: { type: "string", value: user.lastName },
             currentEmployer: { type: "string", value: "ZooPark" },
-            startDate: { type: "string", value: startDate },
-            annualSalary: { type: "int", value: BigInt(annualSalary) },
+            startDate: { type: "string", value: user.startDate },
+            annualSalary: { type: "int", value: BigInt(user.annualSalary) },
             owner: {
                 type: "cryptographic",
                 value: BigInt(inputs.semaphoreCommitment)
             }
         }, process.env.DEEL_EDDSA_PRIVATE_KEY);
         const serializedPOD = pod.serialize();
-        await (0, persistence_1.savePaystubPOD)(email, serializedPOD);
+        await (0, deel_1.savePaystubPOD)(email, serializedPOD);
         res.status(200).json({ pod: serializedPOD });
     }
     catch (e) {

@@ -3,12 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const chance_1 = __importDefault(require("chance"));
 const express_1 = __importDefault(require("express"));
 const express_jwt_1 = require("express-jwt");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const pod_1 = require("@pcd/pod");
-const persistence_1 = require("../util/persistence");
+const gov_1 = require("../stores/gov");
 const gov = express_1.default.Router();
 gov.post("/login", (req, res) => {
     const inputs = req.body;
@@ -46,35 +45,30 @@ gov.post("/issue", (0, express_jwt_1.expressjwt)({
         return;
     }
     // We already issued ID POD for this user, return the POD
-    const pod = await (0, persistence_1.getIDPODByEmail)(email);
+    const pod = await (0, gov_1.getIDPODByEmail)(email);
     if (pod !== null) {
         res.status(200).json({ pod });
         return;
     }
-    const user = (0, persistence_1.getUserByEmail)(email);
+    const user = (0, gov_1.getGovUserByEmail)(email);
     if (user === null) {
         res.status(404).send("User not found");
         return;
     }
-    // radomly generate these fields
-    // In paractice, we can look them up in the database
-    const chance = new chance_1.default();
-    const age = chance.age({ type: "adult" });
-    const idNumber = chance.string({ pool: "0123456789", length: 7 });
     try {
         // For more info, see https://github.com/proofcarryingdata/zupass/blob/main/examples/pod-gpc-example/src/podExample.ts
         const pod = pod_1.POD.sign({
-            idNumber: { type: "string", value: `G${idNumber}` },
+            idNumber: { type: "string", value: user.idNumber },
             firstName: { type: "string", value: user.firstName },
             lastName: { type: "string", value: user.lastName },
-            age: { type: "int", value: BigInt(age) },
+            age: { type: "int", value: BigInt(user.age) },
             owner: {
                 type: "cryptographic",
                 value: BigInt(inputs.semaphoreCommitment)
             }
         }, process.env.GOV_EDDSA_PRIVATE_KEY);
         const serializedPOD = pod.serialize();
-        await (0, persistence_1.saveIDPOD)(email, serializedPOD);
+        await (0, gov_1.saveIDPOD)(email, serializedPOD);
         res.status(200).json({ pod: serializedPOD });
     }
     catch (e) {

@@ -1,13 +1,8 @@
-import Chance from "chance";
 import express, { Request, Response } from "express";
 import { expressjwt, Request as JWTRequest } from "express-jwt";
 import jwt from "jsonwebtoken";
 import { POD, PODEntries } from "@pcd/pod";
-import {
-  getUserByEmail,
-  getIDPODByEmail,
-  saveIDPOD
-} from "../util/persistence";
+import { getGovUserByEmail, getIDPODByEmail, saveIDPOD } from "../stores/gov";
 
 const gov = express.Router();
 
@@ -69,26 +64,20 @@ gov.post(
       return;
     }
 
-    const user = getUserByEmail(email);
+    const user = getGovUserByEmail(email);
     if (user === null) {
       res.status(404).send("User not found");
       return;
     }
 
-    // radomly generate these fields
-    // In paractice, we can look them up in the database
-    const chance = new Chance();
-    const age = chance.age({ type: "adult" });
-    const idNumber = chance.string({ pool: "0123456789", length: 7 });
-
     try {
       // For more info, see https://github.com/proofcarryingdata/zupass/blob/main/examples/pod-gpc-example/src/podExample.ts
       const pod = POD.sign(
         {
-          idNumber: { type: "string", value: `G${idNumber}` },
+          idNumber: { type: "string", value: user.idNumber },
           firstName: { type: "string", value: user.firstName },
           lastName: { type: "string", value: user.lastName },
-          age: { type: "int", value: BigInt(age) },
+          age: { type: "int", value: BigInt(user.age) },
           owner: {
             type: "cryptographic",
             value: BigInt(inputs.semaphoreCommitment)
