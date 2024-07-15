@@ -19,7 +19,7 @@ export default function Prover() {
       alert("Identity cannot be empty!");
       return;
     }
-    console.log(idPODStr);
+
     generateProof(
       identity,
       idPODStr,

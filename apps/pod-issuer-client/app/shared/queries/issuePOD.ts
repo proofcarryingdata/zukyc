@@ -12,7 +12,7 @@ export const issuePOD = async (podType: string, args: IIssuePODArgs) => {
   );
 
   if (!response.ok) {
-    throw new Error(response.statusText);
+    throw new Error(await response.text());
   }
 
   const data = await response.json();
@@ -20,5 +20,5 @@ export const issuePOD = async (podType: string, args: IIssuePODArgs) => {
 };
 
 export interface IIssuePODArgs {
-  semaphoreCommitment: string;
+  semaphoreCommitment: bigint;
 }
