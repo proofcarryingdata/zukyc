@@ -28,29 +28,39 @@ const Login = ({ onLogin }: { onLogin: (_data: FieldValues) => void }) => {
         onSubmit={handleSubmit((data) => onLogin(data))}
         className="flex flex-col gap-2"
       >
-        <input
-          {...register("email", {
-            required: true,
-            pattern: {
-              value: /\S+@\S+\.\S+/,
-              message: "Entered value does not match email format"
-            }
-          })}
-          type="email"
-          className="form-input px-4 py-3 rounded"
-          placeholder="Email"
-        />
-        {errors.email && <p className="text-red-500">Email is required.</p>}
+        <div className="form-group flex gap-12 items-center">
+          <label htmlFor="email">Email:</label>
+          <input
+            {...register("email", {
+              required: "Email is required.",
+              pattern: {
+                value: /\S+@\S+\.\S+/,
+                message: "Entered value does not match email format."
+              }
+            })}
+            type="email"
+            defaultValue={loginCreds.email}
+            className="form-input px-4 py-3 rounded grow"
+            placeholder="Email"
+          />
+          {errors.email && (
+            <p className="text-red-500">{errors.email.message as string}</p>
+          )}
+        </div>
 
-        <input
-          {...register("password", { required: true })}
-          type="password"
-          className="form-input px-4 py-3 rounded"
-          placeholder="Password"
-        />
-        {errors.password && (
-          <p className="text-red-500">Password is required.</p>
-        )}
+        <div className="form-group flex gap-3.5 items-center">
+          <label htmlFor="password">Password:</label>
+          <input
+            {...register("password", { required: "Password is required." })}
+            type="password"
+            defaultValue={loginCreds.password}
+            className="form-input px-4 py-3 rounded grow"
+            placeholder="Password"
+          />
+          {errors.password && (
+            <p className="text-red-500">{errors.password.message as string}</p>
+          )}
+        </div>
 
         <input
           type="submit"

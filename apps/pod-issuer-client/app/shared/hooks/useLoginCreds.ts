@@ -6,7 +6,9 @@ import Chance from "chance";
 const useLoginCreds = () => {
   return useMemo(() => {
     const chance = new Chance();
-    const animal = chance.animal({ type: "zoo" }).toLowerCase();
+    let animal = chance.animal({ type: "zoo" }).replaceAll("'", "");
+    animal = animal.split(" ").join(".").toLowerCase();
+
     return {
       email: `${animal}@zoo.com`,
       password: `zoo${chance.string({ length: 6 })}`

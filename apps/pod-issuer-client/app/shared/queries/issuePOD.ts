@@ -1,4 +1,8 @@
-export const issuePOD = async (podType: string, args: IIssuePODArgs) => {
+export const issuePOD = async (
+  podType: string,
+  token: string,
+  args: IIssuePODArgs
+) => {
   if (!process.env.NEXT_PUBLIC_POD_ISSUER_SERVER_URL)
     throw new Error("NEXT_PUBLIC_POD_ISSUER_SERVER_URL not set");
 
@@ -6,7 +10,10 @@ export const issuePOD = async (podType: string, args: IIssuePODArgs) => {
     `${process.env.NEXT_PUBLIC_POD_ISSUER_SERVER_URL}/${podType}/issue`,
     {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
       body: JSON.stringify({ ...args })
     }
   );

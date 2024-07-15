@@ -1,11 +1,8 @@
 import { useLocalStorage } from "usehooks-ts";
 
 const usePODs = () => {
-  const idPODKey = "idPOD";
-  const paystubPODKey = "paystubPOD";
-
-  const [idPODStr, setIdPODStr] = useLocalStorage(idPODKey, "");
-  const [paystubPODStr, setPaystubPODStr] = useLocalStorage(paystubPODKey, "");
+  const [idPODStr, setIdPODStr] = useLocalStorage("idPOD", "");
+  const [paystubPODStr, setPaystubPODStr] = useLocalStorage("paystubPOD", "");
 
   return {
     idPODStr,
