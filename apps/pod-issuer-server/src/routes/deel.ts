@@ -1,14 +1,9 @@
+import Chance from "chance";
 import express, { Request, Response } from "express";
-import { expressjwt } from "express-jwt";
+import { expressjwt, Request as JWTRequest } from "express-jwt";
 import jwt from "jsonwebtoken";
 import { POD, PODEntries } from "@pcd/pod";
-import {
-  DEMO_FIRSTNAME,
-  DEMO_LASTNAME,
-  DEMO_CURRENT_EMPLOYER,
-  DEMO_START_DATE,
-  DEMO_ANNUAL_SALARY
-} from "../util/constants";
+import { getUserByEmail } from "../util/persistence";
 
 const deel = express.Router();
 
@@ -48,7 +43,12 @@ deel.post(
     secret: process.env.DEEL_EDDSA_PRIVATE_KEY!,
     algorithms: ["HS512"]
   }),
-  (req: Request, res: Response) => {
+  (req: JWTRequest, res: Response) => {
+    const email = req.auth?.email;
+    if (!email) {
+      res.status(401).send("Unauthorized");
+    }
+
     const inputs: {
       semaphoreCommitment: string;
     } = req.body;
@@ -58,17 +58,32 @@ deel.post(
       return;
     }
 
-    // In practice, look up the user information in the database
+    // TODO: look up email, if already exist, return
+
+    const user = getUserByEmail(email);
+    if (user === null) {
+      res.status(404).send("User not found");
+      return;
+    }
+
+    // radomly generate these fields
+    // In paractice, we can look them up in the database
+    const chance = new Chance();
+    const startDate = chance.birthday({
+      string: true,
+      type: "child"
+    }) as string;
+    const annualSalary = chance.integer({ min: 20000, max: 1000000 });
 
     try {
       // For more info, see https://github.com/proofcarryingdata/zupass/blob/main/examples/pod-gpc-example/src/podExample.ts
       const pod = POD.sign(
         {
-          firstName: { type: "string", value: DEMO_FIRSTNAME },
-          lastName: { type: "string", value: DEMO_LASTNAME },
-          currentEmployer: { type: "string", value: DEMO_CURRENT_EMPLOYER },
-          startDate: { type: "string", value: DEMO_START_DATE },
-          annualSalary: { type: "int", value: BigInt(DEMO_ANNUAL_SALARY) },
+          firstName: { type: "string", value: user.firstName },
+          lastName: { type: "string", value: user.lastName },
+          currentEmployer: { type: "string", value: "ZooPark" },
+          startDate: { type: "string", value: startDate },
+          annualSalary: { type: "int", value: BigInt(annualSalary) },
           owner: {
             type: "cryptographic",
             value: BigInt(inputs.semaphoreCommitment)

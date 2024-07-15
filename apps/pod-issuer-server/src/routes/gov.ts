@@ -1,7 +1,9 @@
+import Chance from "chance";
 import express, { Request, Response } from "express";
-import { expressjwt } from "express-jwt";
+import { expressjwt, Request as JWTRequest } from "express-jwt";
 import jwt from "jsonwebtoken";
 import { POD, PODEntries } from "@pcd/pod";
+import { getUserByEmail } from "../util/persistence";
 
 const gov = express.Router();
 
@@ -41,7 +43,12 @@ gov.post(
     secret: process.env.GOV_EDDSA_PRIVATE_KEY!,
     algorithms: ["HS512"]
   }),
-  (req: Request, res: Response) => {
+  (req: JWTRequest, res: Response) => {
+    const email = req.auth?.email;
+    if (!email) {
+      res.status(401).send("Unauthorized");
+    }
+
     const inputs: {
       semaphoreCommitment: string;
     } = req.body;
@@ -51,16 +58,28 @@ gov.post(
       return;
     }
 
-    // TODO: randomly generate first name, last name
+    // TODO: look up email, if already exist, return
+
+    const user = getUserByEmail(email);
+    if (user === null) {
+      res.status(404).send("User not found");
+      return;
+    }
+
+    // radomly generate these fields
+    // In paractice, we can look them up in the database
+    const chance = new Chance();
+    const age = chance.age({ type: "adult" });
+    const idNumber = chance.string({ pool: "0123456789", length: 7 });
 
     try {
       // For more info, see https://github.com/proofcarryingdata/zupass/blob/main/examples/pod-gpc-example/src/podExample.ts
       const pod = POD.sign(
         {
-          idNumber: { type: "string", value: "G1234567" },
-          firstName: { type: "string", value: "gerry" },
-          lastName: { type: "string", value: "raffy" },
-          age: { type: "int", value: BigInt(18) },
+          idNumber: { type: "string", value: `G${idNumber}` },
+          firstName: { type: "string", value: user.firstName },
+          lastName: { type: "string", value: user.lastName },
+          age: { type: "int", value: BigInt(age) },
           owner: {
             type: "cryptographic",
             value: BigInt(inputs.semaphoreCommitment)

@@ -3,10 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const chance_1 = __importDefault(require("chance"));
 const express_1 = __importDefault(require("express"));
 const express_jwt_1 = require("express-jwt");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const pod_1 = require("@pcd/pod");
+const persistence_1 = require("../util/persistence");
 const gov = express_1.default.Router();
 gov.post("/login", (req, res) => {
     const inputs = req.body;
@@ -34,19 +36,33 @@ gov.post("/issue", (0, express_jwt_1.expressjwt)({
     secret: process.env.GOV_EDDSA_PRIVATE_KEY,
     algorithms: ["HS512"]
 }), (req, res) => {
+    const email = req.auth?.email;
+    if (!email) {
+        res.status(401).send("Unauthorized");
+    }
     const inputs = req.body;
     if (!inputs.semaphoreCommitment) {
         res.status(400).send("Missing query parameter");
         return;
     }
-    // TODO: randomly generate first name, last name
+    // TODO: look up email, if already exist, return
+    const user = (0, persistence_1.getUserByEmail)(email);
+    if (user === null) {
+        res.status(404).send("User not found");
+        return;
+    }
+    // radomly generate these fields
+    // In paractice, we can look them up in the database
+    const chance = new chance_1.default();
+    const age = chance.age({ type: "adult" });
+    const idNumber = chance.string({ pool: "0123456789", length: 7 });
     try {
         // For more info, see https://github.com/proofcarryingdata/zupass/blob/main/examples/pod-gpc-example/src/podExample.ts
         const pod = pod_1.POD.sign({
-            idNumber: { type: "string", value: "G1234567" },
-            firstName: { type: "string", value: "gerry" },
-            lastName: { type: "string", value: "raffy" },
-            age: { type: "int", value: BigInt(18) },
+            idNumber: { type: "string", value: `G${idNumber}` },
+            firstName: { type: "string", value: user.firstName },
+            lastName: { type: "string", value: user.lastName },
+            age: { type: "int", value: BigInt(age) },
             owner: {
                 type: "cryptographic",
                 value: BigInt(inputs.semaphoreCommitment)

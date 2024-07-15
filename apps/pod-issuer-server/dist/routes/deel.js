@@ -3,11 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const chance_1 = __importDefault(require("chance"));
 const express_1 = __importDefault(require("express"));
 const express_jwt_1 = require("express-jwt");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const pod_1 = require("@pcd/pod");
-const constants_1 = require("../util/constants");
+const persistence_1 = require("../util/persistence");
 const deel = express_1.default.Router();
 deel.post("/login", (req, res) => {
     const inputs = req.body;
@@ -35,20 +36,37 @@ deel.post("/issue", (0, express_jwt_1.expressjwt)({
     secret: process.env.DEEL_EDDSA_PRIVATE_KEY,
     algorithms: ["HS512"]
 }), (req, res) => {
+    const email = req.auth?.email;
+    if (!email) {
+        res.status(401).send("Unauthorized");
+    }
     const inputs = req.body;
     if (!inputs.semaphoreCommitment) {
         res.status(400).send("Missing query parameter");
         return;
     }
-    // In practice, look up the user information in the database
+    // TODO: look up email, if already exist, return
+    const user = (0, persistence_1.getUserByEmail)(email);
+    if (user === null) {
+        res.status(404).send("User not found");
+        return;
+    }
+    // radomly generate these fields
+    // In paractice, we can look them up in the database
+    const chance = new chance_1.default();
+    const startDate = chance.birthday({
+        string: true,
+        type: "child"
+    });
+    const annualSalary = chance.integer({ min: 20000, max: 1000000 });
     try {
         // For more info, see https://github.com/proofcarryingdata/zupass/blob/main/examples/pod-gpc-example/src/podExample.ts
         const pod = pod_1.POD.sign({
-            firstName: { type: "string", value: constants_1.DEMO_FIRSTNAME },
-            lastName: { type: "string", value: constants_1.DEMO_LASTNAME },
-            currentEmployer: { type: "string", value: constants_1.DEMO_CURRENT_EMPLOYER },
-            startDate: { type: "string", value: constants_1.DEMO_START_DATE },
-            annualSalary: { type: "int", value: BigInt(constants_1.DEMO_ANNUAL_SALARY) },
+            firstName: { type: "string", value: user.firstName },
+            lastName: { type: "string", value: user.lastName },
+            currentEmployer: { type: "string", value: "ZooPark" },
+            startDate: { type: "string", value: startDate },
+            annualSalary: { type: "int", value: BigInt(annualSalary) },
             owner: {
                 type: "cryptographic",
                 value: BigInt(inputs.semaphoreCommitment)

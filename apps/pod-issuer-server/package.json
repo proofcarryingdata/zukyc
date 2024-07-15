@@ -13,6 +13,7 @@
   "dependencies": {
     "@pcd/pod": "^0.1.2",
     "@vercel/kv": "^2.0.0",
+    "chance": "^1.1.12",
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "express-jwt": "^8.4.1",
