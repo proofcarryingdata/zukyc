@@ -3,7 +3,11 @@ import express, { Request, Response } from "express";
 import { expressjwt, Request as JWTRequest } from "express-jwt";
 import jwt from "jsonwebtoken";
 import { POD, PODEntries } from "@pcd/pod";
-import { getUserByEmail } from "../util/persistence";
+import {
+  getUserByEmail,
+  getIDPODByEmail,
+  saveIDPOD
+} from "../util/persistence";
 
 const gov = express.Router();
 
@@ -43,7 +47,7 @@ gov.post(
     secret: process.env.GOV_EDDSA_PRIVATE_KEY!,
     algorithms: ["HS512"]
   }),
-  (req: JWTRequest, res: Response) => {
+  async (req: JWTRequest, res: Response) => {
     const email = req.auth?.email;
     if (!email) {
       res.status(401).send("Unauthorized");
@@ -58,7 +62,12 @@ gov.post(
       return;
     }
 
-    // TODO: look up email, if already exist, return
+    // We already issued ID POD for this user, return the POD
+    const pod = await getIDPODByEmail(email);
+    if (pod !== null) {
+      res.status(200).json({ pod });
+      return;
+    }
 
     const user = getUserByEmail(email);
     if (user === null) {
@@ -88,6 +97,8 @@ gov.post(
         process.env.GOV_EDDSA_PRIVATE_KEY!
       );
       const serializedPOD = pod.serialize();
+
+      await saveIDPOD(email, serializedPOD);
       res.status(200).json({ pod: serializedPOD });
     } catch (e) {
       console.error(e);

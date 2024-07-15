@@ -3,7 +3,11 @@ import express, { Request, Response } from "express";
 import { expressjwt, Request as JWTRequest } from "express-jwt";
 import jwt from "jsonwebtoken";
 import { POD, PODEntries } from "@pcd/pod";
-import { getUserByEmail } from "../util/persistence";
+import {
+  getUserByEmail,
+  getPaystubPODByEmail,
+  savePaystubPOD
+} from "../util/persistence";
 
 const deel = express.Router();
 
@@ -43,7 +47,7 @@ deel.post(
     secret: process.env.DEEL_EDDSA_PRIVATE_KEY!,
     algorithms: ["HS512"]
   }),
-  (req: JWTRequest, res: Response) => {
+  async (req: JWTRequest, res: Response) => {
     const email = req.auth?.email;
     if (!email) {
       res.status(401).send("Unauthorized");
@@ -58,7 +62,12 @@ deel.post(
       return;
     }
 
-    // TODO: look up email, if already exist, return
+    // We already issued ID POD for this user, return the POD
+    const pod = await getPaystubPODByEmail(email);
+    if (pod !== null) {
+      res.status(200).json({ pod });
+      return;
+    }
 
     const user = getUserByEmail(email);
     if (user === null) {
@@ -92,6 +101,8 @@ deel.post(
         process.env.DEEL_EDDSA_PRIVATE_KEY!
       );
       const serializedPOD = pod.serialize();
+
+      await savePaystubPOD(email, serializedPOD);
       res.status(200).json({ pod: serializedPOD });
     } catch (e) {
       console.error(e);

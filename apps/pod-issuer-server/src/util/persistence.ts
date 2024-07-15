@@ -1,18 +1,14 @@
-import { kv } from "@vercel/kv";
+import { createClient } from "@vercel/kv";
 
-export type GovUser = {
-  email: string;
-  // hashedPassword: string;
-  idPOD: string;
-};
-
-export type DeelUser = {
-  email: string;
-  // hashedPassword: string;
-  paystubPOD: string;
-};
+const podIssuerKV = createClient({
+  url: process.env.KV_REST_API_URL,
+  token: process.env.KV_REST_API_TOKEN,
+  automaticDeserialization: false
+});
 
 export type User = {
+  email: string;
+  // hashedpassword: string;
   firstName: string;
   lastName: string;
 };
@@ -24,11 +20,28 @@ export function getUserByEmail(email: string): User | null {
     return null;
   }
   return {
+    email,
     firstName: names[0],
     lastName: names[1]
   };
 }
 
-export async function getGovUser(email: string): Promise<GovUser | undefined> {
-  return (await kv.get<GovUser>(email)) ?? undefined;
+export async function getIDPODByEmail(email: string): Promise<string | null> {
+  const key = `id-${email}`;
+  return await podIssuerKV.get<string>(key);
+}
+
+export async function saveIDPOD(email: string, serializedPOD: string) {
+  await podIssuerKV.set(`id-${email}`, serializedPOD);
+}
+
+export async function getPaystubPODByEmail(
+  email: string
+): Promise<string | null> {
+  const key = `paystub-${email}`;
+  return await podIssuerKV.get<string>(key);
+}
+
+export async function savePaystubPOD(email: string, serializedPOD: string) {
+  await podIssuerKV.set(`paystub-${email}`, serializedPOD);
 }

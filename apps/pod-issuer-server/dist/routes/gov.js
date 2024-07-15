@@ -35,7 +35,7 @@ gov.post("/login", (req, res) => {
 gov.post("/issue", (0, express_jwt_1.expressjwt)({
     secret: process.env.GOV_EDDSA_PRIVATE_KEY,
     algorithms: ["HS512"]
-}), (req, res) => {
+}), async (req, res) => {
     const email = req.auth?.email;
     if (!email) {
         res.status(401).send("Unauthorized");
@@ -45,7 +45,12 @@ gov.post("/issue", (0, express_jwt_1.expressjwt)({
         res.status(400).send("Missing query parameter");
         return;
     }
-    // TODO: look up email, if already exist, return
+    // We already issued ID POD for this user, return the POD
+    const pod = await (0, persistence_1.getIDPODByEmail)(email);
+    if (pod !== null) {
+        res.status(200).json({ pod });
+        return;
+    }
     const user = (0, persistence_1.getUserByEmail)(email);
     if (user === null) {
         res.status(404).send("User not found");
@@ -69,6 +74,7 @@ gov.post("/issue", (0, express_jwt_1.expressjwt)({
             }
         }, process.env.GOV_EDDSA_PRIVATE_KEY);
         const serializedPOD = pod.serialize();
+        await (0, persistence_1.saveIDPOD)(email, serializedPOD);
         res.status(200).json({ pod: serializedPOD });
     }
     catch (e) {
