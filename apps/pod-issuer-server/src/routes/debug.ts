@@ -23,9 +23,15 @@ debug.post("/id/issue", (req: Request, res: Response) => {
     return;
   }
 
-  // TODO: check id number format correct
-  // TODO: DOB, check in range
-  // TODO: check semaphoreCommitment correct
+  if (!/^[A-Z][0-9]{7}$/.test(inputs.idNumber)) {
+    res.status(400).send("Invalid ID number format");
+    return;
+  }
+
+  if (inputs.age < 0) {
+    res.status(400).send("Invalid age");
+    return;
+  }
 
   try {
     // For more info, see https://github.com/proofcarryingdata/zupass/blob/main/examples/pod-gpc-example/src/podExample.ts
@@ -46,7 +52,7 @@ debug.post("/id/issue", (req: Request, res: Response) => {
     res.status(200).json({ pod: serializedPOD });
   } catch (e) {
     console.error(e);
-    res.status(500).send("Error issue ID POD");
+    res.status(500).send("Error issue ID POD: " + e);
   }
 });
 
@@ -56,7 +62,7 @@ debug.post("/paystub/issue", (req: Request, res: Response) => {
     lastName: string;
     currentEmployer: string;
     startDate: string;
-    annualSalary: string;
+    annualSalary: number;
     semaphoreCommitment: string;
   } = req.body;
 
@@ -72,9 +78,16 @@ debug.post("/paystub/issue", (req: Request, res: Response) => {
     return;
   }
 
-  // TODO: check startDate in range
-  // TODO: check annual salary is valid
-  // TODO: check semaphoreCommitment correct
+  const startDate = Date.parse(inputs.startDate);
+  if (!startDate || startDate > new Date().getTime()) {
+    res.status(400).send("Invalid start date");
+    return;
+  }
+
+  if (inputs.annualSalary < 0) {
+    res.status(400).send("Invalid annual salary");
+    return;
+  }
 
   try {
     // For more info, see https://github.com/proofcarryingdata/zupass/blob/main/examples/pod-gpc-example/src/podExample.ts
@@ -96,7 +109,7 @@ debug.post("/paystub/issue", (req: Request, res: Response) => {
     res.status(200).json({ pod: serializedPOD });
   } catch (e) {
     console.error(e);
-    res.status(500).send("Error issue Paystub POD");
+    res.status(500).send("Error issue Paystub POD: " + e);
   }
 });
 

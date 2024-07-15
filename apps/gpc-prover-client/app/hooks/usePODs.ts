@@ -1,35 +1,14 @@
-import { useCallback, useEffect, useState } from "react";
+import { useLocalStorage } from "usehooks-ts";
 
 const usePODs = () => {
-  const [idPODStr, setIDPODStr] = useState("");
-  const [paystubPODStr, setPaystubPODStr] = useState("");
-
-  useEffect(() => {
-    const idPOD = localStorage.getItem("idPOD");
-    const paystubPOD = localStorage.getItem("paystubPOD");
-    if (idPOD) {
-      setIDPODStr(idPOD);
-    }
-    if (paystubPOD) {
-      setPaystubPODStr(paystubPOD);
-    }
-  }, [setIDPODStr, setPaystubPODStr]);
-
-  const saveIDPOD = useCallback(() => {
-    localStorage.setItem("idPOD", idPODStr);
-  }, [idPODStr]);
-
-  const savePaystubPOD = useCallback(() => {
-    localStorage.setItem("paystubPOD", paystubPODStr);
-  }, [paystubPODStr]);
+  const [idPODStr, setIdPODStr] = useLocalStorage("idPOD", "");
+  const [paystubPODStr, setPaystubPODStr] = useLocalStorage("paystubPOD", "");
 
   return {
     idPODStr,
-    setIDPODStr,
-    saveIDPOD,
+    setIdPODStr,
     paystubPODStr,
-    setPaystubPODStr,
-    savePaystubPOD
+    setPaystubPODStr
   };
 };
 

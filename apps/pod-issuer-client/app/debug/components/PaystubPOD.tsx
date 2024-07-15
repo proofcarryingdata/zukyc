@@ -1,15 +1,11 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { useForm, Controller, FieldValues } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
-import {
-  issueDebugPaystubPOD,
-  IissueDebugPaystubPODResponse
-} from "@/debug/util/issueDebugPaystubPOD";
+import { useIssueDebugPaystubPOD } from "@/debug/hooks/useIssueDebugPaystubPOD";
 
 export default function PaystubPOD() {
-  const [response, setResponse] = useState<IissueDebugPaystubPODResponse>();
   const {
     control,
     register,
@@ -17,20 +13,26 @@ export default function PaystubPOD() {
     formState: { errors }
   } = useForm();
 
-  const issuePaystubPOD = useCallback((data: FieldValues) => {
-    // TODO: check start dates in range
-    issueDebugPaystubPOD(
-      {
+  const {
+    mutate: issueDebugPaystubPOD,
+    isSuccess,
+    data,
+    error
+  } = useIssueDebugPaystubPOD();
+
+  const issuePaystubPOD = useCallback(
+    (data: FieldValues) => {
+      issueDebugPaystubPOD({
         firstName: data.firstName,
         lastName: data.lastName,
         currentEmployer: data.currentEmployer,
         startDate: data.startDate,
         annualSalary: parseInt(data.annualSalary),
         semaphoreCommitment: data.semaphoreCommitment
-      },
-      setResponse
-    );
-  }, []);
+      });
+    },
+    [issueDebugPaystubPOD]
+  );
 
   return (
     <div className="flex flex-col gap-2 grow">
@@ -40,44 +42,55 @@ export default function PaystubPOD() {
         className="flex flex-col gap-2"
       >
         <input
-          {...register("firstName", { required: true })}
+          {...register("firstName", { required: "This is required." })}
           type="text"
           className="form-input px-4 py-3 rounded"
           placeholder="First name"
         />
         {errors.firstName && (
-          <p className="text-red-500">First name is required.</p>
+          <p className="text-red-500">{errors.firstName.message as string}</p>
         )}
 
         <input
-          {...register("lastName", { required: true })}
+          {...register("lastName", { required: "This is required." })}
           type="text"
           className="form-input px-4 py-3 rounded"
           placeholder="Last name"
         />
         {errors.lastName && (
-          <p className="text-red-500">Last name is required.</p>
+          <p className="text-red-500">{errors.lastName.message as string}</p>
         )}
 
         <input
-          {...register("currentEmployer", { required: true })}
+          {...register("currentEmployer", { required: "This is required." })}
           type="text"
           className="form-input px-4 py-3 rounded"
           placeholder="Current employer"
         />
         {errors.currentEmployer && (
-          <p className="text-red-500">Current employer is required.</p>
+          <p className="text-red-500">
+            {errors.currentEmployer.message as string}
+          </p>
         )}
 
         <div className="form-group flex gap-20 items-center">
           <label htmlFor="startDate">Start date</label>
           <input
-            {...register("startDate", { required: true })}
+            {...register("startDate", {
+              required: "This is required.",
+              valueAsDate: true,
+              validate: {
+                beforeToday: (v) => v < new Date()
+              }
+            })}
             type="date"
             className="form-input px-4 py-3 rounded grow"
           />
           {errors.startDate && (
-            <p className="text-red-500">Start date is required.</p>
+            <p className="text-red-500">
+              {(errors.startDate.message as string) ||
+                "Start date cannot be a future date."}
+            </p>
           )}
         </div>
 
@@ -100,17 +113,17 @@ export default function PaystubPOD() {
             )}
           />
           {errors.annualSalary && (
-            <p className="text-red-500">Annual salary is required.</p>
+            <p className="text-red-500">This is required.</p>
           )}
         </div>
 
         <input
           {...register("semaphoreCommitment", {
-            required: true,
+            required: "This is required.",
             pattern: {
               value: /\d+/,
               message:
-                "Entered value does not match semaphore commitment format"
+                "Entered value does not match semaphore commitment format."
             }
           })}
           type="text"
@@ -119,8 +132,7 @@ export default function PaystubPOD() {
         />
         {errors.semaphoreCommitment && (
           <p className="text-red-500">
-            {(errors.semaphoreCommitment.message as string) ||
-              "Public identifier is required."}
+            {errors.semaphoreCommitment.message as string}
           </p>
         )}
 
@@ -131,32 +143,25 @@ export default function PaystubPOD() {
         />
       </form>
 
-      {response?.success && (
+      {isSuccess && (
         <div className="flex flex-col gap-2">
           <div className="flex flex-1 gap-1 items-center">
             <h2 className="text-lg">Here is your Paystub POD</h2>
             <button
               className="p-2 m-1 text-sm bg-transparent border-none hover:bg-gray-100"
               onClick={() => {
-                navigator.clipboard.writeText(response?.serializedPOD);
+                navigator.clipboard.writeText(data);
               }}
             >
               📋
             </button>
           </div>
 
-          <textarea
-            className="border-none"
-            readOnly
-            rows={10}
-            value={response?.serializedPOD}
-          />
+          <textarea className="border-none" readOnly rows={10} value={data} />
         </div>
       )}
 
-      {response?.error && (
-        <p className="font-bold text-red-500">{response?.error}</p>
-      )}
+      {error && <p className="font-bold text-red-500">{error.message}</p>}
     </div>
   );
 }

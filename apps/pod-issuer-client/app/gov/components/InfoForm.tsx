@@ -2,7 +2,6 @@
 
 import { useForm, FieldValues } from "react-hook-form";
 import { Tooltip } from "react-tooltip";
-import { DEMO_ID_NUMBER } from "@/util/constants";
 import Dropzone from "@/gov/components/Dropzone";
 
 const InfoForm = ({
@@ -22,34 +21,6 @@ const InfoForm = ({
         onSubmit={handleSubmit((data) => onSubmitInfo(data))}
         className="flex flex-col gap-4"
       >
-        <div className="flex items-center">
-          <h2 className="text-lg">
-            Enter your driver's license or ID card number
-          </h2>
-          <p className="personal-details-tooltip-anchor">❗</p>
-          <Tooltip anchorSelect=".personal-details-tooltip-anchor">
-            For demo purposes, try ID number: {DEMO_ID_NUMBER}
-          </Tooltip>
-        </div>
-
-        <input
-          {...register("id", {
-            required: true,
-            pattern: {
-              value: /[A-Z][0-9]{7}/,
-              message: "Entered value does not match ID number format"
-            }
-          })}
-          type="text"
-          className="form-input px-4 py-3 rounded"
-          placeholder="Driver's license or ID card number"
-        />
-        {errors.id && (
-          <p className="text-red-500">
-            {(errors.id.message as string) || "ID number is required."}
-          </p>
-        )}
-
         <div className="flex items-center">
           <h2 className="text-lg">Upload your driver's license or ID card</h2>
           <p className="upload-tooltip-anchor">❗</p>

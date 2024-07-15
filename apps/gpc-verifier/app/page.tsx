@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import useProofConfig from "@/util/useProofConfig";
+import { useSerializedProofRequest } from "@/hooks/useProofRequest";
 import VerifyProof from "@/components/VerifyProof";
 
 export default function Verifier() {
@@ -18,7 +18,7 @@ export default function Verifier() {
     return true;
   }, []);
 
-  const proofConfig = useProofConfig();
+  const proofRequest = useSerializedProofRequest();
 
   return (
     <main className="p-6 m-0 mb-16 flex flex-col gap-4">
@@ -31,30 +31,42 @@ export default function Verifier() {
         <li>You have a valid govenment-issued ID;</li>
         <li>You are not in the sanctions list;</li>
         <li>You are at least 18 years old;</li>
+        <li>
+          You have at least one year of consistent employment with your current
+          employer;
+        </li>
         <li>Your annual salary is at least $20,000;</li>
       </ul>
 
-      <p>
-        You can use{" "}
-        <a className="text-blue-500" href="#" onClick={onOpenPopup}>
-          ZooKyc
-        </a>{" "}
-        to generate a proof.
-      </p>
-
+      {/* 
+        Here, we ask the user to copy paste the serialized proofConfig and membershipLists
+        to the prover, and after the prover generates the proof, copy paste the proof back
+        to this verifier.
+        In practice, the prover could be inside a wallet or ZuPass. An UI improvement would
+        be to request the prover to generate a proof by sending the proofConfig and membershipLists
+        directly, and then the prover send back the generated proof. So we can elimiate the copy
+        paste.
+      */}
       <div className="flex flex-col">
+        <p>And below is the corresponding proof request.</p>
         <div className="flex items-center">
-          <p>And here is the corresponding proof configuration:</p>
+          <p>
+            You can copy and paste it to{" "}
+            <a className="text-blue-500" href="#" onClick={onOpenPopup}>
+              ZooKyc
+            </a>{" "}
+            to generate a proof.
+          </p>
           <button
             className="p-2 m-1 text-sm bg-transparent border-none hover:bg-gray-100"
             onClick={() => {
-              navigator.clipboard.writeText(proofConfig.serializedConfig);
+              navigator.clipboard.writeText(proofRequest.serialized);
             }}
           >
             📋
           </button>
         </div>
-        <textarea rows={24} value={proofConfig.prettifiedConfig} readOnly />
+        <textarea rows={24} value={proofRequest.prettified} readOnly />
       </div>
 
       <h3 className="font-bold">Step 2: verify your proof</h3>

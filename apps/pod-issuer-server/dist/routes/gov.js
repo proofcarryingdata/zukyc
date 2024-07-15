@@ -4,31 +4,49 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const express_jwt_1 = require("express-jwt");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const pod_1 = require("@pcd/pod");
-const constants_1 = require("../util/constants");
 const gov = express_1.default.Router();
-// TODO: implement login, authenticate
-gov.post("/issue", (req, res) => {
+gov.post("/login", (req, res) => {
     const inputs = req.body;
-    if (!inputs.idNumber || !inputs.semaphoreCommitment) {
+    if (!inputs.email || !inputs.password) {
         res.status(400).send("Missing query parameter");
         return;
     }
-    if (inputs.idNumber === constants_1.DEMO_ID_NUMBER) {
-        // TODO: check if it is demo user
-    }
-    else {
-        // In practice, Check database to see if the id number belongs to this user
-        res.status(403).send("Invalid ID number");
+    // In practice, get user information from database by email,
+    // Here for demo purposes, we'll allow any email with @zoo.com domain
+    if (!inputs.email.endsWith("@zoo.com")) {
+        res.status(401).send("Invalid email or password");
         return;
     }
+    // In practice, check if the encrypted password match
+    // This is just for demo purposes
+    if (!inputs.password.startsWith("zoo")) {
+        res.status(401).send("Invalid email or password");
+        return;
+    }
+    // Signing JWT, valid for 1 hour
+    const token = jsonwebtoken_1.default.sign({ email: inputs.email }, process.env.GOV_EDDSA_PRIVATE_KEY, { algorithm: "HS512", expiresIn: "1h" });
+    res.send(token);
+});
+gov.post("/issue", (0, express_jwt_1.expressjwt)({
+    secret: process.env.GOV_EDDSA_PRIVATE_KEY,
+    algorithms: ["HS512"]
+}), (req, res) => {
+    const inputs = req.body;
+    if (!inputs.semaphoreCommitment) {
+        res.status(400).send("Missing query parameter");
+        return;
+    }
+    // TODO: randomly generate first name, last name
     try {
         // For more info, see https://github.com/proofcarryingdata/zupass/blob/main/examples/pod-gpc-example/src/podExample.ts
         const pod = pod_1.POD.sign({
-            idNumber: { type: "string", value: inputs.idNumber },
-            firstName: { type: "string", value: constants_1.DEMO_FIRSTNAME },
-            lastName: { type: "string", value: constants_1.DEMO_LASTNAME },
-            age: { type: "int", value: BigInt(constants_1.DEMO_AGE) },
+            idNumber: { type: "string", value: "G1234567" },
+            firstName: { type: "string", value: "gerry" },
+            lastName: { type: "string", value: "raffy" },
+            age: { type: "int", value: BigInt(18) },
             owner: {
                 type: "cryptographic",
                 value: BigInt(inputs.semaphoreCommitment)
