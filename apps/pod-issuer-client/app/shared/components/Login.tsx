@@ -2,9 +2,11 @@
 
 import { useForm, FieldValues } from "react-hook-form";
 import { Tooltip } from "react-tooltip";
-import { DEMO_EMAIL, DEMO_PASSWORD } from "@/util/constants";
+import useLoginCreds from "@/shared/hooks/useLoginCreds";
 
 const Login = ({ onLogin }: { onLogin: (_data: FieldValues) => void }) => {
+  const loginCreds = useLoginCreds();
+
   const {
     register,
     handleSubmit,
@@ -17,7 +19,8 @@ const Login = ({ onLogin }: { onLogin: (_data: FieldValues) => void }) => {
         <h2 className="text-lg">Login</h2>
         <p className="login-tooltip-anchor">❗</p>
         <Tooltip anchorSelect=".login-tooltip-anchor">
-          For demo purposes, try email: {DEMO_EMAIL}, password: {DEMO_PASSWORD}
+          For demo purposes, try email: {loginCreds.email}, password:{" "}
+          {loginCreds.password}
         </Tooltip>
       </div>
 

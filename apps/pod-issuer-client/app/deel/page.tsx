@@ -6,7 +6,6 @@ import {
   issuePaystubPOD,
   IissuePaystubPODResponse
 } from "@/deel/util/issuePaystubPOD";
-import { DEMO_EMAIL, DEMO_PASSWORD } from "@/util/constants";
 import Login from "@/shared/components/Login";
 
 export default function Deel() {
@@ -23,13 +22,12 @@ export default function Deel() {
   const login = useCallback((data: FieldValues) => {
     // For demo purposes, only allow DEMO_EMAIL and DEMO_PASSWORD
     // TODO: verify on server
-    if (data.email === DEMO_EMAIL && data.password === DEMO_PASSWORD) {
-      setUser(data.email);
-      localStorage.setItem("user", data.email);
-      return;
-    }
-
-    alert("Incorrect email and password. Please try again.");
+    // if (data.email === DEMO_EMAIL && data.password === DEMO_PASSWORD) {
+    //   setUser(data.email);
+    //   localStorage.setItem("user", data.email);
+    //   return;
+    // }
+    // alert("Incorrect email and password. Please try again.");
   }, []);
 
   const issuePOD = useCallback((data: FieldValues) => {

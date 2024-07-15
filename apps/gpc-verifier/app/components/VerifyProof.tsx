@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { useProofRequest } from "@/util/useProofRequest";
+import { useProofRequest } from "@/hooks/useProofRequest";
 import verifyProof from "@/util/verifyProof";
 
 const VerifyProof = () => {

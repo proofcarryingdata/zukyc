@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import { useSerializedProofRequest } from "@/util/useProofRequest";
+import { useSerializedProofRequest } from "@/hooks/useProofRequest";
 import VerifyProof from "@/components/VerifyProof";
 
 export default function Verifier() {
