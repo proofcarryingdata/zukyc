@@ -1,16 +1,25 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useForm, FieldValues } from "react-hook-form";
 import { useIssuePaystubPOD } from "@/deel/hooks/useIssuePaystubPOD";
 import Login from "@/shared/components/Login";
-import { useLogin } from "@/shared/hooks/useLogin";
-import useAuthToken from "@/shared/hooks/useAuthToken";
+import useLogin from "@/deel/hooks/useLogin";
+import useStore from "@/shared/hooks/useStore";
 
 export default function Deel() {
-  const { token } = useAuthToken("deel");
-  const { mutate: login, error: loginError } = useLogin("deel");
+  const token = useStore((state) =>
+    state._hasHydrated ? state.deelToken : undefined
+  );
 
+  useEffect(() => {
+    // hydrate persisted store after mount
+    useStore.persist.rehydrate();
+  }, []);
+
+  const paystubPOD = useStore((state) => state.paystubPOD);
+
+  const { mutate: login, error: loginError } = useLogin();
   const onLogin = useCallback(
     (data: FieldValues) => {
       login({ email: data.email, password: data.password });
@@ -18,12 +27,7 @@ export default function Deel() {
     [login]
   );
 
-  const {
-    mutate: issuePaystubPOD,
-    isSuccess,
-    data,
-    error
-  } = useIssuePaystubPOD();
+  const { mutate: issuePaystubPOD, error: issueError } = useIssuePaystubPOD();
   const issuePOD = useCallback(
     (data: FieldValues) => {
       issuePaystubPOD({
@@ -49,7 +53,7 @@ export default function Deel() {
         <p className="font-bold text-red-500">{`Error login: ${loginError.message}`}</p>
       )}
 
-      {token && !isSuccess && (
+      {token && !paystubPOD && (
         <form
           onSubmit={handleSubmit((data) => issuePOD(data))}
           className="flex flex-col gap-4"
@@ -88,25 +92,32 @@ export default function Deel() {
         </form>
       )}
 
-      {isSuccess && (
+      {paystubPOD && (
         <div className="flex flex-col gap-2">
           <div className="flex flex-1 gap-1 items-center">
             <h2 className="text-lg">Here is your Paystub POD</h2>
             <button
               className="p-2 m-1 text-sm bg-transparent border-none hover:bg-gray-100"
               onClick={() => {
-                navigator.clipboard.writeText(data);
+                navigator.clipboard.writeText(paystubPOD);
               }}
             >
               📋
             </button>
           </div>
 
-          <textarea className="border-none" readOnly rows={10} value={data} />
+          <textarea
+            className="border-none"
+            readOnly
+            rows={10}
+            value={paystubPOD}
+          />
         </div>
       )}
 
-      {error && <p className="font-bold text-red-500">{error.message}</p>}
+      {issueError && (
+        <p className="font-bold text-red-500">{issueError.message}</p>
+      )}
     </main>
   );
 }

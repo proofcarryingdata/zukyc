@@ -1,17 +1,26 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { FieldValues } from "react-hook-form";
 import InfoForm from "@/gov/components/InfoForm";
 import { useIssueIDPOD } from "@/gov/hooks/useIssueIDPOD";
 import Login from "@/shared/components/Login";
-import { useLogin } from "@/shared/hooks/useLogin";
-import useAuthToken from "@/shared/hooks/useAuthToken";
+import useLogin from "@/gov/hooks/useLogin";
+import useStore from "@/shared/hooks/useStore";
 
 export default function Gov() {
-  const { token } = useAuthToken("gov");
-  const { mutate: login, error: loginError } = useLogin("gov");
+  const token = useStore((state) =>
+    state._hasHydrated ? state.govToken : undefined
+  );
 
+  useEffect(() => {
+    // hydrate persisted store after mount
+    useStore.persist.rehydrate();
+  }, []);
+
+  const idPOD = useStore((state) => state.idPOD);
+
+  const { mutate: login, error: loginError } = useLogin();
   const onLogin = useCallback(
     (data: FieldValues) => {
       login({ email: data.email, password: data.password });
@@ -19,7 +28,7 @@ export default function Gov() {
     [login]
   );
 
-  const { mutate: issueIDPOD, isSuccess, data, error } = useIssueIDPOD();
+  const { mutate: issueIDPOD, error: issueError } = useIssueIDPOD();
   const issuePOD = useCallback(
     (data: FieldValues) => {
       issueIDPOD({
@@ -39,9 +48,9 @@ export default function Gov() {
         <p className="font-bold text-red-500">{`Error login: ${loginError.message}`}</p>
       )}
 
-      {token && !isSuccess && <InfoForm onSubmitInfo={issuePOD} />}
+      {token && !idPOD && <InfoForm onSubmitInfo={issuePOD} />}
 
-      {isSuccess && (
+      {idPOD && (
         <div className="flex flex-col gap-2">
           <h2 className="text-lg text-green-500">
             We have successfully verified your information.
@@ -52,18 +61,20 @@ export default function Gov() {
             <button
               className="p-2 m-1 text-sm bg-transparent border-none hover:bg-gray-100"
               onClick={() => {
-                navigator.clipboard.writeText(data);
+                navigator.clipboard.writeText(idPOD);
               }}
             >
               📋
             </button>
           </div>
 
-          <textarea className="border-none" readOnly rows={10} value={data} />
+          <textarea className="border-none" readOnly rows={10} value={idPOD} />
         </div>
       )}
 
-      {error && <p className="font-bold text-red-500">{error.message}</p>}
+      {issueError && (
+        <p className="font-bold text-red-500">{issueError.message}</p>
+      )}
     </main>
   );
 }

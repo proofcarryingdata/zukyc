@@ -1,14 +1,12 @@
 import express, { Request, Response } from "express";
-import { expressjwt } from "express-jwt";
+import { expressjwt, Request as JWTRequest } from "express-jwt";
 import jwt from "jsonwebtoken";
 import { POD, PODEntries } from "@pcd/pod";
 import {
-  DEMO_FIRSTNAME,
-  DEMO_LASTNAME,
-  DEMO_CURRENT_EMPLOYER,
-  DEMO_START_DATE,
-  DEMO_ANNUAL_SALARY
-} from "../util/constants";
+  getDeelUserByEmail,
+  getPaystubPODByEmail,
+  savePaystubPOD
+} from "../stores/deel";
 
 const deel = express.Router();
 
@@ -48,7 +46,12 @@ deel.post(
     secret: process.env.DEEL_EDDSA_PRIVATE_KEY!,
     algorithms: ["HS512"]
   }),
-  (req: Request, res: Response) => {
+  async (req: JWTRequest, res: Response) => {
+    const email = req.auth?.email;
+    if (!email) {
+      res.status(401).send("Unauthorized");
+    }
+
     const inputs: {
       semaphoreCommitment: string;
     } = req.body;
@@ -58,17 +61,28 @@ deel.post(
       return;
     }
 
-    // In practice, look up the user information in the database
+    // We already issued ID POD for this user, return the POD
+    const pod = await getPaystubPODByEmail(email);
+    if (pod !== null) {
+      res.status(200).json({ pod });
+      return;
+    }
+
+    const user = getDeelUserByEmail(email);
+    if (user === null) {
+      res.status(404).send("User not found");
+      return;
+    }
 
     try {
       // For more info, see https://github.com/proofcarryingdata/zupass/blob/main/examples/pod-gpc-example/src/podExample.ts
       const pod = POD.sign(
         {
-          firstName: { type: "string", value: DEMO_FIRSTNAME },
-          lastName: { type: "string", value: DEMO_LASTNAME },
-          currentEmployer: { type: "string", value: DEMO_CURRENT_EMPLOYER },
-          startDate: { type: "string", value: DEMO_START_DATE },
-          annualSalary: { type: "int", value: BigInt(DEMO_ANNUAL_SALARY) },
+          firstName: { type: "string", value: user.firstName },
+          lastName: { type: "string", value: user.lastName },
+          currentEmployer: { type: "string", value: "ZooPark" },
+          startDate: { type: "string", value: user.startDate },
+          annualSalary: { type: "int", value: BigInt(user.annualSalary) },
           owner: {
             type: "cryptographic",
             value: BigInt(inputs.semaphoreCommitment)
@@ -77,6 +91,8 @@ deel.post(
         process.env.DEEL_EDDSA_PRIVATE_KEY!
       );
       const serializedPOD = pod.serialize();
+
+      await savePaystubPOD(email, serializedPOD);
       res.status(200).json({ pod: serializedPOD });
     } catch (e) {
       console.error(e);

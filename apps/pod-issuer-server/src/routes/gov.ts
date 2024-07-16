@@ -1,7 +1,8 @@
 import express, { Request, Response } from "express";
-import { expressjwt } from "express-jwt";
+import { expressjwt, Request as JWTRequest } from "express-jwt";
 import jwt from "jsonwebtoken";
 import { POD, PODEntries } from "@pcd/pod";
+import { getGovUserByEmail, getIDPODByEmail, saveIDPOD } from "../stores/gov";
 
 const gov = express.Router();
 
@@ -41,7 +42,12 @@ gov.post(
     secret: process.env.GOV_EDDSA_PRIVATE_KEY!,
     algorithms: ["HS512"]
   }),
-  (req: Request, res: Response) => {
+  async (req: JWTRequest, res: Response) => {
+    const email = req.auth?.email;
+    if (!email) {
+      res.status(401).send("Unauthorized");
+    }
+
     const inputs: {
       semaphoreCommitment: string;
     } = req.body;
@@ -51,16 +57,27 @@ gov.post(
       return;
     }
 
-    // TODO: randomly generate first name, last name
+    // We already issued ID POD for this user, return the POD
+    const pod = await getIDPODByEmail(email);
+    if (pod !== null) {
+      res.status(200).json({ pod });
+      return;
+    }
+
+    const user = getGovUserByEmail(email);
+    if (user === null) {
+      res.status(404).send("User not found");
+      return;
+    }
 
     try {
       // For more info, see https://github.com/proofcarryingdata/zupass/blob/main/examples/pod-gpc-example/src/podExample.ts
       const pod = POD.sign(
         {
-          idNumber: { type: "string", value: "G1234567" },
-          firstName: { type: "string", value: "gerry" },
-          lastName: { type: "string", value: "raffy" },
-          age: { type: "int", value: BigInt(18) },
+          idNumber: { type: "string", value: user.idNumber },
+          firstName: { type: "string", value: user.firstName },
+          lastName: { type: "string", value: user.lastName },
+          age: { type: "int", value: BigInt(user.age) },
           owner: {
             type: "cryptographic",
             value: BigInt(inputs.semaphoreCommitment)
@@ -69,6 +86,8 @@ gov.post(
         process.env.GOV_EDDSA_PRIVATE_KEY!
       );
       const serializedPOD = pod.serialize();
+
+      await saveIDPOD(email, serializedPOD);
       res.status(200).json({ pod: serializedPOD });
     } catch (e) {
       console.error(e);
