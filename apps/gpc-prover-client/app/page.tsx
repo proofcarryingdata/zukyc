@@ -30,9 +30,23 @@ export default function Prover() {
     );
   }, [identity, idPODStr, paystubPODStr, requestStr]);
 
+  const reset = useCallback(() => {
+    if (
+      window.confirm(
+        "Are you sure? We will clear your current identity and PODs."
+      )
+    ) {
+      localStorage.clear();
+      window.location.reload();
+    }
+  }, []);
+
   return (
     <main className="p-10 m-0 flex flex-col gap-6">
-      <h1 className="text-xl font-bold">ZooKyc</h1>
+      <div className="flex justify-between">
+        <h1 className="text-xl font-bold">ZooKyc</h1>
+        <a onClick={reset}>Reset</a>
+      </div>
       <div className="flex flex-col">
         <span>
           ZooKyc manages your identity, PODs (e.g. ID POD and paystub POD), and
