@@ -511,36 +511,36 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@pcd/gpc@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@pcd/gpc/-/gpc-0.0.3.tgz#d98bf9c4227dd2413782bbef3e4a057cae81b3e2"
-  integrity sha512-NVv8JDYk42VcMKm9HM+trdrVCkVUNGXVrOhh+N+jNj9DtB+ppZfL7eeaOtIzBjUsjTYiMpm5r+tKDFo5lruATA==
+"@pcd/gpc@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@pcd/gpc/-/gpc-0.1.0.tgz#5475fce55200832bf41a3ddbeba8e09806c04c23"
+  integrity sha512-HyIW1VNJoaRKlGwjLt/T+xt9pS0ITQYU3a+VtBCicaKf6PXb/xvmNVaZLZhAROSB51DCjDyzCJtixcxr6A8E0Q==
   dependencies:
-    "@pcd/gpcircuits" "0.1.2"
-    "@pcd/pod" "0.1.2"
-    "@pcd/util" "0.5.2"
+    "@pcd/gpcircuits" "0.2.0"
+    "@pcd/pod" "0.2.0"
+    "@pcd/util" "0.5.1"
     "@semaphore-protocol/identity" "^3.15.2"
     "@types/lodash" "^4.17.1"
     json-bigint "^1.0.0"
     snarkjs "^0.7.4"
     url-join "^4.0.1"
 
-"@pcd/gpcircuits@0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@pcd/gpcircuits/-/gpcircuits-0.1.2.tgz#9aad480e9fda3f1855888a3f020128e7648517c4"
-  integrity sha512-DgwkxQQTx7PxC2cKqo/QHbgAOzE+sZl2HkHFFjcLSL1o0pOwyQW96hjSe59c6RgaIVZ5fdDyZk6AnOcBMPcMbA==
+"@pcd/gpcircuits@0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@pcd/gpcircuits/-/gpcircuits-0.2.0.tgz#57f00522261996e9f46b33afa6b4042f39760350"
+  integrity sha512-eNaLBOujoXz1cOEXJm6PiLUI07/QoysIhz8JLuvyVjdylMKxwyxK43Gxdb2429Or9ylwx9VRpRNFwu6E2gqwNg==
   dependencies:
-    "@pcd/pod" "0.1.2"
+    "@pcd/pod" "0.2.0"
     fastfile "0.0.20"
     snarkjs "^0.7.4"
     url-join "4.0.1"
 
-"@pcd/pod@0.1.2", "@pcd/pod@^0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@pcd/pod/-/pod-0.1.2.tgz#1e2c0810b5b5490419556d05aff52432dfd487cb"
-  integrity sha512-RtH99SY+sk5uZQ0g901k4u4snHRDpRwr4TH9EUHHbRflto78ZQaCwvPylyA0f2NgG//9ObmmEPOey4HkqfcACQ==
+"@pcd/pod@0.2.0", "@pcd/pod@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@pcd/pod/-/pod-0.2.0.tgz#037f3bb0059184cf24d42394e8584754aedb83f3"
+  integrity sha512-4nmWxFoun6Ve/MMiBXjlpeWbQLIIVb6H6yQUVdvggr9VLSRyyurwc1XVDanGdz5VV5LgdDrBUJRiwXLq3oVN1Q==
   dependencies:
-    "@pcd/util" "0.5.2"
+    "@pcd/util" "0.5.1"
     "@zk-kit/baby-jubjub" "1.0.0-beta"
     "@zk-kit/eddsa-poseidon" "1.0.0-beta"
     "@zk-kit/imt" "2.0.0-beta.4"
@@ -549,10 +549,10 @@
     json-bigint "^1.0.0"
     poseidon-lite "^0.2.0"
 
-"@pcd/util@0.5.2":
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/@pcd/util/-/util-0.5.2.tgz#5ba20eb3b79f32d14b6eaf1ddd0cd9db5a439e4f"
-  integrity sha512-pdrlAZ8Za0BfBrVeXhCTunulvIIoJE/CgCyYFmJ5Lx1z/Pr/hl+ncnrtTIiqO5dzyoNYCx15+uPOCJ/ipIX8uw==
+"@pcd/util@0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@pcd/util/-/util-0.5.1.tgz#fae9ceded4418312d6a1a46cd033f4bc3aab8115"
+  integrity sha512-+gjJACUV6mDZtfgCEIOv79cyJv0xkEseI2iuV9gvpLwm5DZy94JZg9YdPgsOKZU1R4roaXv30/7RWsYt7y368g==
   dependencies:
     buffer "^6.0.3"
     email-validator "^2.0.4"

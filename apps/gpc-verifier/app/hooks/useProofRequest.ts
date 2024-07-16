@@ -5,6 +5,7 @@ import {
   GPCProofConfig,
   PODMembershipLists
 } from "@pcd/gpc";
+import { POD_INT_MAX } from "@pcd/pod";
 import { generateSnarkMessageHash } from "@pcd/util";
 
 // https://docs.pcd.team/types/_pcd_gpc.GPCProofConfig.html
@@ -23,9 +24,11 @@ const proofConfig: GPCProofConfig = {
         // Prove the presence of an entry called "lastName", hide its value.
         lastName: { isRevealed: false },
         // Prove the presence of an entry called "age", hide its value.
-        // and prove that it is in the range of { min: 18, max: POD_INT_MAX }
-        // TODO: inRange: { min: 18, max: POD_INT_MAX }
-        age: { isRevealed: false },
+        // and prove that it is >= 18
+        age: {
+          isRevealed: false,
+          inRange: { min: 18n, max: POD_INT_MAX }
+        },
         // Prove the presence of an entry called "owner", hide its value, and prove
         // that I own the corresponding Semaphore identity secrets.
         owner: { isRevealed: false, isOwnerID: true }
@@ -46,9 +49,11 @@ const proofConfig: GPCProofConfig = {
         // Prove the presence of an entry called "startDate", reveal its value.
         startDate: { isRevealed: true },
         // Prove the presence of an entry called "annualSalary", hide its value,
-        // and prove that it is in the range of { min: 20000, max: POD_INT_MAX }
-        // TODO: inRange: { min: 20000, max: POD_INT_MAX }
-        annualSalary: { isRevealed: false },
+        // and prove that it is >= 20000
+        annualSalary: {
+          isRevealed: false,
+          inRange: { min: 20000n, max: POD_INT_MAX }
+        },
         // Prove the presence of an entry called "owner", hide its value, and prove
         // that I own the corresponding Semaphore identity secrets.
         owner: { isRevealed: false, isOwnerID: true }
