@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { FieldValues } from "react-hook-form";
 import InfoForm from "@/gov/components/InfoForm";
 import { useIssueIDPOD } from "@/gov/hooks/useIssueIDPOD";
@@ -9,15 +9,9 @@ import useLogin from "@/gov/hooks/useLogin";
 import useStore from "@/shared/hooks/useStore";
 
 export default function Gov() {
-  const token = useStore((state) =>
-    state._hasHydrated ? state.govToken : undefined
-  );
+  const hasHydrated = useStore((state) => state._hasHydrated);
 
-  useEffect(() => {
-    // hydrate persisted store after mount
-    useStore.persist.rehydrate();
-  }, []);
-
+  const token = useStore((state) => state.govToken);
   const idPOD = useStore((state) => state.idPOD);
 
   const { mutate: login, error: loginError } = useLogin();
@@ -37,6 +31,10 @@ export default function Gov() {
     },
     [issueIDPOD]
   );
+
+  if (!hasHydrated) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <main className="p-6 m-0 flex flex-col gap-4">

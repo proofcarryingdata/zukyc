@@ -3,9 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getDeelUserByEmail = getDeelUserByEmail;
-exports.getPaystubPODByEmail = getPaystubPODByEmail;
-exports.savePaystubPOD = savePaystubPOD;
+exports.savePaystubPOD = exports.getPaystubPODByEmail = exports.getDeelUserByEmail = void 0;
 const chance_1 = __importDefault(require("chance"));
 const lodash_1 = __importDefault(require("lodash"));
 const kv_1 = require("@vercel/kv");
@@ -19,12 +17,8 @@ function getDeelUserByEmail(email) {
     // randomly generate DeelUser fields
     // In practice, look up the user in the database
     const names = email.replace(/@zoo.com$/, "").split(".");
-    if (names.length < 1) {
+    if (names.length < 2) {
         return null;
-    }
-    if (names.length === 1) {
-        const lastName = chance.last();
-        names.push(lastName);
     }
     const startDate = chance.birthday({
         string: true,
@@ -39,10 +33,13 @@ function getDeelUserByEmail(email) {
         annualSalary
     };
 }
+exports.getDeelUserByEmail = getDeelUserByEmail;
 async function getPaystubPODByEmail(email) {
     const key = `paystub-${email}`;
     return await podIssuerKV.get(key);
 }
+exports.getPaystubPODByEmail = getPaystubPODByEmail;
 async function savePaystubPOD(email, serializedPOD) {
     await podIssuerKV.set(`paystub-${email}`, serializedPOD);
 }
+exports.savePaystubPOD = savePaystubPOD;

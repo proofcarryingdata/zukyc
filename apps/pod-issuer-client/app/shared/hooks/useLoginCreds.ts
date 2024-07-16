@@ -3,6 +3,9 @@ import Chance from "chance";
 import useStore from "@/shared/hooks/useStore";
 
 // Generate random login credentials for demo purposes
+// We reuse the same email for "gov" and "deel" websites.
+// On the server side, they generate the same firstName and lastName for the same email.
+// Our proof will check we have the same firstName and lastName for ID POD and paystub POD.
 // In practice, need to implement sign up process
 const useLoginCreds = () => {
   const email = useStore((state) => state.email);
@@ -10,12 +13,15 @@ const useLoginCreds = () => {
   return useMemo(() => {
     const chance = new Chance();
 
-    console.log(email);
     let loginEmail = email;
     if (!loginEmail) {
-      let animal = chance.animal({ type: "zoo" }).replaceAll("'", "");
-      animal = animal.split(" ").join(".").toLowerCase();
-      loginEmail = `${animal}@zoo.com`;
+      const animal = chance.animal().replaceAll("'", "");
+      const names = animal.split(" ");
+      if (names.length < 2) {
+        names.push(chance.last());
+      }
+      const name = names.join(".").toLowerCase();
+      loginEmail = `${name}@zoo.com`;
     }
 
     return {

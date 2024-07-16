@@ -7,7 +7,7 @@ module.exports = {
     browser: true,
     node: true
   },
-  plugins: ["@typescript-eslint", "react-hooks"],
+  plugins: ["@typescript-eslint", "react-hooks", "@tanstack/query"],
   rules: {
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": "error"

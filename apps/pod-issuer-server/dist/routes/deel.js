@@ -38,24 +38,33 @@ deel.post("/issue", (0, express_jwt_1.expressjwt)({
     const email = req.auth?.email;
     if (!email) {
         res.status(401).send("Unauthorized");
+        return;
     }
     const inputs = req.body;
     if (!inputs.semaphoreCommitment) {
         res.status(400).send("Missing query parameter");
         return;
     }
-    // We already issued ID POD for this user, return the POD
-    const pod = await (0, deel_1.getPaystubPODByEmail)(email);
-    if (pod !== null) {
-        res.status(200).json({ pod });
-        return;
-    }
-    const user = (0, deel_1.getDeelUserByEmail)(email);
-    if (user === null) {
-        res.status(404).send("User not found");
-        return;
-    }
     try {
+        // We already issued paystub POD for this user, return the POD
+        const podStr = await (0, deel_1.getPaystubPODByEmail)(email);
+        if (podStr !== null) {
+            const pod = pod_1.POD.deserialize(podStr);
+            const owner = pod.content.asEntries().owner.value;
+            if (owner !== BigInt(inputs.semaphoreCommitment)) {
+                res
+                    .status(400)
+                    .send("Already issued POD for this user, but Semaphore Commitment doesn't match.");
+                return;
+            }
+            res.status(200).json({ pod: podStr });
+            return;
+        }
+        const user = (0, deel_1.getDeelUserByEmail)(email);
+        if (user === null) {
+            res.status(404).send("User not found");
+            return;
+        }
         // For more info, see https://github.com/proofcarryingdata/zupass/blob/main/examples/pod-gpc-example/src/podExample.ts
         const pod = pod_1.POD.sign({
             firstName: { type: "string", value: user.firstName },

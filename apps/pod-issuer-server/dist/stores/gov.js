@@ -3,9 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getGovUserByEmail = getGovUserByEmail;
-exports.getIDPODByEmail = getIDPODByEmail;
-exports.saveIDPOD = saveIDPOD;
+exports.saveIDPOD = exports.getIDPODByEmail = exports.getGovUserByEmail = void 0;
 const chance_1 = __importDefault(require("chance"));
 const lodash_1 = __importDefault(require("lodash"));
 const kv_1 = require("@vercel/kv");
@@ -19,12 +17,8 @@ function getGovUserByEmail(email) {
     // randomly generate GovUser fields
     // In practice, look up the user in the database
     const names = email.replace(/@zoo.com$/, "").split(".");
-    if (names.length < 1) {
+    if (names.length < 2) {
         return null;
-    }
-    if (names.length === 1) {
-        const lastName = chance.last();
-        names.push(lastName);
     }
     const age = chance.age({ type: "adult" });
     const idNumber = chance.string({ pool: "0123456789", length: 7 });
@@ -36,10 +30,13 @@ function getGovUserByEmail(email) {
         idNumber: `G${idNumber}`
     };
 }
+exports.getGovUserByEmail = getGovUserByEmail;
 async function getIDPODByEmail(email) {
     const key = `id-${email}`;
     return await podIssuerKV.get(key);
 }
+exports.getIDPODByEmail = getIDPODByEmail;
 async function saveIDPOD(email, serializedPOD) {
     await podIssuerKV.set(`id-${email}`, serializedPOD);
 }
+exports.saveIDPOD = saveIDPOD;

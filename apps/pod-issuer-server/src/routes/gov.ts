@@ -46,6 +46,7 @@ gov.post(
     const email = req.auth?.email;
     if (!email) {
       res.status(401).send("Unauthorized");
+      return;
     }
 
     const inputs: {
@@ -57,20 +58,30 @@ gov.post(
       return;
     }
 
-    // We already issued ID POD for this user, return the POD
-    const pod = await getIDPODByEmail(email);
-    if (pod !== null) {
-      res.status(200).json({ pod });
-      return;
-    }
-
-    const user = getGovUserByEmail(email);
-    if (user === null) {
-      res.status(404).send("User not found");
-      return;
-    }
-
     try {
+      // We already issued ID POD for this user, return the POD
+      const podStr = await getIDPODByEmail(email);
+      if (podStr !== null) {
+        const pod = POD.deserialize(podStr);
+        const owner = pod.content.asEntries().owner.value;
+        if (owner !== BigInt(inputs.semaphoreCommitment)) {
+          res
+            .status(400)
+            .send(
+              "Already issued POD for this user, but Semaphore Commitment doesn't match."
+            );
+          return;
+        }
+        res.status(200).json({ pod: podStr });
+        return;
+      }
+
+      const user = getGovUserByEmail(email);
+      if (user === null) {
+        res.status(404).send("User not found");
+        return;
+      }
+
       // For more info, see https://github.com/proofcarryingdata/zupass/blob/main/examples/pod-gpc-example/src/podExample.ts
       const pod = POD.sign(
         {

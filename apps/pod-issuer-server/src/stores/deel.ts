@@ -23,13 +23,8 @@ export function getDeelUserByEmail(email: string): DeelUser | null {
   // randomly generate DeelUser fields
   // In practice, look up the user in the database
   const names = email.replace(/@zoo.com$/, "").split(".");
-  if (names.length < 1) {
+  if (names.length < 2) {
     return null;
-  }
-
-  if (names.length === 1) {
-    const lastName = chance.last();
-    names.push(lastName);
   }
 
   const startDate = chance.birthday({
