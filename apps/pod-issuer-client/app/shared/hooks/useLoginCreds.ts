@@ -15,9 +15,13 @@ const useLoginCreds = () => {
 
     let loginEmail = email;
     if (!loginEmail) {
-      let animal = chance.animal({ type: "zoo" }).replaceAll("'", "");
-      animal = animal.split(" ").join(".").toLowerCase();
-      loginEmail = `${animal}@zoo.com`;
+      const animal = chance.animal().replaceAll("'", "");
+      const names = animal.split(" ");
+      if (names.length < 2) {
+        names.push(chance.last());
+      }
+      const name = names.join(".").toLowerCase();
+      loginEmail = `${name}@zoo.com`;
     }
 
     return {

@@ -39,7 +39,7 @@ const Login = ({ onLogin }: { onLogin: (_data: FieldValues) => void }) => {
               }
             })}
             type="email"
-            value={loginCreds.email}
+            defaultValue={loginCreds.email}
             className="form-input px-4 py-3 rounded grow"
             placeholder="Email"
           />
@@ -53,7 +53,7 @@ const Login = ({ onLogin }: { onLogin: (_data: FieldValues) => void }) => {
           <input
             {...register("password", { required: "Password is required." })}
             type="password"
-            value={loginCreds.password}
+            defaultValue={loginCreds.password}
             className="form-input px-4 py-3 rounded grow"
             placeholder="Password"
           />
