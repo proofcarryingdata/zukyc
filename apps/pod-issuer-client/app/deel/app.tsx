@@ -63,6 +63,12 @@ export default function Deel() {
               Semaphore identity commitment
             </a>
             ). We'll issue your Paystub POD to this public identifier.
+            <span className="info-tooltip-anchor">❗</span>
+            <Tooltip anchorSelect=".info-tooltip-anchor">
+              You can get this from{" "}
+              {process.env.NEXT_PUBLIC_GPC_PROVER_CLIENT_URL}, see "Identity,
+              Public identifier".
+            </Tooltip>
           </p>
           <input
             {...register("semaphoreCommitment", {
