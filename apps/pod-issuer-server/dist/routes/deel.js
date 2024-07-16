@@ -83,7 +83,7 @@ deel.post("/issue", (0, express_jwt_1.expressjwt)({
     }
     catch (e) {
         console.error(e);
-        res.status(500).send("Error issue ID POD");
+        res.status(500).send("Error issue Paystub POD: " + e);
     }
 });
 exports.default = deel;
