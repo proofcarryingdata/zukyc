@@ -20,9 +20,14 @@ module.exports = {
 
     return config;
   },
-
   env: {
     KV_REST_API_URL: process.env.KV_REST_API_URL,
-    KV_REST_API_TOKEN: process.env.KV_REST_API_TOKEN
+    KV_REST_API_TOKEN: process.env.KV_REST_API_TOKEN,
+    NEXT_PUBLIC_GPC_PROVER_CLIENT_URL:
+      process.env.NEXT_PUBLIC_GPC_PROVER_CLIENT_URL,
+    NEXT_PUBLIC_GOV_EDDSA_PUBLIC_KEY:
+      process.env.NEXT_PUBLIC_GOV_EDDSA_PUBLIC_KEY,
+    NEXT_PUBLIC_DEEL_EDDSA_PUBLIC_KEY:
+      process.env.NEXT_PUBLIC_DEEL_EDDSA_PUBLIC_KEY
   }
 };
