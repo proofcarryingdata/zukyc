@@ -48,7 +48,7 @@ export const generateProof = async (
     const proofConfig = deserializeGPCProofConfig(proofRequest.proofConfig);
     const membershipLists = proofRequest.membershipLists;
     const externalNullifier = proofRequest.externalNullifier || "ZooKyc";
-    const watermark = proofRequest.watermark || BigInt(Date.now());
+    const watermark = proofRequest.watermark || new Date().toISOString();
 
     // https://docs.pcd.team/types/_pcd_gpc.GPCProofInputs.html
     // To generate a proof we need to pair the config with a set of inputs, including
