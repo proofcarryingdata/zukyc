@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
+import { Tooltip } from "react-tooltip";
 import { FieldValues } from "react-hook-form";
 import InfoForm from "@/gov/components/InfoForm";
 import { useIssueIDPOD } from "@/gov/hooks/useIssueIDPOD";
@@ -64,6 +65,11 @@ export default function Gov() {
             >
               📋
             </button>
+            <p className="info-tooltip-anchor">❗</p>
+            <Tooltip anchorSelect=".info-tooltip-anchor">
+              To generate ID PODs with different information, try{" "}
+              {window.location.origin}/debug.
+            </Tooltip>
           </div>
 
           <textarea className="border-none" readOnly rows={10} value={idPOD} />

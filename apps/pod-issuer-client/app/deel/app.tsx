@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
+import { Tooltip } from "react-tooltip";
 import { useForm, FieldValues } from "react-hook-form";
 import { useIssuePaystubPOD } from "@/deel/hooks/useIssuePaystubPOD";
 import Login from "@/shared/components/Login";
@@ -102,6 +103,11 @@ export default function Deel() {
             >
               📋
             </button>
+            <p className="info-tooltip-anchor">❗</p>
+            <Tooltip anchorSelect=".info-tooltip-anchor">
+              To generate Paystub PODs with different information, try{" "}
+              {window.location.origin}/debug.
+            </Tooltip>
           </div>
 
           <textarea
