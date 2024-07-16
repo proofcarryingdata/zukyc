@@ -1,14 +1,19 @@
 import { Dispatch } from "react";
+import JSONBig from "json-bigint";
 import { POD } from "@pcd/pod";
 import {
   GPCProofInputs,
-  deserializeGPCProofConfig,
   gpcArtifactDownloadURL,
   gpcProve,
   serializeGPCBoundConfig,
   serializeGPCRevealedClaims
 } from "@pcd/gpc";
 import { Identity } from "@semaphore-protocol/identity";
+
+const jsonBigSerializer = JSONBig({
+  useNativeBigInt: true,
+  alwaysParseAsBig: true
+});
 
 export type ProofResult = {
   config: string;
@@ -43,10 +48,8 @@ export const generateProof = async (
     const idPOD = POD.deserialize(serializedIDPOD);
     const paytsubPOD = POD.deserialize(serializedPaystubPOD);
 
-    const proofRequest = JSON.parse(serializedProofRequest);
-    // https://docs.pcd.team/functions/_pcd_gpc.deserializeGPCProofConfig.html
-    const proofConfig = deserializeGPCProofConfig(proofRequest.proofConfig);
-    const membershipLists = proofRequest.membershipLists;
+    // TODO: explain
+    const proofRequest = jsonBigSerializer.parse(serializedProofRequest);
     const externalNullifier = proofRequest.externalNullifier || "ZooKyc";
     const watermark = proofRequest.watermark || new Date().toISOString();
 
@@ -73,7 +76,7 @@ export const generateProof = async (
         // Here, We don't want the same user to get more than one loan.
         externalNullifier: { type: "string", value: externalNullifier }
       },
-      membershipLists,
+      membershipLists: proofRequest.membershipLists,
       // If watermark is set, the given value will be included in the resulting
       // proof. This allows identifying a proof as tied to a specific use case, to
       // avoid reuse. Unlike a nullifier, this watermark is not cryptographically
@@ -87,7 +90,7 @@ export const generateProof = async (
 
     // https://docs.pcd.team/functions/_pcd_gpc.gpcProve.html
     const { proof, boundConfig, revealedClaims } = await gpcProve(
-      proofConfig,
+      proofRequest.proofConfig,
       proofInputs,
       artifactsURL
     );

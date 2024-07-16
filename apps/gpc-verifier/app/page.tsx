@@ -60,13 +60,13 @@ export default function Verifier() {
           <button
             className="p-2 m-1 text-sm bg-transparent border-none hover:bg-gray-100"
             onClick={() => {
-              navigator.clipboard.writeText(proofRequest.serialized);
+              navigator.clipboard.writeText(proofRequest);
             }}
           >
             📋
           </button>
         </div>
-        <textarea rows={24} value={proofRequest.prettified} readOnly />
+        <textarea rows={24} value={proofRequest} readOnly />
       </div>
 
       <h3 className="font-bold">Step 2: verify your proof</h3>

@@ -1,11 +1,12 @@
 import { useMemo } from "react";
-import {
-  serializeGPCProofConfig,
-  gpcBindConfig,
-  GPCProofConfig,
-  PODMembershipLists
-} from "@pcd/gpc";
+import JSONBig from "json-bigint";
+import { gpcBindConfig, GPCProofConfig, PODMembershipLists } from "@pcd/gpc";
 import { POD_INT_MAX } from "@pcd/pod";
+
+const jsonBigSerializer = JSONBig({
+  useNativeBigInt: true,
+  alwaysParseAsBig: true
+});
 
 // https://docs.pcd.team/types/_pcd_gpc.GPCProofConfig.html
 const proofConfig: GPCProofConfig = {
@@ -105,29 +106,28 @@ export const useProofRequest = () => {
 
 export const useSerializedProofRequest = () => {
   return useMemo(() => {
+    // TODO: cleanup
     // https://docs.pcd.team/functions/_pcd_gpc.serializeGPCProofConfig.html
     // serializes GPCProofConfig to a string in a full-fidelity format, so we can send this
     // to the prover.
-    const serializedConfig = serializeGPCProofConfig(proofConfig);
-    const serialized = JSON.stringify({
-      proofConfig: serializedConfig,
-      membershipLists,
-      externalNullifier,
-      watermark
-    });
+    return jsonBigSerializer.stringify(
+      {
+        proofConfig,
+        membershipLists,
+        externalNullifier,
+        watermark
+      },
+      null,
+      4
+    );
 
     // For display
-    const prettified = `{
-  proofConfig: ${serializeGPCProofConfig(proofConfig, 4)},
-  membershipLists: ${JSON.stringify(membershipLists, null, 4)},
-  externalNullifier: ${externalNullifier},
-  watermark: ${watermark}
-}
-`;
-
-    return {
-      serialized,
-      prettified
-    };
-  }, [externalNullifier, watermark]);
+    //     const prettified = `{
+    //   proofConfig: ${serializeGPCProofConfig(proofConfig, 4)},
+    //   membershipLists: ${JSON.stringify(membershipLists, null, 4)},
+    //   externalNullifier: ${externalNullifier},
+    //   watermark: ${watermark}
+    // }
+    // `;
+  }, []);
 };
