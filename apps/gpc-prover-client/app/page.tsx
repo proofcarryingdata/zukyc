@@ -45,12 +45,9 @@ export default function Prover() {
       <div className="flex flex-col gap-4 p-4 border rounded border-slate-400">
         <h2 className="text-lg font-bold">Generate proof</h2>
         <div className="flex flex-col gap-2">
-          <span>
-            Proof request (including proof config, and optionally membership
-            lists, external nullifier and watermark)
-          </span>
+          <span className="font-bold">Proof request</span>{" "}
           <textarea
-            rows={10}
+            rows={20}
             value={requestStr}
             placeholder="Past your proof request here!"
             onChange={(e) => setRequestStr(e.target.value.trim())}
