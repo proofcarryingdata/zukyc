@@ -70,7 +70,13 @@ export default function Verifier() {
       </div>
 
       <h3 className="font-bold">Step 2: verify your proof</h3>
-      <p>Paste the proof generated from Zookyc below.</p>
+      <p>
+        Paste the proof generated from{" "}
+        <a className="text-blue-500" href="#" onClick={onOpenPopup}>
+          ZooKyc
+        </a>{" "}
+        below.
+      </p>
       <p>
         Your loan will be approved if we can successfully verify your proof.
       </p>

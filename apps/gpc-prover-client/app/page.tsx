@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
+import { Tooltip } from "react-tooltip";
 import { generateProof, ProofResult } from "@/util/generateProof";
 import useIdentity from "@/hooks/useIdentity";
 import SemaphoreID from "@/components/SemaphoreID";
@@ -44,15 +45,20 @@ export default function Prover() {
 
       <div className="flex flex-col gap-4 p-4 border rounded border-slate-400">
         <h2 className="text-lg font-bold">Generate proof</h2>
-        <div className="flex flex-col gap-2">
-          <span className="font-bold">Proof request</span>{" "}
-          <textarea
-            rows={20}
-            value={requestStr}
-            placeholder="Past your proof request here!"
-            onChange={(e) => setRequestStr(e.target.value.trim())}
-          />
+        <div className="flex gap-2">
+          <span className="font-bold">Proof request</span>
+          <span className="info-tooltip-anchor">❗</span>
+          <Tooltip anchorSelect=".info-tooltip-anchor">
+            This is what you want to prove. You can get it from{" "}
+            {process.env.NEXT_PUBLIC_GPC_VERIFIER_URL}.
+          </Tooltip>
         </div>
+        <textarea
+          rows={20}
+          value={requestStr}
+          placeholder="Past your proof request here!"
+          onChange={(e) => setRequestStr(e.target.value.trim())}
+        />
         <div>
           <button onClick={generate}>Generate Proof</button>
         </div>
