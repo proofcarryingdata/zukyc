@@ -76,7 +76,6 @@ export const verifyProof = async (
       );
     }
     const nullifierHash = BigInt(vClaims.owner?.nullifierHash).toString();
-    console.log(nullifierHash);
     if (!(await tryRecordNullifierHash(nullifierHash))) {
       throw new Error(
         "We've got a proof from you before. You cannot get more than one loan."

@@ -6,7 +6,6 @@ import useLoginCreds from "@/shared/hooks/useLoginCreds";
 
 const Login = ({ onLogin }: { onLogin: (_data: FieldValues) => void }) => {
   const loginCreds = useLoginCreds();
-  console.log(loginCreds);
 
   const {
     register,

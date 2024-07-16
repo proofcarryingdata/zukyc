@@ -10,7 +10,6 @@ const useLoginCreds = () => {
   return useMemo(() => {
     const chance = new Chance();
 
-    console.log(email);
     let loginEmail = email;
     if (!loginEmail) {
       let animal = chance.animal({ type: "zoo" }).replaceAll("'", "");

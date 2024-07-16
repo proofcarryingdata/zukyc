@@ -71,8 +71,6 @@ const useStore = create<State>()(
       })),
       {
         name: "Store",
-        // skip hydration on SSR
-        skipHydration: true,
         onRehydrateStorage: () => (state) => {
           state?.setHasHydrated(true);
         }

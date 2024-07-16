@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { useForm, FieldValues } from "react-hook-form";
 import { useIssuePaystubPOD } from "@/deel/hooks/useIssuePaystubPOD";
 import Login from "@/shared/components/Login";
@@ -8,15 +8,9 @@ import useLogin from "@/deel/hooks/useLogin";
 import useStore from "@/shared/hooks/useStore";
 
 export default function Deel() {
-  const token = useStore((state) =>
-    state._hasHydrated ? state.deelToken : undefined
-  );
+  const hasHydrated = useStore((state) => state._hasHydrated);
 
-  useEffect(() => {
-    // hydrate persisted store after mount
-    useStore.persist.rehydrate();
-  }, []);
-
+  const token = useStore((state) => state.deelToken);
   const paystubPOD = useStore((state) => state.paystubPOD);
 
   const { mutate: login, error: loginError } = useLogin();
@@ -42,6 +36,10 @@ export default function Deel() {
     handleSubmit,
     formState: { errors }
   } = useForm();
+
+  if (!hasHydrated) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <main className="p-6 m-0 flex flex-col gap-4">
