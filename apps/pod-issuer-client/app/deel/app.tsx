@@ -6,6 +6,7 @@ import { useForm, FieldValues } from "react-hook-form";
 import { useIssuePaystubPOD } from "@/deel/hooks/useIssuePaystubPOD";
 import Login from "@/shared/components/Login";
 import useLogin from "@/deel/hooks/useLogin";
+import logout from "@/shared/hooks/logout";
 import useStore from "@/shared/hooks/useStore";
 
 export default function Deel() {
@@ -44,7 +45,11 @@ export default function Deel() {
 
   return (
     <main className="p-6 m-0 flex flex-col gap-4">
-      <h1 className="text-xl font-bold">ZooDeel</h1>
+      <div className="flex justify-between">
+        <h1 className="text-xl font-bold">ZooDeel</h1>
+        {token && <a onClick={logout}>Logout</a>}
+      </div>
+
       <h2 className="text-lg font-bold">Paystub POD issuer</h2>
 
       {!token && <Login onLogin={onLogin} />}

@@ -1,9 +1,6 @@
-const logout = (force: boolean) => {
-  if (
-    force ||
-    confirm("are you sure you want to log out and create a new user?")
-  ) {
-    window.localStorage.clear();
+const logout = () => {
+  if (window.confirm("Are you sure?")) {
+    localStorage.clear();
     window.location.reload();
   }
 };

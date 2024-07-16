@@ -7,6 +7,7 @@ import InfoForm from "@/gov/components/InfoForm";
 import { useIssueIDPOD } from "@/gov/hooks/useIssueIDPOD";
 import Login from "@/shared/components/Login";
 import useLogin from "@/gov/hooks/useLogin";
+import logout from "@/shared/hooks/logout";
 import useStore from "@/shared/hooks/useStore";
 
 export default function Gov() {
@@ -39,7 +40,11 @@ export default function Gov() {
 
   return (
     <main className="p-6 m-0 flex flex-col gap-4">
-      <h1 className="text-xl font-bold">ZooGov</h1>
+      <div className="flex justify-between">
+        <h1 className="text-xl font-bold">ZooGov</h1>
+        {token && <a onClick={logout}>Logout</a>}
+      </div>
+
       <h2 className="text-lg font-bold">Govenment ID POD issuer</h2>
 
       {!token && <Login onLogin={onLogin} />}
