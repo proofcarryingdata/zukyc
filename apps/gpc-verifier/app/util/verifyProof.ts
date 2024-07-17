@@ -79,18 +79,6 @@ export const verifyProof = async (
       throw new Error("Please make sure your ID POD is signed by ZooDeel");
     }
 
-    // Checks the nullifer, we don't want the same user to get more than one loan.
-    if (vClaims.owner?.externalNullifier.value !== externalNullifier) {
-      throw new Error(
-        `Invalid external nullifier value, make sure it is ${externalNullifier}`
-      );
-    }
-    if (!(await tryRecordNullifierHash(vClaims.owner?.nullifierHash))) {
-      throw new Error(
-        "We've got a proof from you before. You cannot get more than one loan."
-      );
-    }
-
     // Checks the watermark, it should be what we passed in
     if (vClaims.watermark?.value !== watermark) {
       throw new Error("Watermark does not match");
@@ -104,6 +92,21 @@ export const verifyProof = async (
     if (oneYearAfter > new Date()) {
       throw new Error(
         "You haven't been with your current employer for at least a year"
+      );
+    }
+
+    // Checks the nullifer, we don't want the same user to get more than one loan.
+    if (vClaims.owner?.externalNullifier.value !== externalNullifier) {
+      throw new Error(
+        `Invalid external nullifier value, make sure it is ${externalNullifier}`
+      );
+    }
+    // This check has side-effects (recording the nullifierHash which indicates that the
+    // user got a loan). Therefore it should be the last thing to happen after all the
+    // other checks are successful.
+    if (!(await tryRecordNullifierHash(vClaims.owner?.nullifierHash))) {
+      throw new Error(
+        "We've got a proof from you before. You cannot get more than one loan."
       );
     }
 

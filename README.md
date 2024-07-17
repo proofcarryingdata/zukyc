@@ -76,22 +76,21 @@ This Turborepo includes the following apps (inside the `apps/` folder):
 - This is a frontend app which provides the proof request, and uses the GPC library to verify ZK proofs.
 - In this demo, the server side code is not included, because the proof verification code would be similar. But in real world, the proof needs to be verified on the server side too.
 
-## Getting started
+## Local development
 
-### Build
+#### Environment Variables
 
-To build all apps and packages, run the following command:
+In order to develop locally, you will need to set some environment variables. We have included an example environment variable file .env.example
+In order to make the application use these environment variables, you will need to copy the contents of the example file into an adjacent file called .env.
 
-```
-cd zukyc
-yarn build
-```
+### Running the project
 
-### Develop
-
-To develop all apps and packages, run the following command:
+In the root of this project, execute the following commands locally.
 
 ```
-cd zukyc
+# installs dependencies for all apps and packages in this repository
+yarn
+
+# starts all the applications contained in the `/apps` folder of the repository
 yarn dev
 ```

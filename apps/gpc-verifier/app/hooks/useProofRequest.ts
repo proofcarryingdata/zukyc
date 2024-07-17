@@ -40,7 +40,7 @@ const proofConfig: GPCProofConfig = {
         // prove that it equals to the firstName in the govID POD.
         firstName: { isRevealed: false, equalsEntry: "govID.firstName" },
         // Prove the presence of an entry called "lastName", hide its value, and
-        // prove that it equals to the firstName in the govID POD.
+        // prove that it equals to the lastName in the govID POD.
         lastName: { isRevealed: false, equalsEntry: "govID.lastName" },
         // There's an entry "currentEmployer" in the paystub POD, because it is
         // not specified here, it will be ignored, meaning the proof says nothiing

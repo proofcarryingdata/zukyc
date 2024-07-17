@@ -79,6 +79,7 @@ export const generateProof = async (
     const artifactsURL = gpcArtifactDownloadURL("unpkg", "prod", undefined);
     console.log("download artifacts from", artifactsURL);
 
+    // This is the core functionality which generates the proof.
     // https://docs.pcd.team/functions/_pcd_gpc.gpcProve.html
     const { proof, boundConfig, revealedClaims } = await gpcProve(
       proofRequest.proofConfig,
