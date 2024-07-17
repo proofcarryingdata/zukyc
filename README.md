@@ -42,23 +42,39 @@ This Turborepo includes the following apps (inside the `apps/` folder):
 
 #### `pod-issuer-client`
 
-- http://localhost:3000, deployed at https://zukyc-issuer-client.vercel.app. It includes:
-- [ZooGov](https://zukyc-issuer-client.vercel.app/gov): Govenment ID POD issuer.
-- [ZooDeel](https://zukyc-issuer-client.vercel.app/deel): Paystub POD issuer.
-- [ZooAdmin](https://zukyc-issuer-client.vercel.app/debug): For debugging purposes, it allows you to generate ID PODs and Paystub PODs with the information you provide.
-- `pod-issuer-server`: http://localhost:8080, deployed at https://zukyc-issuer-server.vercel.app.
-  - This is the Express server for pod-issuer-client. It provides the APIs to issues PODs to the user.
+- http://localhost:3000, deployed at https://zukyc-issuer-client.vercel.app.
+- This is the frontend of POD issuers (ZooGov, ZooDeel and ZooAdmin).
+- It includes:
+  - `app/gov`: ZooGov
+  - `app/deel`: ZooDeel
+  - `app/debug`: ZooAdmin
+- In real world, those would be three independent websites.
+
+#### `pod-issuer-server`
+
+- http://localhost:8080, deployed at https://zukyc-issuer-server.vercel.app.
+- This is the server for pod-issuer-client. It provides the server-side APIs to issues PODs to the user.
+- It includes:
+  - `routes/gov.ts`: server-side APIs for ZooGov
+  - `routes/deel.ts`: server-side APIs for ZooDeel
+  - `routes/debug.ts`: server-side APIs for ZooAdmin
+- Similarly, in real world, those would be three independent server-side applications issuing PODs independently.
+- A server is needed because in real world, the server would have a user database; and the server would hold a signing key for issuing PODs.
 
 ### ZooKyc
 
-- `gpc-prover-client` (ZooKyc): http://localhost:3002, deployed at https://zukyc-gpc-prover-client.vercel.app.
-  - This is a Next.js app which uses the GPC library to generate ZK proofs. GPCs can prove properties of one POD or serveral PODs together. PODs can be proven to be owned by the prover, using their Semaphore identity.
+#### `gpc-prover-client`
+
+- http://localhost:3002, deployed at https://zukyc-gpc-prover-client.vercel.app.
+- This is a frontend app which manages Semaphore identity, PODs, and uses the GPC library to generate ZK proofs based on proof requests.
 
 ### ZooLender
 
-- `gpc-verifier` (ZooLender): http://localhost:3001, deployed at https://zukyc-gpc-verifier.vercel.app.
-  - This is a Next.js app which uses the GPC library to verify ZK proofs.
-  - I didn't build a server side app for this, because the verification code would be similar. But in reality, the proof needs to be verified on the server side too.
+#### `gpc-verifier`
+
+- http://localhost:3001, deployed at https://zukyc-gpc-verifier.vercel.app.
+- This is a frontend app which provides the proof request, and uses the GPC library to verify ZK proofs.
+- In this demo, the server side code is not included, because the proof verification code would be similar. But in real world, the proof needs to be verified on the server side too.
 
 ## Getting started
 
