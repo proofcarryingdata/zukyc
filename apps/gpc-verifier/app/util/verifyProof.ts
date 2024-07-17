@@ -62,9 +62,8 @@ export const verifyProof = async (
       throw new Error("Your proof is not valid. Please try again.");
     }
 
-    // Note that `gpcVerify` only checks that the inputs are valid with
-    // respect to each other.  We still need to check that everything is as
-    // we expect.
+    // Note that `gpcVerify` only checks that the inputs are valid with respect to each other.
+    // We still need to check that revealed values are as expected.
 
     // Check the PODs are signed by a trusted authorities with known public keys.
     if (
@@ -86,8 +85,7 @@ export const verifyProof = async (
         `Invalid external nullifier value, make sure it is ${externalNullifier}`
       );
     }
-    const nullifierHash = BigInt(vClaims.owner?.nullifierHash).toString();
-    if (!(await tryRecordNullifierHash(nullifierHash))) {
+    if (!(await tryRecordNullifierHash(vClaims.owner?.nullifierHash))) {
       throw new Error(
         "We've got a proof from you before. You cannot get more than one loan."
       );

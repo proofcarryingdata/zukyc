@@ -6,9 +6,9 @@ const NULLIFIER_KV_SET = "nullifiers_hash";
 // Checks whether we've seen the nullifier hash before.
 // If yes, return false; otherwise, returns true, and add the nullfier hash to our set.
 export async function tryRecordNullifierHash(
-  nullifierHash: string
+  nullifierHash: bigint
 ): Promise<boolean> {
-  if (await kv.sismember(NULLIFIER_KV_SET, nullifierHash)) {
+  if (await kv.sismember(NULLIFIER_KV_SET, nullifierHash.toString())) {
     return false;
   }
 
