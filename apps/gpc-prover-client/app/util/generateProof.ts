@@ -98,7 +98,7 @@ export const generateProof = async (
         revealedClaims
       },
       null,
-      4
+      2
     );
     setProofResult(serializedProof);
   } catch (e) {

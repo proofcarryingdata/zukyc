@@ -117,7 +117,7 @@ export const useSerializedProofRequest = () => {
         watermark
       },
       null,
-      4
+      2
     );
   }, []);
 };
