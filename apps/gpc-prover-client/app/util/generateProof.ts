@@ -1,27 +1,20 @@
 import { Dispatch } from "react";
+import JSONBig from "json-bigint";
 import { POD } from "@pcd/pod";
-import {
-  GPCProofInputs,
-  deserializeGPCProofConfig,
-  gpcArtifactDownloadURL,
-  gpcProve,
-  serializeGPCBoundConfig,
-  serializeGPCRevealedClaims
-} from "@pcd/gpc";
+import { GPCProofInputs, gpcArtifactDownloadURL, gpcProve } from "@pcd/gpc";
 import { Identity } from "@semaphore-protocol/identity";
 
-export type ProofResult = {
-  config: string;
-  proof: string;
-  claims: string;
-};
+const jsonBigSerializer = JSONBig({
+  useNativeBigInt: true,
+  alwaysParseAsBig: true
+});
 
 export const generateProof = async (
   identity: Identity,
   serializedIDPOD: string,
   serializedPaystubPOD: string,
   serializedProofRequest: string,
-  setProofResult: Dispatch<ProofResult>
+  setProofResult: Dispatch<string>
 ) => {
   try {
     if (!identity) {
@@ -43,12 +36,13 @@ export const generateProof = async (
     const idPOD = POD.deserialize(serializedIDPOD);
     const paytsubPOD = POD.deserialize(serializedPaystubPOD);
 
-    const proofRequest = JSON.parse(serializedProofRequest);
+    // You can also use deserializeGPCProofConfig to deserialize the proofConfig,
+    // and underlyingly it uses json-bitint like what we are doing here.
     // https://docs.pcd.team/functions/_pcd_gpc.deserializeGPCProofConfig.html
-    const proofConfig = deserializeGPCProofConfig(proofRequest.proofConfig);
-    const membershipLists = proofRequest.membershipLists;
+    const proofRequest = jsonBigSerializer.parse(serializedProofRequest);
+    const proofConfig = proofRequest.proofConfig;
     const externalNullifier = proofRequest.externalNullifier || "ZooKyc";
-    const watermark = proofRequest.watermark || BigInt(Date.now());
+    const watermark = proofRequest.watermark || new Date().toISOString();
 
     // https://docs.pcd.team/types/_pcd_gpc.GPCProofInputs.html
     // To generate a proof we need to pair the config with a set of inputs, including
@@ -73,7 +67,7 @@ export const generateProof = async (
         // Here, We don't want the same user to get more than one loan.
         externalNullifier: { type: "string", value: externalNullifier }
       },
-      membershipLists,
+      membershipLists: proofRequest.membershipLists,
       // If watermark is set, the given value will be included in the resulting
       // proof. This allows identifying a proof as tied to a specific use case, to
       // avoid reuse. Unlike a nullifier, this watermark is not cryptographically
@@ -92,11 +86,20 @@ export const generateProof = async (
       artifactsURL
     );
 
-    const serializedProof = {
-      config: serializeGPCBoundConfig(boundConfig),
-      proof: JSON.stringify(proof),
-      claims: serializeGPCRevealedClaims(revealedClaims)
-    };
+    // You can also use serializeGPCBoundConfig to serialize the boundConfig,
+    // and use serializeGPCRevealedClaims to serialize the revealedClaims,
+    // and underlyingly they use json-bigint like we do here.
+    // https://docs.pcd.team/functions/_pcd_gpc.serializeGPCBoundConfig.html
+    // https://docs.pcd.team/functions/_pcd_gpc.serializeGPCRevealedClaims.html
+    const serializedProof = JSONBig.stringify(
+      {
+        boundConfig,
+        proof,
+        revealedClaims
+      },
+      null,
+      2
+    );
     setProofResult(serializedProof);
   } catch (e) {
     alert("Error generate proof");

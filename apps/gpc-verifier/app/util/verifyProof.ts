@@ -1,14 +1,17 @@
 import { Dispatch } from "react";
+import JSONBig from "json-bigint";
 import {
   GPCBoundConfig,
-  GPCProof,
   gpcArtifactDownloadURL,
   gpcVerify,
-  deserializeGPCBoundConfig,
-  deserializeGPCRevealedClaims,
   PODMembershipLists
 } from "@pcd/gpc";
 import { tryRecordNullifierHash } from "@/util/persistence";
+
+const jsonBigSerializer = JSONBig({
+  useNativeBigInt: true,
+  alwaysParseAsBig: true
+});
 
 export const verifyProof = async (
   boundConfig: GPCBoundConfig,
@@ -23,8 +26,12 @@ export const verifyProof = async (
       throw new Error("Proof cannot be empty!");
     }
 
-    const proofObj = JSON.parse(proofStr);
-    const vProof = JSON.parse(proofObj.proof) as GPCProof;
+    // You can also use deserializeGPCBoundConfig to deserialize the boundConfig,
+    // and use deserializeGPCRevealedClaims to deserialize the revealedClaims,
+    // and underlyingly they use json-bigint like we do here.
+    // https://docs.pcd.team/functions/_pcd_gpc.deserializeGPCBoundConfig.html
+    // https://docs.pcd.team/functions/_pcd_gpc.deserializeGPCRevealedClaims.html
+    const proofObj = jsonBigSerializer.parse(proofStr);
 
     // Use the boundConfig we provided.
     // However, gpcBindConfig might not always pick the same circuit as gpcProve,
@@ -32,21 +39,25 @@ export const verifyProof = async (
     // Here we would like to use the circuitIdentifier returned by gpcProve.
     const vConfig = {
       ...boundConfig,
-      circuitIdentifier: deserializeGPCBoundConfig(proofObj.config)
-        .circuitIdentifier
+      circuitIdentifier: proofObj.boundConfig.circuitIdentifier
     };
 
     // Make sure the membershipLists in the revealed claims matches
     // the lists we provided.
     const vClaims = {
-      ...deserializeGPCRevealedClaims(proofObj.claims),
+      ...proofObj.revealedClaims,
       membershipLists
     };
 
     const artifactsURL = gpcArtifactDownloadURL("unpkg", "prod", undefined);
     console.log("download artifacts from", artifactsURL);
 
-    const isValid = await gpcVerify(vProof, vConfig, vClaims, artifactsURL);
+    const isValid = await gpcVerify(
+      proofObj.proof,
+      vConfig,
+      vClaims,
+      artifactsURL
+    );
     if (!isValid) {
       throw new Error("Your proof is not valid. Please try again.");
     }

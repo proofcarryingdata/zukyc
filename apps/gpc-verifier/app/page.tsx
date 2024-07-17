@@ -60,17 +60,23 @@ export default function Verifier() {
           <button
             className="p-2 m-1 text-sm bg-transparent border-none hover:bg-gray-100"
             onClick={() => {
-              navigator.clipboard.writeText(proofRequest.serialized);
+              navigator.clipboard.writeText(proofRequest);
             }}
           >
             📋
           </button>
         </div>
-        <textarea rows={24} value={proofRequest.prettified} readOnly />
+        <textarea rows={24} value={proofRequest} readOnly />
       </div>
 
       <h3 className="font-bold">Step 2: verify your proof</h3>
-      <p>Paste the proof generated from Zookyc below.</p>
+      <p>
+        Paste the proof generated from{" "}
+        <a className="text-blue-500" href="#" onClick={onOpenPopup}>
+          ZooKyc
+        </a>{" "}
+        below.
+      </p>
       <p>
         Your loan will be approved if we can successfully verify your proof.
       </p>

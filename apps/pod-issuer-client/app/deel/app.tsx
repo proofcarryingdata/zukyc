@@ -1,10 +1,12 @@
 "use client";
 
 import { useCallback } from "react";
+import { Tooltip } from "react-tooltip";
 import { useForm, FieldValues } from "react-hook-form";
 import { useIssuePaystubPOD } from "@/deel/hooks/useIssuePaystubPOD";
 import Login from "@/shared/components/Login";
 import useLogin from "@/deel/hooks/useLogin";
+import logout from "@/shared/hooks/logout";
 import useStore from "@/shared/hooks/useStore";
 
 export default function Deel() {
@@ -43,7 +45,11 @@ export default function Deel() {
 
   return (
     <main className="p-6 m-0 flex flex-col gap-4">
-      <h1 className="text-xl font-bold">ZooDeel</h1>
+      <div className="flex justify-between">
+        <h1 className="text-xl font-bold">ZooDeel</h1>
+        {token && <a onClick={logout}>Logout</a>}
+      </div>
+
       <h2 className="text-lg font-bold">Paystub POD issuer</h2>
 
       {!token && <Login onLogin={onLogin} />}
@@ -62,6 +68,12 @@ export default function Deel() {
               Semaphore identity commitment
             </a>
             ). We'll issue your Paystub POD to this public identifier.
+            <span className="info-tooltip-anchor">❗</span>
+            <Tooltip anchorSelect=".info-tooltip-anchor">
+              You can get this from{" "}
+              {process.env.NEXT_PUBLIC_GPC_PROVER_CLIENT_URL}, see "Identity,
+              Public identifier".
+            </Tooltip>
           </p>
           <input
             {...register("semaphoreCommitment", {
@@ -102,6 +114,11 @@ export default function Deel() {
             >
               📋
             </button>
+            <p className="info-tooltip-anchor">❗</p>
+            <Tooltip anchorSelect=".info-tooltip-anchor">
+              To generate Paystub PODs with different information, try{" "}
+              {window.location.origin}/debug.
+            </Tooltip>
           </div>
 
           <textarea

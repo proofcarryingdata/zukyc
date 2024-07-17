@@ -1,12 +1,12 @@
 import { useMemo } from "react";
-import {
-  serializeGPCProofConfig,
-  gpcBindConfig,
-  GPCProofConfig,
-  PODMembershipLists
-} from "@pcd/gpc";
+import JSONBig from "json-bigint";
+import { gpcBindConfig, GPCProofConfig, PODMembershipLists } from "@pcd/gpc";
 import { POD_INT_MAX } from "@pcd/pod";
-import { generateSnarkMessageHash } from "@pcd/util";
+
+const jsonBigSerializer = JSONBig({
+  useNativeBigInt: true,
+  alwaysParseAsBig: true
+});
 
 // https://docs.pcd.team/types/_pcd_gpc.GPCProofConfig.html
 const proofConfig: GPCProofConfig = {
@@ -85,24 +85,14 @@ const useBoundConfig = () => {
 // We can optionally ask to generate a nullifier, which is tied to the user's
 // identity and to the external nullifier value here. This can be used
 // to identify duplicate proofs without de-anonymizing.
-const useExternalNullifier = () => {
-  return useMemo(() => {
-    return generateSnarkMessageHash("ZooKyc").toString();
-  }, []);
-};
+const externalNullifier = "ZooKyc";
 
 // Watermark will be included in the resulting proof.
 // This allows identifying a proof as tied to a specific use case, to avoid reuse.
-const useWatermark = () => {
-  return useMemo(() => {
-    return generateSnarkMessageHash("ZooKyc ZooLender challenge").toString();
-  }, []);
-};
+const watermark = "ZooKyc ZooLender challenge";
 
 export const useProofRequest = () => {
   const boundConfig = useBoundConfig();
-  const externalNullifier = useExternalNullifier();
-  const watermark = useWatermark();
 
   return useMemo(() => {
     return {
@@ -111,37 +101,23 @@ export const useProofRequest = () => {
       externalNullifier,
       watermark
     };
-  }, [boundConfig, externalNullifier, watermark]);
+  }, [boundConfig]);
 };
 
 export const useSerializedProofRequest = () => {
-  const externalNullifier = useExternalNullifier();
-  const watermark = useWatermark();
-
   return useMemo(() => {
+    // You can also use serializeGPCProofConfig to serialize the proofConfig,
+    // and underlyingly it uses json-bitint like what we are doing here.
     // https://docs.pcd.team/functions/_pcd_gpc.serializeGPCProofConfig.html
-    // serializes GPCProofConfig to a string in a full-fidelity format, so we can send this
-    // to the prover.
-    const serializedConfig = serializeGPCProofConfig(proofConfig);
-    const serialized = JSON.stringify({
-      proofConfig: serializedConfig,
-      membershipLists,
-      externalNullifier,
-      watermark
-    });
-
-    // For display
-    const prettified = `{
-  proofConfig: ${serializeGPCProofConfig(proofConfig, 4)},
-  membershipLists: ${JSON.stringify(membershipLists, null, 4)},
-  externalNullifier: ${externalNullifier},
-  watermark: ${watermark}
-}
-`;
-
-    return {
-      serialized,
-      prettified
-    };
-  }, [externalNullifier, watermark]);
+    return jsonBigSerializer.stringify(
+      {
+        proofConfig,
+        membershipLists,
+        externalNullifier,
+        watermark
+      },
+      null,
+      2
+    );
+  }, []);
 };
