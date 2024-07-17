@@ -1,13 +1,7 @@
 import { Dispatch } from "react";
 import JSONBig from "json-bigint";
 import { POD } from "@pcd/pod";
-import {
-  GPCProofInputs,
-  gpcArtifactDownloadURL,
-  gpcProve,
-  serializeGPCBoundConfig,
-  serializeGPCRevealedClaims
-} from "@pcd/gpc";
+import { GPCProofInputs, gpcArtifactDownloadURL, gpcProve } from "@pcd/gpc";
 import { Identity } from "@semaphore-protocol/identity";
 
 const jsonBigSerializer = JSONBig({
@@ -15,18 +9,12 @@ const jsonBigSerializer = JSONBig({
   alwaysParseAsBig: true
 });
 
-export type ProofResult = {
-  config: string;
-  proof: string;
-  claims: string;
-};
-
 export const generateProof = async (
   identity: Identity,
   serializedIDPOD: string,
   serializedPaystubPOD: string,
   serializedProofRequest: string,
-  setProofResult: Dispatch<ProofResult>
+  setProofResult: Dispatch<string>
 ) => {
   try {
     if (!identity) {
@@ -48,8 +36,11 @@ export const generateProof = async (
     const idPOD = POD.deserialize(serializedIDPOD);
     const paytsubPOD = POD.deserialize(serializedPaystubPOD);
 
-    // TODO: explain
+    // You can also use deserializeGPCProofConfig to deserialize the proofConfig,
+    // and underlyingly it uses json-bitint like what we are doing here.
+    // https://docs.pcd.team/functions/_pcd_gpc.deserializeGPCProofConfig.html
     const proofRequest = jsonBigSerializer.parse(serializedProofRequest);
+    const proofConfig = proofRequest.proofConfig;
     const externalNullifier = proofRequest.externalNullifier || "ZooKyc";
     const watermark = proofRequest.watermark || new Date().toISOString();
 
@@ -90,16 +81,25 @@ export const generateProof = async (
 
     // https://docs.pcd.team/functions/_pcd_gpc.gpcProve.html
     const { proof, boundConfig, revealedClaims } = await gpcProve(
-      proofRequest.proofConfig,
+      proofConfig,
       proofInputs,
       artifactsURL
     );
 
-    const serializedProof = {
-      config: serializeGPCBoundConfig(boundConfig),
-      proof: JSON.stringify(proof),
-      claims: serializeGPCRevealedClaims(revealedClaims)
-    };
+    // You can also use serializeGPCBoundConfig to serialize the boundConfig,
+    // and use serializeGPCRevealedClaims to serialize the revealedClaims,
+    // and underlyingly they use json-bigint like we do here.
+    // https://docs.pcd.team/functions/_pcd_gpc.serializeGPCBoundConfig.html
+    // https://docs.pcd.team/functions/_pcd_gpc.serializeGPCRevealedClaims.html
+    const serializedProof = JSONBig.stringify(
+      {
+        boundConfig,
+        proof,
+        revealedClaims
+      },
+      null,
+      4
+    );
     setProofResult(serializedProof);
   } catch (e) {
     alert("Error generate proof");

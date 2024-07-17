@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { Tooltip } from "react-tooltip";
-import { generateProof, ProofResult } from "@/util/generateProof";
+import { generateProof } from "@/util/generateProof";
 import useIdentity from "@/hooks/useIdentity";
 import SemaphoreID from "@/components/SemaphoreID";
 import PODs from "@/components/PODs";
@@ -10,7 +10,7 @@ import usePODs from "@/hooks/usePODs";
 
 export default function Prover() {
   const [requestStr, setRequestStr] = useState("");
-  const [proofResult, setProofResult] = useState<ProofResult>();
+  const [proofResult, setProofResult] = useState("");
 
   const identity = useIdentity();
   const { idPODStr, paystubPODStr } = usePODs();
@@ -78,42 +78,24 @@ export default function Prover() {
         </div>
 
         {proofResult && (
-          <div>
+          <div className="flex flex-col">
             <div className="flex flex-1 gap-1 items-center">
               <span className="font-bold">Result</span>
               <button
                 className="p-2 m-1 text-sm bg-transparent border-none hover:bg-gray-100"
                 onClick={() => {
-                  navigator.clipboard.writeText(JSON.stringify(proofResult));
+                  navigator.clipboard.writeText(proofResult);
                 }}
               >
                 📋
               </button>
             </div>
-
-            <div className="flex flex-col">
-              <p>Config:</p>
-              <textarea
-                className="border-none"
-                readOnly
-                rows={4}
-                value={proofResult?.config}
-              />
-              <p>Proof:</p>
-              <textarea
-                className="border-none"
-                readOnly
-                rows={10}
-                value={proofResult?.proof}
-              />
-              <p>Claims:</p>
-              <textarea
-                className="border-none"
-                readOnly
-                rows={6}
-                value={proofResult?.claims}
-              />
-            </div>
+            <textarea
+              className="border-none"
+              readOnly
+              rows={30}
+              value={proofResult}
+            />
           </div>
         )}
       </div>

@@ -101,15 +101,14 @@ export const useProofRequest = () => {
       externalNullifier,
       watermark
     };
-  }, [boundConfig, externalNullifier, watermark]);
+  }, [boundConfig]);
 };
 
 export const useSerializedProofRequest = () => {
   return useMemo(() => {
-    // TODO: cleanup
+    // You can also use serializeGPCProofConfig to serialize the proofConfig,
+    // and underlyingly it uses json-bitint like what we are doing here.
     // https://docs.pcd.team/functions/_pcd_gpc.serializeGPCProofConfig.html
-    // serializes GPCProofConfig to a string in a full-fidelity format, so we can send this
-    // to the prover.
     return jsonBigSerializer.stringify(
       {
         proofConfig,
@@ -120,14 +119,5 @@ export const useSerializedProofRequest = () => {
       null,
       4
     );
-
-    // For display
-    //     const prettified = `{
-    //   proofConfig: ${serializeGPCProofConfig(proofConfig, 4)},
-    //   membershipLists: ${JSON.stringify(membershipLists, null, 4)},
-    //   externalNullifier: ${externalNullifier},
-    //   watermark: ${watermark}
-    // }
-    // `;
   }, []);
 };
