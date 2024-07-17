@@ -40,9 +40,6 @@ export const generateProof = async (
     // and underlyingly it uses json-bitint like what we are doing here.
     // https://docs.pcd.team/functions/_pcd_gpc.deserializeGPCProofConfig.html
     const proofRequest = jsonBigSerializer.parse(serializedProofRequest);
-    const proofConfig = proofRequest.proofConfig;
-    const externalNullifier = proofRequest.externalNullifier || "ZooKyc";
-    const watermark = proofRequest.watermark || new Date().toISOString();
 
     // https://docs.pcd.team/types/_pcd_gpc.GPCProofInputs.html
     // To generate a proof we need to pair the config with a set of inputs, including
@@ -65,7 +62,10 @@ export const generateProof = async (
         // identity and to the external nullifier value here. This can be used
         // to identify duplicate proofs without de-anonymizing.
         // Here, We don't want the same user to get more than one loan.
-        externalNullifier: { type: "string", value: externalNullifier }
+        externalNullifier: {
+          type: "string",
+          value: proofRequest.externalNullifier
+        }
       },
       membershipLists: proofRequest.membershipLists,
       // If watermark is set, the given value will be included in the resulting
@@ -73,7 +73,7 @@ export const generateProof = async (
       // avoid reuse. Unlike a nullifier, this watermark is not cryptographically
       // tied to any specific input data. When the proof is verified, the watermark is also
       // verified (as a public input).
-      watermark: { type: "string", value: watermark }
+      watermark: { type: "string", value: proofRequest.watermark }
     };
 
     const artifactsURL = gpcArtifactDownloadURL("unpkg", "prod", undefined);
@@ -81,7 +81,7 @@ export const generateProof = async (
 
     // https://docs.pcd.team/functions/_pcd_gpc.gpcProve.html
     const { proof, boundConfig, revealedClaims } = await gpcProve(
-      proofConfig,
+      proofRequest.proofConfig,
       proofInputs,
       artifactsURL
     );
