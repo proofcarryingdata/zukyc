@@ -27,5 +27,5 @@ export const issuePOD = async (
 };
 
 export interface IIssuePODArgs {
-  semaphoreCommitment: bigint;
+  semaphoreCommitment: string;
 }

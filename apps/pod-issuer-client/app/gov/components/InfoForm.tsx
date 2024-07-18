@@ -52,7 +52,7 @@ const InfoForm = ({
                 "Entered value does not match semaphore commitment format"
             }
           })}
-          type="text"
+          type="number"
           className="form-input px-4 py-3 rounded"
           placeholder="Public identifier (Semaphore identity commiment)"
         />

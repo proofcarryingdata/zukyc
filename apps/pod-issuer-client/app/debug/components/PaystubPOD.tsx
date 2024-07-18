@@ -122,11 +122,10 @@ export default function PaystubPOD() {
             required: "This is required.",
             pattern: {
               value: /\d+/,
-              message:
-                "Entered value does not match semaphore commitment format."
+              message: "Entered value should be bigint."
             }
           })}
-          type="text"
+          type="number"
           className="form-input px-4 py-3 rounded"
           placeholder="Public identifier (Semaphore identity commiment)"
         />
