@@ -67,6 +67,11 @@ export const generateProof = async (
           value: proofRequest.externalNullifier
         }
       },
+      // Named lists of values for each list (non-)membership check.
+      // The names assigned here are ussed to link these lists to their (non-)membership
+      // checks in GPCProofEntryConfig.
+      // In our case, this is for the isNotMemberOf check on govID POD idNumber entry in
+      // our proofConfig.
       membershipLists: proofRequest.membershipLists,
       // If watermark is set, the given value will be included in the resulting
       // proof. This allows identifying a proof as tied to a specific use case, to
@@ -76,6 +81,8 @@ export const generateProof = async (
       watermark: { type: "string", value: proofRequest.watermark }
     };
 
+    // We need a URL for downloading GPC artifacts depending on configuration in the browser.
+    // https://docs.pcd.team/functions/_pcd_gpc.gpcArtifactDownloadURL.html
     const artifactsURL = gpcArtifactDownloadURL("unpkg", "prod", undefined);
     console.log("download artifacts from", artifactsURL);
 

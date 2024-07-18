@@ -107,7 +107,7 @@ deel.post(
       res.status(200).json({ pod: serializedPOD });
     } catch (e) {
       console.error(e);
-      res.status(500).send("Error issue Paystub POD: " + e);
+      res.status(500).send("Error issuing Paystub POD: " + e);
     }
   }
 );
