@@ -1,24 +1,17 @@
 import { useCallback, useState } from "react";
-import { useProofRequest } from "@/hooks/useProofRequest";
+import { proofRequest } from "@/util/proofRequest";
 import verifyProof from "@/util/verifyProof";
+import { useProofRequestBoundConfig } from "@/hooks/useProofRequest";
 
 const VerifyProof = () => {
   const [proofStr, setProofStr] = useState("");
   const [verified, setVerified] = useState(false);
 
-  const { boundConfig, membershipLists, externalNullifier, watermark } =
-    useProofRequest();
+  const proofRequestBoundConfig = useProofRequestBoundConfig();
 
   const verify = useCallback(() => {
-    verifyProof(
-      boundConfig,
-      membershipLists,
-      externalNullifier,
-      watermark,
-      proofStr,
-      setVerified
-    );
-  }, [boundConfig, membershipLists, externalNullifier, watermark, proofStr]);
+    verifyProof(proofRequest, proofRequestBoundConfig, proofStr, setVerified);
+  }, [proofRequestBoundConfig, proofStr]);
 
   return (
     <>

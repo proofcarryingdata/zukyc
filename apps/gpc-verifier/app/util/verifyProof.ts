@@ -1,13 +1,8 @@
 import { Dispatch } from "react";
 import JSONBig from "json-bigint";
 import _ from "lodash";
-import {
-  GPCBoundConfig,
-  gpcArtifactDownloadURL,
-  gpcVerify,
-  PODMembershipLists
-} from "@pcd/gpc";
-import { PODValue } from "@pcd/pod";
+import { GPCBoundConfig, gpcArtifactDownloadURL, gpcVerify } from "@pcd/gpc";
+import { ProofRequest } from "@/util/proofRequest";
 import { tryRecordNullifierHash } from "@/util/persistence";
 
 const jsonBigSerializer = JSONBig({
@@ -16,10 +11,8 @@ const jsonBigSerializer = JSONBig({
 });
 
 export const verifyProof = async (
-  boundConfig: GPCBoundConfig,
-  membershipLists: PODMembershipLists,
-  externalNullifier: PODValue,
-  watermark: PODValue,
+  proofRequest: ProofRequest,
+  proofRequestBoundConfig: GPCBoundConfig,
   proofStr: string,
   setVerified: Dispatch<boolean>
 ) => {
@@ -35,25 +28,33 @@ export const verifyProof = async (
     // https://docs.pcd.team/functions/_pcd_gpc.deserializeGPCRevealedClaims.html
     const proofObj = jsonBigSerializer.parse(proofStr);
 
-    // Use the boundConfig we provided.
-    // However, gpcBindConfig might not always pick the same circuit as gpcProve,
-    // since it doesn't know the size of the inputs.
-    // Here we would like to use the circuitIdentifier returned by gpcProve.
+    // We need to make sure the proof is generated with the proofConfig provided in
+    // our proofRequest. So here we force the verifier to use the bound proofConfig in our proofRequest
+    // as part of the boundConfig, with the understanding that it will force the verification to fail
+    // if this boundConfig is not the one used to generate the proof.
+    // Note that gpcBindConfig might not always pick the same circuit as gpcProve, since it doesn't know
+    // the size of the inputs. so here we would like to use the circuitIdentifier returned by gpcProve.
     const vConfig = {
-      ...boundConfig,
+      ...proofRequestBoundConfig,
       circuitIdentifier: proofObj.boundConfig.circuitIdentifier
     };
 
-    // Make sure the membershipLists in the revealed claims matches
-    // the lists we provided.
+    // We need to make sure the proof is generated with the membershipLists provided in our proofRequest.
+    // So here we force the verifier to use the membershipLists in our proofRequest as part of the
+    // revealed claims, with the understanding that it will force the verification to fail
+    // if this membershipLists is not the one used to generate the proof.
     const vClaims = {
       ...proofObj.revealedClaims,
-      membershipLists
+      membershipLists: proofRequest.membershipLists
     };
 
+    // We need a URL for downloading GPC artifacts depending on the configuration in the browser.
+    // https://docs.pcd.team/functions/_pcd_gpc.gpcArtifactDownloadURL.html
     const artifactsURL = gpcArtifactDownloadURL("unpkg", "prod", undefined);
     console.log("download artifacts from", artifactsURL);
 
+    // This is the core functionality which verifies the proof produced by gpcProve.
+    // https://docs.pcd.team/functions/_pcd_gpc.gpcVerify.html
     const isValid = await gpcVerify(
       proofObj.proof,
       vConfig,
@@ -65,7 +66,7 @@ export const verifyProof = async (
     }
 
     // Note that `gpcVerify` only checks that the inputs are valid with respect to each other.
-    // We still need to check that revealed values are as expected.
+    // We still need to check that revealed claims are as expected.
 
     // Check the PODs are signed by a trusted authorities with known public keys.
     if (
@@ -82,7 +83,7 @@ export const verifyProof = async (
     }
 
     // Checks the watermark, it should be what we passed in
-    if (!_.isEqual(vClaims.watermark, watermark)) {
+    if (!_.isEqual(vClaims.watermark, proofRequest.watermark)) {
       throw new Error("Watermark does not match");
     }
 
@@ -98,9 +99,14 @@ export const verifyProof = async (
     }
 
     // Checks the nullifer, we don't want the same user to get more than one loan.
-    if (!_.isEqual(vClaims.owner?.externalNullifier, externalNullifier)) {
+    if (
+      !_.isEqual(
+        vClaims.owner?.externalNullifier,
+        proofRequest.externalNullifier
+      )
+    ) {
       throw new Error(
-        `Invalid external nullifier value, make sure it is ${externalNullifier}`
+        `Invalid external nullifier value, make sure it is ${proofRequest.externalNullifier}`
       );
     }
     // This check has side-effects (recording the nullifierHash which indicates that the

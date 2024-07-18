@@ -78,7 +78,7 @@ export const generateProof = async (
       watermark: proofRequest.watermark
     };
 
-    // We need a URL for downloading GPC artifacts depending on configuration in the browser.
+    // We need a URL for downloading GPC artifacts depending on the configuration in the browser.
     // https://docs.pcd.team/functions/_pcd_gpc.gpcArtifactDownloadURL.html
     const artifactsURL = gpcArtifactDownloadURL("unpkg", "prod", undefined);
     console.log("download artifacts from", artifactsURL);
@@ -107,7 +107,7 @@ export const generateProof = async (
     );
     setProofResult(serializedProof);
   } catch (e) {
-    alert("Error generate proof");
+    alert("Error generating proof");
     console.log(e);
   }
 };
