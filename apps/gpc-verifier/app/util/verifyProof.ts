@@ -1,11 +1,13 @@
 import { Dispatch } from "react";
 import JSONBig from "json-bigint";
+import _ from "lodash";
 import {
   GPCBoundConfig,
   gpcArtifactDownloadURL,
   gpcVerify,
   PODMembershipLists
 } from "@pcd/gpc";
+import { PODValue } from "@pcd/pod";
 import { tryRecordNullifierHash } from "@/util/persistence";
 
 const jsonBigSerializer = JSONBig({
@@ -16,8 +18,8 @@ const jsonBigSerializer = JSONBig({
 export const verifyProof = async (
   boundConfig: GPCBoundConfig,
   membershipLists: PODMembershipLists,
-  externalNullifier: string,
-  watermark: string,
+  externalNullifier: PODValue,
+  watermark: PODValue,
   proofStr: string,
   setVerified: Dispatch<boolean>
 ) => {
@@ -80,7 +82,7 @@ export const verifyProof = async (
     }
 
     // Checks the watermark, it should be what we passed in
-    if (vClaims.watermark?.value !== watermark) {
+    if (!_.isEqual(vClaims.watermark, watermark)) {
       throw new Error("Watermark does not match");
     }
 
@@ -96,7 +98,7 @@ export const verifyProof = async (
     }
 
     // Checks the nullifer, we don't want the same user to get more than one loan.
-    if (vClaims.owner?.externalNullifier.value !== externalNullifier) {
+    if (!_.isEqual(vClaims.owner?.externalNullifier, externalNullifier)) {
       throw new Error(
         `Invalid external nullifier value, make sure it is ${externalNullifier}`
       );

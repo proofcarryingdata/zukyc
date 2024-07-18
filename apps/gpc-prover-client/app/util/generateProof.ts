@@ -62,10 +62,7 @@ export const generateProof = async (
         // identity and to the external nullifier value here. This can be used
         // to identify duplicate proofs without de-anonymizing.
         // Here, We don't want the same user to get more than one loan.
-        externalNullifier: {
-          type: "string",
-          value: proofRequest.externalNullifier
-        }
+        externalNullifier: proofRequest.externalNullifier
       },
       // Named lists of values for each list (non-)membership check.
       // The names assigned here are ussed to link these lists to their (non-)membership
@@ -78,7 +75,7 @@ export const generateProof = async (
       // avoid reuse. Unlike a nullifier, this watermark is not cryptographically
       // tied to any specific input data. When the proof is verified, the watermark is also
       // verified (as a public input).
-      watermark: { type: "string", value: proofRequest.watermark }
+      watermark: proofRequest.watermark
     };
 
     // We need a URL for downloading GPC artifacts depending on configuration in the browser.

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import JSONBig from "json-bigint";
 import { gpcBindConfig, GPCProofConfig, PODMembershipLists } from "@pcd/gpc";
-import { POD_INT_MAX } from "@pcd/pod";
+import { POD_INT_MAX, PODValue } from "@pcd/pod";
 
 const jsonBigSerializer = JSONBig({
   useNativeBigInt: true,
@@ -85,11 +85,14 @@ const useBoundConfig = () => {
 // We can optionally ask to generate a nullifier, which is tied to the user's
 // identity and to the external nullifier value here. This can be used
 // to identify duplicate proofs without de-anonymizing.
-const externalNullifier = "ZooKyc";
+const externalNullifier: PODValue = { type: "string", value: "ZooKyc" };
 
 // Watermark will be included in the resulting proof.
 // This allows identifying a proof as tied to a specific use case, to avoid reuse.
-const watermark = "ZooKyc ZooLender challenge";
+const watermark: PODValue = {
+  type: "string",
+  value: "ZooKyc ZooLender challenge"
+};
 
 export const useProofRequest = () => {
   const boundConfig = useBoundConfig();
