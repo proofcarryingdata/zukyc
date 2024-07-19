@@ -9,6 +9,7 @@ const jsonBigSerializer = JSONBig({
 });
 
 export const useProofRequest = () => {
+  // We need to memorize the proof request because some fields uses "new Date()" for time.
   return useMemo(() => {
     return {
       proofRequest,
