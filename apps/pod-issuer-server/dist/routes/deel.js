@@ -11,10 +11,10 @@ const loginHelper_1 = require("./util/loginHelper");
 const shared_1 = require("../stores/shared");
 const deel = express_1.default.Router();
 deel.post("/login", (req, res) => {
-    (0, loginHelper_1.handleLogin)(req, res, process.env.DEEL_EDDSA_PRIVATE_KEY);
+    (0, loginHelper_1.handleLogin)(req, res, process.env.DEEL_JWT_SECRET_KEY);
 });
 deel.post("/issue", (0, express_jwt_1.expressjwt)({
-    secret: process.env.DEEL_EDDSA_PRIVATE_KEY,
+    secret: process.env.DEEL_JWT_SECRET_KEY,
     algorithms: ["HS512"]
 }), async (req, res) => {
     const email = req.auth?.email;

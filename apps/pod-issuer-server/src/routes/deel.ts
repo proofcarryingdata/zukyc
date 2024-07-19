@@ -8,13 +8,13 @@ import { checkSemaphoreCommitment } from "../stores/shared";
 const deel = express.Router();
 
 deel.post("/login", (req: Request, res: Response) => {
-  handleLogin(req, res, process.env.DEEL_EDDSA_PRIVATE_KEY!);
+  handleLogin(req, res, process.env.DEEL_JWT_SECRET_KEY!);
 });
 
 deel.post(
   "/issue",
   expressjwt({
-    secret: process.env.DEEL_EDDSA_PRIVATE_KEY!,
+    secret: process.env.DEEL_JWT_SECRET_KEY!,
     algorithms: ["HS512"]
   }),
   async (req: JWTRequest, res: Response) => {

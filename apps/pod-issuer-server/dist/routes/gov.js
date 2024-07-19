@@ -10,10 +10,10 @@ const gov_1 = require("../stores/gov");
 const loginHelper_1 = require("./util/loginHelper");
 const gov = express_1.default.Router();
 gov.post("/login", (req, res) => {
-    (0, loginHelper_1.handleLogin)(req, res, process.env.GOV_EDDSA_PRIVATE_KEY);
+    (0, loginHelper_1.handleLogin)(req, res, process.env.GOV_JWT_SECRET_KEY);
 });
 gov.post("/issue", (0, express_jwt_1.expressjwt)({
-    secret: process.env.GOV_EDDSA_PRIVATE_KEY,
+    secret: process.env.GOV_JWT_SECRET_KEY,
     algorithms: ["HS512"]
 }), async (req, res) => {
     const email = req.auth?.email;

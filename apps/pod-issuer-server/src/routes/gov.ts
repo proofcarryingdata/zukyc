@@ -7,13 +7,13 @@ import { handleLogin } from "./util/loginHelper";
 const gov = express.Router();
 
 gov.post("/login", (req: Request, res: Response) => {
-  handleLogin(req, res, process.env.GOV_EDDSA_PRIVATE_KEY!);
+  handleLogin(req, res, process.env.GOV_JWT_SECRET_KEY!);
 });
 
 gov.post(
   "/issue",
   expressjwt({
-    secret: process.env.GOV_EDDSA_PRIVATE_KEY!,
+    secret: process.env.GOV_JWT_SECRET_KEY!,
     algorithms: ["HS512"]
   }),
   async (req: JWTRequest, res: Response) => {
