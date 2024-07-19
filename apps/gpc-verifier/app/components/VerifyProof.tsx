@@ -1,13 +1,12 @@
 import { useState } from "react";
-import { proofRequest } from "@/util/proofRequest";
 import verifyProof from "@/util/verifyProof";
-import { useProofRequestBoundConfig } from "@/hooks/useProofRequest";
+import { useProofRequest } from "@/hooks/useProofRequest";
 
 const VerifyProof = () => {
   const [proofStr, setProofStr] = useState("");
   const [verified, setVerified] = useState(false);
 
-  const proofRequestBoundConfig = useProofRequestBoundConfig();
+  const { proofRequest, proofRequestBoundConfig } = useProofRequest();
 
   const verify = async () => {
     try {
