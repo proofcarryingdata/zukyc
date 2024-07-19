@@ -36,5 +36,6 @@ export interface IIssueDebugPaystubPODArgs {
   currentEmployer: string;
   startDate: number;
   annualSalary: number;
+  socialSecurityNumber: string;
   semaphoreCommitment: string;
 }

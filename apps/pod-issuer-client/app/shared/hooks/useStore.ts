@@ -26,6 +26,9 @@ interface State {
 
   paystubPOD: string | null;
   setPaystubPOD: (pod: string | null) => void;
+
+  semaphoreCommitment: string | null;
+  setSemaphoreCommitment: (commitment: string | null) => void;
 }
 
 const useStore = create<State>()(
@@ -67,7 +70,11 @@ const useStore = create<State>()(
         setIdPOD: (pod) => set(() => ({ idPOD: pod })),
 
         paystubPOD: null,
-        setPaystubPOD: (pod) => set(() => ({ paystubPOD: pod }))
+        setPaystubPOD: (pod) => set(() => ({ paystubPOD: pod })),
+
+        semaphoreCommitment: null,
+        setSemaphoreCommitment: (commitment) =>
+          set(() => ({ semaphoreCommitment: commitment }))
       })),
       {
         name: "Store",

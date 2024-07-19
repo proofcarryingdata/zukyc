@@ -12,6 +12,7 @@ debug.post("/id/issue", (req, res) => {
         !inputs.firstName ||
         !inputs.lastName ||
         !inputs.dateOfBirth ||
+        !inputs.socialSecurityNumber ||
         !inputs.semaphoreCommitment) {
         res.status(400).send("Missing query parameter");
         return;
@@ -31,6 +32,10 @@ debug.post("/id/issue", (req, res) => {
             firstName: { type: "string", value: inputs.firstName },
             lastName: { type: "string", value: inputs.lastName },
             dateOfBirth: { type: "int", value: BigInt(inputs.dateOfBirth) },
+            socialSecurityNumber: {
+                type: "string",
+                value: inputs.socialSecurityNumber
+            },
             owner: {
                 type: "cryptographic",
                 value: BigInt(inputs.semaphoreCommitment)
@@ -51,6 +56,7 @@ debug.post("/paystub/issue", (req, res) => {
         !inputs.currentEmployer ||
         !inputs.startDate ||
         !inputs.annualSalary ||
+        !inputs.socialSecurityNumber ||
         !inputs.semaphoreCommitment) {
         res.status(400).send("Missing query parameter");
         return;
@@ -72,6 +78,10 @@ debug.post("/paystub/issue", (req, res) => {
             startDate: { type: "int", value: BigInt(inputs.startDate) },
             annualSalary: { type: "int", value: BigInt(inputs.annualSalary) },
             issueDate: { type: "int", value: BigInt(new Date().getTime()) },
+            socialSecurityNumber: {
+                type: "string",
+                value: inputs.socialSecurityNumber
+            },
             owner: {
                 type: "cryptographic",
                 value: BigInt(inputs.semaphoreCommitment)

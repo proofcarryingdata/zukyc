@@ -9,6 +9,7 @@ debug.post("/id/issue", (req: Request, res: Response) => {
     firstName: string;
     lastName: string;
     dateOfBirth: number;
+    socialSecurityNumber: string;
     semaphoreCommitment: string;
   } = req.body;
 
@@ -17,6 +18,7 @@ debug.post("/id/issue", (req: Request, res: Response) => {
     !inputs.firstName ||
     !inputs.lastName ||
     !inputs.dateOfBirth ||
+    !inputs.socialSecurityNumber ||
     !inputs.semaphoreCommitment
   ) {
     res.status(400).send("Missing query parameter");
@@ -41,6 +43,10 @@ debug.post("/id/issue", (req: Request, res: Response) => {
         firstName: { type: "string", value: inputs.firstName },
         lastName: { type: "string", value: inputs.lastName },
         dateOfBirth: { type: "int", value: BigInt(inputs.dateOfBirth) },
+        socialSecurityNumber: {
+          type: "string",
+          value: inputs.socialSecurityNumber
+        },
         owner: {
           type: "cryptographic",
           value: BigInt(inputs.semaphoreCommitment)
@@ -63,6 +69,7 @@ debug.post("/paystub/issue", (req: Request, res: Response) => {
     currentEmployer: string;
     startDate: number;
     annualSalary: number;
+    socialSecurityNumber: string;
     semaphoreCommitment: string;
   } = req.body;
 
@@ -72,6 +79,7 @@ debug.post("/paystub/issue", (req: Request, res: Response) => {
     !inputs.currentEmployer ||
     !inputs.startDate ||
     !inputs.annualSalary ||
+    !inputs.socialSecurityNumber ||
     !inputs.semaphoreCommitment
   ) {
     res.status(400).send("Missing query parameter");
@@ -98,6 +106,10 @@ debug.post("/paystub/issue", (req: Request, res: Response) => {
         startDate: { type: "int", value: BigInt(inputs.startDate) },
         annualSalary: { type: "int", value: BigInt(inputs.annualSalary) },
         issueDate: { type: "int", value: BigInt(new Date().getTime()) },
+        socialSecurityNumber: {
+          type: "string",
+          value: inputs.socialSecurityNumber
+        },
         owner: {
           type: "cryptographic",
           value: BigInt(inputs.semaphoreCommitment)

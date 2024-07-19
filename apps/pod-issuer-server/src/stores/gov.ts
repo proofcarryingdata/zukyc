@@ -1,14 +1,5 @@
-import Chance from "chance";
 import _ from "lodash";
-import { createClient } from "@vercel/kv";
-
-const podIssuerKV = createClient({
-  url: process.env.KV_REST_API_URL,
-  token: process.env.KV_REST_API_TOKEN,
-  automaticDeserialization: false
-});
-
-const chance = new Chance();
+import { podIssuerKV, chance, getSSNByEmail } from "./shared";
 
 export type GovUser = {
   email: string;
@@ -17,9 +8,12 @@ export type GovUser = {
   lastName: string;
   dateOfBirth: bigint;
   idNumber: string;
+  socialSecurityNumber: string;
 };
 
-export function getGovUserByEmail(email: string): GovUser | null {
+export async function getGovUserByEmail(
+  email: string
+): Promise<GovUser | null> {
   // randomly generate GovUser fields
   // In practice, look up the user in the database
   const names = email.replace(/@zoo.com$/, "").split(".");
@@ -29,21 +23,22 @@ export function getGovUserByEmail(email: string): GovUser | null {
 
   const dateOfBirth = chance.birthday({ type: "adult" }) as Date;
   const idNumber = chance.string({ pool: "0123456789", length: 7 });
+  const ssn = await getSSNByEmail(email);
 
   return {
     email,
     firstName: _.upperFirst(names[0]),
     lastName: _.upperFirst(names[1]),
     dateOfBirth: BigInt(dateOfBirth.getTime()),
-    idNumber: `G${idNumber}`
+    idNumber: `G${idNumber}`,
+    socialSecurityNumber: ssn
   };
 }
 
 export async function getIDPODByEmail(email: string): Promise<string | null> {
-  const key = `id-${email}`;
-  return await podIssuerKV.get<string>(key);
+  return await podIssuerKV.hget<string>(email, "idPOD");
 }
 
 export async function saveIDPOD(email: string, serializedPOD: string) {
-  await podIssuerKV.set(`id-${email}`, serializedPOD);
+  await podIssuerKV.hset(email, { idPOD: serializedPOD });
 }

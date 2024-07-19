@@ -28,6 +28,7 @@ export default function PaystubPOD() {
         currentEmployer: data.currentEmployer,
         startDate: Date.parse(data.startDate),
         annualSalary: parseInt(data.annualSalary),
+        socialSecurityNumber: data.ssn,
         semaphoreCommitment: data.semaphoreCommitment
       });
     },
@@ -116,6 +117,23 @@ export default function PaystubPOD() {
             <p className="text-red-500">This is required.</p>
           )}
         </div>
+
+        <input
+          {...register("ssn", {
+            required: "This is required",
+            pattern: {
+              value: /^(?!(000|666|9))\d{3}-(?!00)\d{2}-(?!0000)\d{4}$/,
+              message:
+                "Entered value does not match social security number format."
+            }
+          })}
+          type="text"
+          className="form-input px-4 py-3 rounded"
+          placeholder="Social security number"
+        />
+        {errors.ssn && (
+          <p className="text-red-500">{errors.ssn.message as string}</p>
+        )}
 
         <input
           {...register("semaphoreCommitment", {

@@ -42,10 +42,11 @@ const proofConfig: GPCProofConfig = {
         // Prove the presence of an entry called "idNumber", hide its value,
         // and also prove that it is not a member of the sanctionsList.
         idNumber: { isRevealed: false, isNotMemberOf: "sanctionsList" },
-        // Prove the presence of an entry called "firstName", hide its value.
-        firstName: { isRevealed: false },
-        // Prove the presence of an entry called "lastName", hide its value.
-        lastName: { isRevealed: false },
+        // There's an entry "firstName" in the govID POD. Because it is not
+        // specified here, it will be ignored, meaning that the proof says nothiing
+        // about the entry, and the entry won't be in the revealed claims.
+        // firstName: {},
+
         // Prove the presence of an entry called "dateOfBirth", hide its value.
         // and prove that it is <= the timestamp of eight years ago.
         // Because we would like to prove that the ID holder is at least 18 years old.
@@ -56,6 +57,8 @@ const proofConfig: GPCProofConfig = {
             max: BigInt(getDates().eighteenYearsAgo.getTime())
           }
         },
+        // Prove the presence of an entry called "socialSecurityNumber", hide its value
+        socialSecurityNumber: { isRevealed: false },
         // Prove the presence of an entry called "owner", hide its value, and prove
         // that I own the corresponding Semaphore identity secrets.
         owner: { isRevealed: false, isOwnerID: true }
@@ -63,17 +66,12 @@ const proofConfig: GPCProofConfig = {
     },
     paystub: {
       entries: {
-        // Prove the presence of an entry called "firstName", hide its value, and
-        // prove that it equals to the firstName in the govID POD.
-        firstName: { isRevealed: false, equalsEntry: "govID.firstName" },
-        // Prove the presence of an entry called "lastName", hide its value, and
-        // prove that it equals to the lastName in the govID POD.
-        lastName: { isRevealed: false, equalsEntry: "govID.lastName" },
-        // There's an entry "currentEmployer" in the paystub POD, because it is
-        // not specified here, it will be ignored, meaning the proof says nothiing
-        // about the entry, and the entry won't be in the revealed claims.
-        // currentEmployer: {}
-
+        // Prove the presence of an entry called "socialSecurityNumber", hide its value,
+        // and prove that it equals to the socialSecurityNumber in the govID POD.
+        socialSecurityNumber: {
+          isRevealed: false,
+          equalsEntry: "govID.socialSecurityNumber"
+        },
         // Prove the presence of an entry called "startDate", hide its value,
         // and prove that it is <= the timestamp of one year ago.
         // Because we would like to prove that the paystub holder has at least
@@ -89,13 +87,13 @@ const proofConfig: GPCProofConfig = {
         // and prove that it is >= the timestamp of one week ago.
         // Because we would like to prove the paystub holder is still employed
         // by the current employer at least a week ago.
-        // issueDate: {
-        //   isRevealed: true,
-        //   inRange: {
-        //     min: BigInt(getDates().oneWeekAgo.getTime()),
-        //     max: POD_INT_MAX
-        //   }
-        // },
+        issueDate: {
+          isRevealed: true,
+          inRange: {
+            min: BigInt(getDates().oneWeekAgo.getTime()),
+            max: POD_INT_MAX
+          }
+        },
         // Prove the presence of an entry called "annualSalary", hide its value,
         // and prove that it is >= 20000
         annualSalary: {

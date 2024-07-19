@@ -44,7 +44,7 @@ gov.post("/issue", (0, express_jwt_1.expressjwt)({
             res.status(200).json({ pod: podStr });
             return;
         }
-        const user = (0, gov_1.getGovUserByEmail)(email);
+        const user = await (0, gov_1.getGovUserByEmail)(email);
         if (user === null) {
             res.status(404).send("User not found");
             return;
@@ -57,6 +57,10 @@ gov.post("/issue", (0, express_jwt_1.expressjwt)({
             firstName: { type: "string", value: user.firstName },
             lastName: { type: "string", value: user.lastName },
             dateOfBirth: { type: "int", value: user.dateOfBirth },
+            socialSecurityNumber: {
+                type: "string",
+                value: user.socialSecurityNumber
+            },
             owner: {
                 type: "cryptographic",
                 value: BigInt(inputs.semaphoreCommitment)

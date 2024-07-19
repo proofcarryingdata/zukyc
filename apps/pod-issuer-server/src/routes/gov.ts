@@ -53,7 +53,7 @@ gov.post(
         return;
       }
 
-      const user = getGovUserByEmail(email);
+      const user = await getGovUserByEmail(email);
       if (user === null) {
         res.status(404).send("User not found");
         return;
@@ -68,6 +68,10 @@ gov.post(
           firstName: { type: "string", value: user.firstName },
           lastName: { type: "string", value: user.lastName },
           dateOfBirth: { type: "int", value: user.dateOfBirth },
+          socialSecurityNumber: {
+            type: "string",
+            value: user.socialSecurityNumber
+          },
           owner: {
             type: "cryptographic",
             value: BigInt(inputs.semaphoreCommitment)
