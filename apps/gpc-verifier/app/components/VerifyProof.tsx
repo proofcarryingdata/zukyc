@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { proofRequest } from "@/util/proofRequest";
 import verifyProof from "@/util/verifyProof";
 import { useProofRequestBoundConfig } from "@/hooks/useProofRequest";
@@ -9,9 +9,14 @@ const VerifyProof = () => {
 
   const proofRequestBoundConfig = useProofRequestBoundConfig();
 
-  const verify = useCallback(() => {
-    verifyProof(proofRequest, proofRequestBoundConfig, proofStr, setVerified);
-  }, [proofRequestBoundConfig, proofStr]);
+  const verify = async () => {
+    const valid = await verifyProof(
+      proofRequest,
+      proofRequestBoundConfig,
+      proofStr
+    );
+    setVerified(valid);
+  };
 
   return (
     <>

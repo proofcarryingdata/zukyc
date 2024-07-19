@@ -9,26 +9,27 @@ import PODs from "@/components/PODs";
 import usePODs from "@/hooks/usePODs";
 
 export default function Prover() {
-  const [requestStr, setRequestStr] = useState("");
-  const [proofResult, setProofResult] = useState("");
+  const [proofRequestStr, setProofRequestStr] = useState("");
+  const [proofResult, setProofResult] = useState<string | null>(null);
 
   const identity = useIdentity();
   const { idPODStr, paystubPODStr } = usePODs();
 
-  const generate = useCallback(() => {
+  const generate = async () => {
     if (!identity) {
       alert("Identity cannot be empty!");
       return;
     }
 
-    generateProof(
+    const proof = await generateProof(
       identity,
       idPODStr,
       paystubPODStr,
-      requestStr,
-      setProofResult
+      proofRequestStr
     );
-  }, [identity, idPODStr, paystubPODStr, requestStr]);
+
+    setProofResult(proof);
+  };
 
   const reset = useCallback(() => {
     if (
@@ -69,9 +70,9 @@ export default function Prover() {
         </div>
         <textarea
           rows={20}
-          value={requestStr}
+          value={proofRequestStr}
           placeholder="Past your proof request here!"
-          onChange={(e) => setRequestStr(e.target.value.trim())}
+          onChange={(e) => setProofRequestStr(e.target.value.trim())}
         />
         <div>
           <button onClick={generate}>Generate Proof</button>

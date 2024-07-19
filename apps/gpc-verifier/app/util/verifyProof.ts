@@ -1,4 +1,3 @@
-import { Dispatch } from "react";
 import JSONBig from "json-bigint";
 import _ from "lodash";
 import { GPCBoundConfig, gpcArtifactDownloadURL, gpcVerify } from "@pcd/gpc";
@@ -13,8 +12,7 @@ const jsonBigSerializer = JSONBig({
 export const verifyProof = async (
   proofRequest: ProofRequest,
   proofRequestBoundConfig: GPCBoundConfig,
-  proofStr: string,
-  setVerified: Dispatch<boolean>
+  proofStr: string
 ) => {
   try {
     if (!proofStr) {
@@ -106,11 +104,12 @@ export const verifyProof = async (
         "We've got a proof from you before. You cannot get more than one loan."
       );
     }
-
-    setVerified(isValid);
   } catch (e) {
     alert(e);
+    return false;
   }
+
+  return true;
 };
 
 export default verifyProof;
