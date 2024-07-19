@@ -14,11 +14,20 @@ export type ProofRequest = {
 
 const getDates = () => {
   const now = new Date();
-  const eighteenYearsAgo = now;
+
+  const oneWeekAgo = new Date(now);
+  oneWeekAgo.setDate(now.getDate() - 7);
+
+  const oneYearAgo = new Date(now);
+  oneYearAgo.setFullYear(now.getFullYear() - 1);
+
+  const eighteenYearsAgo = new Date(now);
   eighteenYearsAgo.setFullYear(now.getFullYear() - 18);
   return {
     now,
-    eightYearsAgo: eighteenYearsAgo
+    oneWeekAgo,
+    oneYearAgo,
+    eighteenYearsAgo
   };
 };
 
@@ -38,12 +47,13 @@ const proofConfig: GPCProofConfig = {
         // Prove the presence of an entry called "lastName", hide its value.
         lastName: { isRevealed: false },
         // Prove the presence of an entry called "dateOfBirth", hide its value.
-        // and prove that it is <= the timestamp of eight years ago from now.
+        // and prove that it is <= the timestamp of eight years ago.
+        // Because we would like to prove that the ID holder is at least 18 years old.
         dateOfBirth: {
           isRevealed: false,
           inRange: {
             min: POD_INT_MIN,
-            max: BigInt(getDates().eightYearsAgo.getTime())
+            max: BigInt(getDates().eighteenYearsAgo.getTime())
           }
         },
         // Prove the presence of an entry called "owner", hide its value, and prove
@@ -63,8 +73,29 @@ const proofConfig: GPCProofConfig = {
         // not specified here, it will be ignored, meaning the proof says nothiing
         // about the entry, and the entry won't be in the revealed claims.
         // currentEmployer: {}
-        // Prove the presence of an entry called "startDate", reveal its value.
-        startDate: { isRevealed: true },
+
+        // Prove the presence of an entry called "startDate", hide its value,
+        // and prove that it is <= the timestamp of one year ago.
+        // Because we would like to prove that the paystub holder has at least
+        // one year of consistent employment with this current employer.
+        startDate: {
+          isRevealed: false,
+          inRange: {
+            min: POD_INT_MIN,
+            max: BigInt(getDates().oneYearAgo.getTime())
+          }
+        },
+        // Prove the presence of an entry called "issueDate", hide its value,
+        // and prove that it is >= the timestamp of one week ago.
+        // Because we would like to prove the paystub holder is still employed
+        // by the current employer at least a week ago.
+        // issueDate: {
+        //   isRevealed: true
+        //   inRange: {
+        //     min: BigInt(getDates().oneWeekAgo.getTime()),
+        //     max: POD_INT_MAX
+        //   }
+        // },
         // Prove the presence of an entry called "annualSalary", hide its value,
         // and prove that it is >= 20000
         annualSalary: {

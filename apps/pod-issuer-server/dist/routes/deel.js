@@ -70,7 +70,8 @@ deel.post("/issue", (0, express_jwt_1.expressjwt)({
             firstName: { type: "string", value: user.firstName },
             lastName: { type: "string", value: user.lastName },
             currentEmployer: { type: "string", value: "ZooPark" },
-            startDate: { type: "string", value: user.startDate },
+            startDate: { type: "int", value: user.startDate },
+            issueDate: { type: "int", value: BigInt(new Date().getTime()) },
             annualSalary: { type: "int", value: BigInt(user.annualSalary) },
             owner: {
                 type: "cryptographic",

@@ -28,11 +28,7 @@ debug.post("/id/issue", (req: Request, res: Response) => {
     return;
   }
 
-  const dateOfBirth = new Date(inputs.dateOfBirth);
-  if (
-    isNaN(dateOfBirth.valueOf()) ||
-    new Date(inputs.dateOfBirth) > new Date()
-  ) {
+  if (isNaN(inputs.dateOfBirth) || inputs.dateOfBirth > new Date().getTime()) {
     res.status(400).send("Invalid date of birth");
     return;
   }
@@ -44,7 +40,7 @@ debug.post("/id/issue", (req: Request, res: Response) => {
         idNumber: { type: "string", value: inputs.idNumber },
         firstName: { type: "string", value: inputs.firstName },
         lastName: { type: "string", value: inputs.lastName },
-        dateOfBirth: { type: "int", value: BigInt(dateOfBirth.getTime()) },
+        dateOfBirth: { type: "int", value: BigInt(inputs.dateOfBirth) },
         owner: {
           type: "cryptographic",
           value: BigInt(inputs.semaphoreCommitment)
@@ -56,7 +52,7 @@ debug.post("/id/issue", (req: Request, res: Response) => {
     res.status(200).json({ pod: serializedPOD });
   } catch (e) {
     console.error(e);
-    res.status(500).send("Error issue ID POD: " + e);
+    res.status(500).send("Error issuing ID POD: " + e);
   }
 });
 
@@ -65,7 +61,7 @@ debug.post("/paystub/issue", (req: Request, res: Response) => {
     firstName: string;
     lastName: string;
     currentEmployer: string;
-    startDate: string;
+    startDate: number;
     annualSalary: number;
     semaphoreCommitment: string;
   } = req.body;
@@ -82,13 +78,12 @@ debug.post("/paystub/issue", (req: Request, res: Response) => {
     return;
   }
 
-  const startDate = Date.parse(inputs.startDate);
-  if (!startDate || startDate > new Date().getTime()) {
+  if (isNaN(inputs.startDate) || inputs.startDate > new Date().getTime()) {
     res.status(400).send("Invalid start date");
     return;
   }
 
-  if (inputs.annualSalary < 0) {
+  if (isNaN(inputs.annualSalary) || inputs.annualSalary < 0) {
     res.status(400).send("Invalid annual salary");
     return;
   }
@@ -100,8 +95,9 @@ debug.post("/paystub/issue", (req: Request, res: Response) => {
         firstName: { type: "string", value: inputs.firstName },
         lastName: { type: "string", value: inputs.lastName },
         currentEmployer: { type: "string", value: inputs.currentEmployer },
-        startDate: { type: "string", value: inputs.startDate },
+        startDate: { type: "int", value: BigInt(inputs.startDate) },
         annualSalary: { type: "int", value: BigInt(inputs.annualSalary) },
+        issueDate: { type: "int", value: BigInt(new Date().getTime()) },
         owner: {
           type: "cryptographic",
           value: BigInt(inputs.semaphoreCommitment)

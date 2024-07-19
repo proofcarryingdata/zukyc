@@ -26,7 +26,7 @@ export default function PaystubPOD() {
         firstName: data.firstName,
         lastName: data.lastName,
         currentEmployer: data.currentEmployer,
-        startDate: data.startDate,
+        startDate: Date.parse(data.startDate),
         annualSalary: parseInt(data.annualSalary),
         semaphoreCommitment: data.semaphoreCommitment
       });

@@ -15,8 +15,8 @@ export type DeelUser = {
   // hashedpassword: string;
   firstName: string;
   lastName: string;
-  startDate: string;
-  annualSalary: number;
+  startDate: bigint;
+  annualSalary: bigint;
 };
 
 export function getDeelUserByEmail(email: string): DeelUser | null {
@@ -27,18 +27,15 @@ export function getDeelUserByEmail(email: string): DeelUser | null {
     return null;
   }
 
-  const startDate = chance.birthday({
-    string: true,
-    type: "child"
-  }) as string;
+  const startDate = chance.birthday({ type: "child" }) as Date;
   const annualSalary = chance.integer({ min: 20000, max: 1000000 });
 
   return {
     email,
     firstName: _.upperFirst(names[0]),
     lastName: _.upperFirst(names[1]),
-    startDate,
-    annualSalary
+    startDate: BigInt(startDate.getTime()),
+    annualSalary: BigInt(annualSalary)
   };
 }
 

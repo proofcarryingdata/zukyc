@@ -47,12 +47,3 @@ export async function getIDPODByEmail(email: string): Promise<string | null> {
 export async function saveIDPOD(email: string, serializedPOD: string) {
   await podIssuerKV.set(`id-${email}`, serializedPOD);
 }
-
-export type DeelUser = {
-  email: string;
-  // hashedpassword: string;
-  firstName: string;
-  lastName: string;
-  startDate: string;
-  annualSalary: number;
-};

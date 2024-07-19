@@ -24,7 +24,7 @@ export default function IDPOD() {
         idNumber: data.id,
         firstName: data.firstName,
         lastName: data.lastName,
-        dateOfBirth: new Date(data.dateOfBirth).getTime(),
+        dateOfBirth: Date.parse(data.dateOfBirth),
         semaphoreCommitment: data.semaphoreCommitment
       });
     },

@@ -20,17 +20,14 @@ function getDeelUserByEmail(email) {
     if (names.length < 2) {
         return null;
     }
-    const startDate = chance.birthday({
-        string: true,
-        type: "child"
-    });
+    const startDate = chance.birthday({ type: "child" });
     const annualSalary = chance.integer({ min: 20000, max: 1000000 });
     return {
         email,
         firstName: lodash_1.default.upperFirst(names[0]),
         lastName: lodash_1.default.upperFirst(names[1]),
-        startDate,
-        annualSalary
+        startDate: BigInt(startDate.getTime()),
+        annualSalary: BigInt(annualSalary)
     };
 }
 exports.getDeelUserByEmail = getDeelUserByEmail;

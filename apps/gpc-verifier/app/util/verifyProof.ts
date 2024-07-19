@@ -87,17 +87,6 @@ export const verifyProof = async (
       throw new Error("Watermark does not match");
     }
 
-    // Do more checks with the revealed claims
-    const oneYearAfter = new Date(
-      vClaims.pods.paystub?.entries?.startDate?.value as string
-    );
-    oneYearAfter.setFullYear(oneYearAfter.getFullYear() + 1);
-    if (oneYearAfter > new Date()) {
-      throw new Error(
-        "You haven't been with your current employer for at least a year"
-      );
-    }
-
     // Checks the nullifer, we don't want the same user to get more than one loan.
     if (
       !_.isEqual(

@@ -12,6 +12,6 @@ export async function tryRecordNullifierHash(
     return false;
   }
 
-  await kv.sadd(NULLIFIER_KV_SET, nullifierHash);
+  await kv.sadd(NULLIFIER_KV_SET, nullifierHash.toString());
   return true;
 }
