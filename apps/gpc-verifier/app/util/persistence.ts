@@ -8,6 +8,12 @@ const NULLIFIER_KV_SET = "nullifiers_hash";
 export async function tryRecordNullifierHash(
   nullifierHash: bigint
 ): Promise<boolean> {
+  // If running this locally, we can skip this step
+  // # TODO: need to fix the CORS error when connecting with the local kv store from the browser
+  // # tracked here: https://github.com/proofcarryingdata/zukyc/issues/20
+  if (!process.env.KV_REST_API_URL) {
+    return true;
+  }
   if (await kv.sismember(NULLIFIER_KV_SET, nullifierHash.toString())) {
     return false;
   }

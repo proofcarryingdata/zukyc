@@ -78,11 +78,6 @@ This Turborepo includes the following apps (inside the `apps/` folder):
 
 ## Local development
 
-#### Environment Variables
-
-In order to develop locally, you will need to set some environment variables. We have included an example environment variable file .env.example
-In order to make the application use these environment variables, you will need to copy the contents of the example file into an adjacent file called .env.
-
 ### Running the project
 
 In the root of this project, execute the following commands locally.
@@ -90,6 +85,10 @@ In the root of this project, execute the following commands locally.
 ```
 # installs dependencies for all apps and packages in this repository
 yarn
+
+# this will copy all the environment variable file .env.example into an adjacent file .env or .env.local
+# and also running a docker image for Vercel KV local development (see https://github.com/vercel/storage/issues/281)
+yarn localenv
 
 # starts all the applications contained in the `/apps` folder of the repository
 yarn dev
