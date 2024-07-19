@@ -15,7 +15,7 @@ export type GovUser = {
   // hashedpassword: string;
   firstName: string;
   lastName: string;
-  age: number;
+  dateOfBirth: bigint;
   idNumber: string;
 };
 
@@ -27,14 +27,14 @@ export function getGovUserByEmail(email: string): GovUser | null {
     return null;
   }
 
-  const age = chance.age({ type: "adult" });
+  const dateOfBirth = chance.birthday({ type: "adult" }) as Date;
   const idNumber = chance.string({ pool: "0123456789", length: 7 });
 
   return {
     email,
     firstName: _.upperFirst(names[0]),
     lastName: _.upperFirst(names[1]),
-    age,
+    dateOfBirth: BigInt(dateOfBirth.getTime()),
     idNumber: `G${idNumber}`
   };
 }

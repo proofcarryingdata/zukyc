@@ -88,7 +88,7 @@ gov.post(
           idNumber: { type: "string", value: user.idNumber },
           firstName: { type: "string", value: user.firstName },
           lastName: { type: "string", value: user.lastName },
-          age: { type: "int", value: BigInt(user.age) },
+          dateOfBirth: { type: "int", value: user.dateOfBirth },
           owner: {
             type: "cryptographic",
             value: BigInt(inputs.semaphoreCommitment)

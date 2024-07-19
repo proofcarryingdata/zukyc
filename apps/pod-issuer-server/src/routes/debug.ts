@@ -8,7 +8,7 @@ debug.post("/id/issue", (req: Request, res: Response) => {
     idNumber: string;
     firstName: string;
     lastName: string;
-    age: number;
+    dateOfBirth: number;
     semaphoreCommitment: string;
   } = req.body;
 
@@ -16,7 +16,7 @@ debug.post("/id/issue", (req: Request, res: Response) => {
     !inputs.idNumber ||
     !inputs.firstName ||
     !inputs.lastName ||
-    !inputs.age ||
+    !inputs.dateOfBirth ||
     !inputs.semaphoreCommitment
   ) {
     res.status(400).send("Missing query parameter");
@@ -28,8 +28,12 @@ debug.post("/id/issue", (req: Request, res: Response) => {
     return;
   }
 
-  if (inputs.age < 0) {
-    res.status(400).send("Invalid age");
+  const dateOfBirth = new Date(inputs.dateOfBirth);
+  if (
+    isNaN(dateOfBirth.valueOf()) ||
+    new Date(inputs.dateOfBirth) > new Date()
+  ) {
+    res.status(400).send("Invalid date of birth");
     return;
   }
 
@@ -40,7 +44,7 @@ debug.post("/id/issue", (req: Request, res: Response) => {
         idNumber: { type: "string", value: inputs.idNumber },
         firstName: { type: "string", value: inputs.firstName },
         lastName: { type: "string", value: inputs.lastName },
-        age: { type: "int", value: BigInt(inputs.age) },
+        dateOfBirth: { type: "int", value: BigInt(dateOfBirth.getTime()) },
         owner: {
           type: "cryptographic",
           value: BigInt(inputs.semaphoreCommitment)

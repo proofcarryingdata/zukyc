@@ -1,5 +1,5 @@
 import { GPCProofConfig, PODMembershipLists } from "@pcd/gpc";
-import { POD_INT_MAX, PODValue } from "@pcd/pod";
+import { POD_INT_MIN, POD_INT_MAX, PODValue } from "@pcd/pod";
 
 // This proof request specifies what we want to prove, which can be sent to the
 // prover to request a proof.
@@ -10,6 +10,16 @@ export type ProofRequest = {
   membershipLists: PODMembershipLists;
   externalNullifier: PODValue;
   watermark: PODValue;
+};
+
+const getDates = () => {
+  const now = new Date();
+  const eighteenYearsAgo = now;
+  eighteenYearsAgo.setFullYear(now.getFullYear() - 18);
+  return {
+    now,
+    eightYearsAgo: eighteenYearsAgo
+  };
 };
 
 // https://docs.pcd.team/types/_pcd_gpc.GPCProofConfig.html
@@ -27,11 +37,14 @@ const proofConfig: GPCProofConfig = {
         firstName: { isRevealed: false },
         // Prove the presence of an entry called "lastName", hide its value.
         lastName: { isRevealed: false },
-        // Prove the presence of an entry called "age", hide its value.
-        // and prove that it is >= 18
-        age: {
+        // Prove the presence of an entry called "dateOfBirth", hide its value.
+        // and prove that it is <= the timestamp of eight years ago from now.
+        dateOfBirth: {
           isRevealed: false,
-          inRange: { min: 18n, max: POD_INT_MAX }
+          inRange: {
+            min: POD_INT_MIN,
+            max: BigInt(getDates().eightYearsAgo.getTime())
+          }
         },
         // Prove the presence of an entry called "owner", hide its value, and prove
         // that I own the corresponding Semaphore identity secrets.
@@ -82,11 +95,14 @@ const membershipLists: PODMembershipLists = {
 // to identify duplicate proofs without de-anonymizing.
 const externalNullifier: PODValue = { type: "string", value: "ZooKyc" };
 
-// Watermark will be included in the resulting proof.
-// This allows identifying a proof as tied to a specific use case, to avoid reuse.
+// Watermark will be included in the resulting proof. It allows identifying a proof as tied
+// to a specific use case to avoid reuse.
+// Here we use the current timestamp. Also because it is good to know when this proof request
+// is created. Since in the proof config, we are checking the govID POD dateOfBirth entry is
+// <= the timestamp of eight years ago from the current timestamp.
 const watermark: PODValue = {
   type: "string",
-  value: "ZooKyc ZooLender challenge"
+  value: getDates().now.toISOString()
 };
 
 export const proofRequest: ProofRequest = {

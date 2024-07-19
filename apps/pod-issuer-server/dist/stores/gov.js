@@ -20,13 +20,13 @@ function getGovUserByEmail(email) {
     if (names.length < 2) {
         return null;
     }
-    const age = chance.age({ type: "adult" });
+    const dateOfBirth = chance.birthday({ type: "adult" });
     const idNumber = chance.string({ pool: "0123456789", length: 7 });
     return {
         email,
         firstName: lodash_1.default.upperFirst(names[0]),
         lastName: lodash_1.default.upperFirst(names[1]),
-        age,
+        dateOfBirth: BigInt(dateOfBirth.getTime()),
         idNumber: `G${idNumber}`
     };
 }

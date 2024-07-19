@@ -24,7 +24,7 @@ export default function IDPOD() {
         idNumber: data.id,
         firstName: data.firstName,
         lastName: data.lastName,
-        age: data.age,
+        dateOfBirth: new Date(data.dateOfBirth).getTime(),
         semaphoreCommitment: data.semaphoreCommitment
       });
     },
@@ -76,21 +76,23 @@ export default function IDPOD() {
         )}
 
         <div className="form-group flex gap-20 items-center">
-          <label htmlFor="age">Age</label>
+          <label htmlFor="dateOfBirth">Date of birth</label>
           <input
-            {...register("age", {
-              required: "This is required",
-              valueAsNumber: true,
-              min: {
-                value: 0,
-                message: "Age has to be > 0."
+            {...register("dateOfBirth", {
+              required: "This is required.",
+              valueAsDate: true,
+              validate: {
+                beforeToday: (v) => v < new Date()
               }
             })}
-            type="number"
+            type="date"
             className="form-input px-4 py-3 rounded grow"
           />
-          {errors.age && (
-            <p className="text-red-500">{errors.age.message as string}</p>
+          {errors.dateOfBirth && (
+            <p className="text-red-500">
+              {(errors.dateOfBirth.message as string) ||
+                "Date of birth cannot be a future date."}
+            </p>
           )}
         </div>
 
