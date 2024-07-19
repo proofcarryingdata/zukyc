@@ -21,7 +21,9 @@ export async function getGovUserByEmail(
     return null;
   }
 
-  const dateOfBirth = chance.birthday({ type: "adult" }) as Date;
+  const dateOfBirth = chance.birthday({
+    year: chance.year({ min: 1970, max: 2005 })
+  }) as Date;
   const idNumber = chance.string({ pool: "0123456789", length: 7 });
   const ssn = await getSSNByEmail(email);
 

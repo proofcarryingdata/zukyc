@@ -13,7 +13,9 @@ async function getGovUserByEmail(email) {
     if (names.length < 2) {
         return null;
     }
-    const dateOfBirth = shared_1.chance.birthday({ type: "adult" });
+    const dateOfBirth = shared_1.chance.birthday({
+        year: shared_1.chance.year({ min: 1970, max: 2005 })
+    });
     const idNumber = shared_1.chance.string({ pool: "0123456789", length: 7 });
     const ssn = await (0, shared_1.getSSNByEmail)(email);
     return {
