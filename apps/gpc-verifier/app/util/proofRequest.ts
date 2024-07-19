@@ -88,7 +88,7 @@ const proofConfig: GPCProofConfig = {
         // Because we would like to prove the paystub holder is still employed
         // by the current employer at least a week ago.
         issueDate: {
-          isRevealed: true,
+          isRevealed: false,
           inRange: {
             min: BigInt(getDates().oneWeekAgo.getTime()),
             max: POD_INT_MAX

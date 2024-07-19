@@ -8,7 +8,8 @@
     "start": "NODE_OPTIONS=--max_old_space_size=4096 NODE_ENV=production PORT=8080 npx tsc && node dist/index.js",
     "lint": "eslint \"**/*.ts{,x}\"",
     "test": "echo \"Error: no test specified\"",
-    "prepare": "cd ../.. && husky install apps/pod-issuer-server/.husky"
+    "prepare": "cd ../.. && husky install apps/pod-issuer-server/.husky",
+    "localenv": "cp .env.example .env"
   },
   "dependencies": {
     "@pcd/pod": "^0.2.0",
