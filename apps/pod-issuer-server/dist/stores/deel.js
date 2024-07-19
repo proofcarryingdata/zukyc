@@ -17,7 +17,9 @@ async function getDeelUserByEmail(email) {
     if (names.length < 2) {
         return null;
     }
-    const startDate = shared_1.chance.birthday({ type: "child" });
+    const startDate = shared_1.chance.birthday({
+        year: shared_1.chance.year({ min: 2000, max: 2022 })
+    });
     const annualSalary = shared_1.chance.integer({ min: 20000, max: 1000000 });
     const ssn = await (0, shared_1.getSSNByEmail)(email);
     const deelUser = {

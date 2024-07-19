@@ -8,13 +8,9 @@ const NULLIFIER_KV_SET = "nullifiers_hash";
 export async function tryRecordNullifierHash(
   nullifierHash: bigint
 ): Promise<boolean> {
-  if (!process.env.KV_REST_API_URL) {
-    return true;
-  }
   if (await kv.sismember(NULLIFIER_KV_SET, nullifierHash.toString())) {
     return false;
   }
-
   await kv.sadd(NULLIFIER_KV_SET, nullifierHash.toString());
   return true;
 }

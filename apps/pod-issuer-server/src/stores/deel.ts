@@ -32,7 +32,9 @@ export async function getDeelUserByEmail(
     return null;
   }
 
-  const startDate = chance.birthday({ type: "child" }) as Date;
+  const startDate = chance.birthday({
+    year: chance.year({ min: 2000, max: 2022 })
+  }) as Date;
   const annualSalary = chance.integer({ min: 20000, max: 1000000 });
   const ssn = await getSSNByEmail(email);
 

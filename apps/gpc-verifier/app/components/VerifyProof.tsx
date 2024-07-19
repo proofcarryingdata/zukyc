@@ -10,12 +10,17 @@ const VerifyProof = () => {
   const proofRequestBoundConfig = useProofRequestBoundConfig();
 
   const verify = async () => {
-    const valid = await verifyProof(
-      proofRequest,
-      proofRequestBoundConfig,
-      proofStr
-    );
-    setVerified(valid);
+    try {
+      const valid = await verifyProof(
+        proofRequest,
+        proofRequestBoundConfig,
+        proofStr
+      );
+      setVerified(valid);
+    } catch (e) {
+      alert(e);
+      setVerified(false);
+    }
   };
 
   return (
