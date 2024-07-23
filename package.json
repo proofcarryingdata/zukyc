@@ -10,7 +10,8 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "localenv": "turbo run localenv && docker-compose up"
+    "localenv": "turbo run localenv",
+    "localdb": "docker-compose up"
   },
   "devDependencies": {
     "prettier": "^3.2.5",

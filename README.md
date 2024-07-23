@@ -87,8 +87,13 @@ In the root of this project, execute the following commands locally.
 yarn
 
 # this will copy all the environment variable file .env.example into an adjacent file .env or .env.local
-# and also running a docker image for Vercel KV local development (see https://github.com/vercel/storage/issues/281)
 yarn localenv
+
+# this will run a docker image for Vercel KV store (a durable Redis database) local development
+# you need to install docker first and make sure it is running, see this: https://docs.docker.com/engine/install/
+# the Vercel KV store is currently used by `pod-issuer-server` `gov` and `deel` routes, as well as
+# `gpc-verifier` for storing nullifier hash.
+yarn localdb
 
 # starts all the applications contained in the `/apps` folder of the repository
 yarn dev
