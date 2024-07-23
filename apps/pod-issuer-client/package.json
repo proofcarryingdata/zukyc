@@ -6,7 +6,8 @@
     "dev": "next dev -p 3000",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . --max-warnings 0"
+    "lint": "eslint . --max-warnings 0",
+    "localenv": "cp .env.example .env.local"
   },
   "dependencies": {
     "@tailwindcss/forms": "^0.5.7",

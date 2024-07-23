@@ -12,13 +12,14 @@ export const useIssuePaystubPOD = () => {
       if (!token) {
         throw new Error("Not logged in");
       }
+      setPaystubPOD(null);
       return issuePOD("deel", token, args);
+    },
+    onMutate: () => {
+      setPaystubPOD(null);
     },
     onSuccess: (data) => {
       setPaystubPOD(data);
-    },
-    onError: () => {
-      setPaystubPOD(null);
     }
   });
 };

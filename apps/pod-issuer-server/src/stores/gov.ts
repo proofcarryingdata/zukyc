@@ -1,25 +1,19 @@
-import Chance from "chance";
 import _ from "lodash";
-import { createClient } from "@vercel/kv";
-
-const podIssuerKV = createClient({
-  url: process.env.KV_REST_API_URL,
-  token: process.env.KV_REST_API_TOKEN,
-  automaticDeserialization: false
-});
-
-const chance = new Chance();
+import { podIssuerKV, chance, getSSNByEmail } from "./shared";
 
 export type GovUser = {
   email: string;
   // hashedpassword: string;
   firstName: string;
   lastName: string;
-  age: number;
+  dateOfBirth: bigint;
   idNumber: string;
+  socialSecurityNumber: string;
 };
 
-export function getGovUserByEmail(email: string): GovUser | null {
+export async function getGovUserByEmail(
+  email: string
+): Promise<GovUser | null> {
   // randomly generate GovUser fields
   // In practice, look up the user in the database
   const names = email.replace(/@zoo.com$/, "").split(".");
@@ -27,32 +21,26 @@ export function getGovUserByEmail(email: string): GovUser | null {
     return null;
   }
 
-  const age = chance.age({ type: "adult" });
+  const dateOfBirth = chance.birthday({
+    year: chance.year({ min: 1970, max: 2005 })
+  }) as Date;
   const idNumber = chance.string({ pool: "0123456789", length: 7 });
+  const ssn = await getSSNByEmail(email);
 
   return {
     email,
     firstName: _.upperFirst(names[0]),
     lastName: _.upperFirst(names[1]),
-    age,
-    idNumber: `G${idNumber}`
+    dateOfBirth: BigInt(dateOfBirth.getTime()),
+    idNumber: `G${idNumber}`,
+    socialSecurityNumber: ssn
   };
 }
 
 export async function getIDPODByEmail(email: string): Promise<string | null> {
-  const key = `id-${email}`;
-  return await podIssuerKV.get<string>(key);
+  return await podIssuerKV.hget<string>(email, "idPOD");
 }
 
 export async function saveIDPOD(email: string, serializedPOD: string) {
-  await podIssuerKV.set(`id-${email}`, serializedPOD);
+  await podIssuerKV.hset(email, { idPOD: serializedPOD });
 }
-
-export type DeelUser = {
-  email: string;
-  // hashedpassword: string;
-  firstName: string;
-  lastName: string;
-  startDate: string;
-  annualSalary: number;
-};

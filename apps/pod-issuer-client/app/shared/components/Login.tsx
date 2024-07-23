@@ -38,6 +38,7 @@ const Login = ({ onLogin }: { onLogin: (_data: FieldValues) => void }) => {
                 message: "Entered value does not match email format."
               }
             })}
+            id="email"
             type="email"
             defaultValue={loginCreds.email}
             className="form-input px-4 py-3 rounded grow"
@@ -52,6 +53,7 @@ const Login = ({ onLogin }: { onLogin: (_data: FieldValues) => void }) => {
           <label htmlFor="password">Password:</label>
           <input
             {...register("password", { required: "Password is required." })}
+            id="password"
             type="password"
             defaultValue={loginCreds.password}
             className="form-input px-4 py-3 rounded grow"

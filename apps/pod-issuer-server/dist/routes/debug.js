@@ -11,7 +11,8 @@ debug.post("/id/issue", (req, res) => {
     if (!inputs.idNumber ||
         !inputs.firstName ||
         !inputs.lastName ||
-        !inputs.age ||
+        !inputs.dateOfBirth ||
+        !inputs.socialSecurityNumber ||
         !inputs.semaphoreCommitment) {
         res.status(400).send("Missing query parameter");
         return;
@@ -20,8 +21,8 @@ debug.post("/id/issue", (req, res) => {
         res.status(400).send("Invalid ID number format");
         return;
     }
-    if (inputs.age < 0) {
-        res.status(400).send("Invalid age");
+    if (isNaN(inputs.dateOfBirth) || inputs.dateOfBirth > new Date().getTime()) {
+        res.status(400).send("Invalid date of birth");
         return;
     }
     try {
@@ -30,7 +31,11 @@ debug.post("/id/issue", (req, res) => {
             idNumber: { type: "string", value: inputs.idNumber },
             firstName: { type: "string", value: inputs.firstName },
             lastName: { type: "string", value: inputs.lastName },
-            age: { type: "int", value: BigInt(inputs.age) },
+            dateOfBirth: { type: "int", value: BigInt(inputs.dateOfBirth) },
+            socialSecurityNumber: {
+                type: "string",
+                value: inputs.socialSecurityNumber
+            },
             owner: {
                 type: "cryptographic",
                 value: BigInt(inputs.semaphoreCommitment)
@@ -41,7 +46,7 @@ debug.post("/id/issue", (req, res) => {
     }
     catch (e) {
         console.error(e);
-        res.status(500).send("Error issue ID POD: " + e);
+        res.status(500).send("Error issuing ID POD: " + e);
     }
 });
 debug.post("/paystub/issue", (req, res) => {
@@ -51,16 +56,16 @@ debug.post("/paystub/issue", (req, res) => {
         !inputs.currentEmployer ||
         !inputs.startDate ||
         !inputs.annualSalary ||
+        !inputs.socialSecurityNumber ||
         !inputs.semaphoreCommitment) {
         res.status(400).send("Missing query parameter");
         return;
     }
-    const startDate = Date.parse(inputs.startDate);
-    if (!startDate || startDate > new Date().getTime()) {
+    if (isNaN(inputs.startDate) || inputs.startDate > new Date().getTime()) {
         res.status(400).send("Invalid start date");
         return;
     }
-    if (inputs.annualSalary < 0) {
+    if (isNaN(inputs.annualSalary) || inputs.annualSalary < 0) {
         res.status(400).send("Invalid annual salary");
         return;
     }
@@ -70,8 +75,13 @@ debug.post("/paystub/issue", (req, res) => {
             firstName: { type: "string", value: inputs.firstName },
             lastName: { type: "string", value: inputs.lastName },
             currentEmployer: { type: "string", value: inputs.currentEmployer },
-            startDate: { type: "string", value: inputs.startDate },
+            startDate: { type: "int", value: BigInt(inputs.startDate) },
             annualSalary: { type: "int", value: BigInt(inputs.annualSalary) },
+            issueDate: { type: "int", value: BigInt(new Date().getTime()) },
+            socialSecurityNumber: {
+                type: "string",
+                value: inputs.socialSecurityNumber
+            },
             owner: {
                 type: "cryptographic",
                 value: BigInt(inputs.semaphoreCommitment)

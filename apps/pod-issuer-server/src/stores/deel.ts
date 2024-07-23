@@ -1,54 +1,53 @@
-import Chance from "chance";
 import _ from "lodash";
-import { createClient } from "@vercel/kv";
-
-const podIssuerKV = createClient({
-  url: process.env.KV_REST_API_URL,
-  token: process.env.KV_REST_API_TOKEN,
-  automaticDeserialization: false
-});
-
-const chance = new Chance();
+import {
+  jsonBigSerializer,
+  podIssuerKV,
+  chance,
+  getSSNByEmail
+} from "./shared";
 
 export type DeelUser = {
   email: string;
   // hashedpassword: string;
   firstName: string;
   lastName: string;
-  startDate: string;
-  annualSalary: number;
+  startDate: bigint;
+  annualSalary: bigint;
+  socialSecurityNumber: string;
 };
 
-export function getDeelUserByEmail(email: string): DeelUser | null {
+export async function getDeelUserByEmail(
+  email: string
+): Promise<DeelUser | null> {
   // randomly generate DeelUser fields
   // In practice, look up the user in the database
+
+  const user = await podIssuerKV.hget<string>(email, "deelUser");
+  if (user !== null) {
+    return jsonBigSerializer.parse(user);
+  }
+
   const names = email.replace(/@zoo.com$/, "").split(".");
   if (names.length < 2) {
     return null;
   }
 
   const startDate = chance.birthday({
-    string: true,
-    type: "child"
-  }) as string;
+    year: chance.year({ min: 2000, max: 2022 })
+  }) as Date;
   const annualSalary = chance.integer({ min: 20000, max: 1000000 });
+  const ssn = await getSSNByEmail(email);
 
-  return {
+  const deelUser = {
     email,
     firstName: _.upperFirst(names[0]),
     lastName: _.upperFirst(names[1]),
-    startDate,
-    annualSalary
+    startDate: BigInt(startDate.getTime()),
+    annualSalary: BigInt(annualSalary),
+    socialSecurityNumber: ssn
   };
-}
-
-export async function getPaystubPODByEmail(
-  email: string
-): Promise<string | null> {
-  const key = `paystub-${email}`;
-  return await podIssuerKV.get<string>(key);
-}
-
-export async function savePaystubPOD(email: string, serializedPOD: string) {
-  await podIssuerKV.set(`paystub-${email}`, serializedPOD);
+  await podIssuerKV.hset(email, {
+    deelUser: jsonBigSerializer.stringify(deelUser)
+  });
+  return deelUser;
 }

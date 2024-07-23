@@ -2,9 +2,10 @@
 
 import { useCallback } from "react";
 import { Tooltip } from "react-tooltip";
-import { useForm, FieldValues } from "react-hook-form";
+import { FieldValues } from "react-hook-form";
 import { useIssuePaystubPOD } from "@/deel/hooks/useIssuePaystubPOD";
 import Login from "@/shared/components/Login";
+import InfoForm from "@/deel/components/InfoForm";
 import useLogin from "@/deel/hooks/useLogin";
 import logout from "@/shared/hooks/logout";
 import useStore from "@/shared/hooks/useStore";
@@ -14,6 +15,10 @@ export default function Deel() {
 
   const token = useStore((state) => state.deelToken);
   const paystubPOD = useStore((state) => state.paystubPOD);
+  const semaphoreCommitment = useStore((state) => state.semaphoreCommitment);
+  const setSemaphoreCommitment = useStore(
+    (state) => state.setSemaphoreCommitment
+  );
 
   const { mutate: login, error: loginError } = useLogin();
   const onLogin = useCallback(
@@ -26,18 +31,16 @@ export default function Deel() {
   const { mutate: issuePaystubPOD, error: issueError } = useIssuePaystubPOD();
   const issuePOD = useCallback(
     (data: FieldValues) => {
+      if (!semaphoreCommitment) {
+        setSemaphoreCommitment(data.semaphoreCommitment);
+      }
+      const commitment = semaphoreCommitment || data.semaphoreCommitment;
       issuePaystubPOD({
-        semaphoreCommitment: data.semaphoreCommitment
+        semaphoreCommitment: commitment
       });
     },
-    [issuePaystubPOD]
+    [semaphoreCommitment, setSemaphoreCommitment, issuePaystubPOD]
   );
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors }
-  } = useForm();
 
   if (!hasHydrated) {
     return <p>Loading...</p>;
@@ -57,50 +60,7 @@ export default function Deel() {
         <p className="font-bold text-red-500">{`Error login: ${loginError.message}`}</p>
       )}
 
-      {token && !paystubPOD && (
-        <form
-          onSubmit={handleSubmit((data) => issuePOD(data))}
-          className="flex flex-col gap-4"
-        >
-          <p className="text-lg">
-            Please provide your public identifier (e.g.
-            <a href="https://docs.semaphore.pse.dev/V3/guides/identities">
-              Semaphore identity commitment
-            </a>
-            ). We'll issue your Paystub POD to this public identifier.
-            <span className="info-tooltip-anchor">❗</span>
-            <Tooltip anchorSelect=".info-tooltip-anchor">
-              You can get this from{" "}
-              {process.env.NEXT_PUBLIC_GPC_PROVER_CLIENT_URL}, see "Identity,
-              Public identifier".
-            </Tooltip>
-          </p>
-          <input
-            {...register("semaphoreCommitment", {
-              required: "This is required.",
-              pattern: {
-                value: /\d+/,
-                message:
-                  "Entered value does not match semaphore commitment format."
-              }
-            })}
-            type="text"
-            className="form-input px-4 py-3 rounded"
-            placeholder="Public identifier (Semaphore identity commiment)"
-          />
-          {errors.semaphoreCommitment && (
-            <p className="text-red-500">
-              {errors.semaphoreCommitment.message as string}
-            </p>
-          )}
-
-          <input
-            type="submit"
-            className="bg-gray-200 hover:bg-gray-300 form-input px-4 py-3 rounded"
-            value="Issue Paystub POD"
-          />
-        </form>
-      )}
+      {token && <InfoForm onSubmitInfo={issuePOD} />}
 
       {paystubPOD && (
         <div className="flex flex-col gap-2">
@@ -126,6 +86,7 @@ export default function Deel() {
             readOnly
             rows={10}
             value={paystubPOD}
+            id="paystub-pod"
           />
         </div>
       )}

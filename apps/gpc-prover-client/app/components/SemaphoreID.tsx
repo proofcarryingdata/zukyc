@@ -39,6 +39,7 @@ const SemaphoreID = () => {
           readOnly
           rows={1}
           value={identity?.commitment.toString()}
+          id="identity-commitment"
         />
       </div>
 
@@ -62,6 +63,7 @@ const SemaphoreID = () => {
           readOnly
           rows={1}
           value={identity?.toString()}
+          id="identity"
         />
       </div>
     </div>

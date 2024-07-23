@@ -1,24 +1,26 @@
-import { useCallback, useState } from "react";
-import { useProofRequest } from "@/hooks/useProofRequest";
+import { useState } from "react";
 import verifyProof from "@/util/verifyProof";
+import { useProofRequest } from "@/hooks/useProofRequest";
 
 const VerifyProof = () => {
   const [proofStr, setProofStr] = useState("");
   const [verified, setVerified] = useState(false);
 
-  const { boundConfig, membershipLists, externalNullifier, watermark } =
-    useProofRequest();
+  const { proofRequest, proofRequestBoundConfig } = useProofRequest();
 
-  const verify = useCallback(() => {
-    verifyProof(
-      boundConfig,
-      membershipLists,
-      externalNullifier,
-      watermark,
-      proofStr,
-      setVerified
-    );
-  }, [boundConfig, membershipLists, externalNullifier, watermark, proofStr]);
+  const verify = async () => {
+    try {
+      const valid = await verifyProof(
+        proofRequest,
+        proofRequestBoundConfig,
+        proofStr
+      );
+      setVerified(valid);
+    } catch (e) {
+      alert(e);
+      setVerified(false);
+    }
+  };
 
   return (
     <>
@@ -29,6 +31,7 @@ const VerifyProof = () => {
           value={proofStr}
           placeholder="Past your proof here!"
           onChange={(e) => setProofStr(e.target.value.trim())}
+          id="proof"
         />
       </div>
 

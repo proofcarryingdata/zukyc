@@ -1,0 +1,20 @@
+version: "3.1"
+
+services:
+  # This is the local Redis database that will be running on your computer; Within docker it has the hostname `redis` and it exposes the port 6379 to your pc and other containers
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+
+  # This is the serverless router that allows the Vercel KV libraries to send queries to the redis server above (redis:6379)
+  # It uses the port 80 internally, so it is mapped to an arbitrary port 8079, so that it doesn't conflict with your potential web app on port 80
+  # Think of this as local Vercel KV, and you could even rename this to local-vercel-kv if that helps you to understand this structure
+  serverless-redis-http:
+    ports:
+      - "8079:80"
+    image: vzheng41/serverless-redis-http-cors
+    environment:
+      SRH_MODE: env
+      SRH_TOKEN: example_token # This is your local Vercel KV instance's API token (KV_REST_API_TOKEN), and you can change it to anything or keep it as is for development
+      SRH_CONNECTION_STRING: "redis://redis:6379" # Using `redis` hostname since they're in the same Docker network.

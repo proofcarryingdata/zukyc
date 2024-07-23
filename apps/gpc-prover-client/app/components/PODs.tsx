@@ -25,6 +25,7 @@ const PODs = () => {
           value={idPODStr}
           placeholder="Past your ID POD here!"
           onChange={(e) => setIdPODStr(e.target.value.trim())}
+          id="id-pod"
         />
       </div>
 
@@ -44,6 +45,7 @@ const PODs = () => {
           value={paystubPODStr}
           placeholder="Past your Paystub POD here!"
           onChange={(e) => setPaystubPODStr(e.target.value.trim())}
+          id="paystub-pod"
         />
       </div>
     </div>
