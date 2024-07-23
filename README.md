@@ -98,3 +98,11 @@ yarn localdb
 # starts all the applications contained in the `/apps` folder of the repository
 yarn dev
 ```
+
+## Tips
+If you are using `@pcd/gpc` in your own frontend app, you might encounter a fastfile build error.
+```
+../../node_modules/fastfile/src/fastfile.js
+Can't import the named export 'O_CREAT' (imported as 'O_CREAT') from default-exporting module (only default export is available)
+```
+See here on how to address it: https://github.com/proofcarryingdata/zukyc/pull/3
