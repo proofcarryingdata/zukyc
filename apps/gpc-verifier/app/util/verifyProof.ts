@@ -97,7 +97,7 @@ export const verifyProof = async (
   // other checks are successful.
   if (!(await tryRecordNullifierHash(vClaims.owner?.nullifierHash))) {
     throw new Error(
-      "Your proof is valid. But we've got a proof from you before. You cannot get more than one loan."
+      `Your proof is valid. But we've got a proof from you before. You cannot get more than one loan. See ${window.location.origin}/debug.`
     );
   }
 
