@@ -15,7 +15,7 @@ const useLoginCreds = () => {
 
     let loginEmail = email;
     if (!loginEmail) {
-      const animal = chance.animal().replaceAll("'", "");
+      const animal = chance.animal().replace(/'| /g, "");
       const names = animal.split(" ");
       if (names.length < 2) {
         names.push(chance.last());

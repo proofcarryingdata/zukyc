@@ -86,6 +86,7 @@ export default function Deel() {
             readOnly
             rows={10}
             value={paystubPOD}
+            id="paystub-pod"
           />
         </div>
       )}

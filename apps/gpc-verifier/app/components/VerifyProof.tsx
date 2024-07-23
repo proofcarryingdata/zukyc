@@ -31,6 +31,7 @@ const VerifyProof = () => {
           value={proofStr}
           placeholder="Past your proof here!"
           onChange={(e) => setProofStr(e.target.value.trim())}
+          id="proof"
         />
       </div>
 

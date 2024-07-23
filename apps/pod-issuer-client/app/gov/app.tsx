@@ -77,7 +77,13 @@ export default function Gov() {
             </Tooltip>
           </div>
 
-          <textarea className="border-none" readOnly rows={10} value={idPOD} />
+          <textarea
+            className="border-none"
+            readOnly
+            rows={10}
+            value={idPOD}
+            id="id-pod"
+          />
         </div>
       )}
 
