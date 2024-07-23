@@ -66,7 +66,7 @@ export default function Verifier() {
             📋
           </button>
         </div>
-        <textarea rows={24} value={proofRequest} readOnly />
+        <textarea rows={24} value={proofRequest} readOnly id="proof-request" />
       </div>
 
       <h3 className="font-bold">Step 2: verify your proof</h3>

@@ -73,6 +73,7 @@ export default function Prover() {
           value={proofRequestStr}
           placeholder="Past your proof request here!"
           onChange={(e) => setProofRequestStr(e.target.value.trim())}
+          id="proof-request"
         />
         <div>
           <button onClick={generate}>Generate Proof</button>
@@ -96,6 +97,7 @@ export default function Prover() {
               readOnly
               rows={30}
               value={proofResult}
+              id="proof-result"
             />
           </div>
         )}
