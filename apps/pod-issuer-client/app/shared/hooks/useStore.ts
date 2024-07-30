@@ -14,6 +14,7 @@ interface State {
   setHasHydrated: (state: boolean) => void;
 
   email: string | null;
+  setEmail: (email: string | null) => void;
 
   govToken: string | null;
   setGovToken: (token: string | null) => void;
@@ -43,6 +44,7 @@ const useStore = create<State>()(
         },
 
         email: null,
+        setEmail: (email) => set(() => ({ email })),
 
         govToken: null,
         setGovToken: (token) => {
