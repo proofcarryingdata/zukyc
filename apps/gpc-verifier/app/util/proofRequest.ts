@@ -16,6 +16,7 @@ const getDates = (now: Date) => {
   const oneWeekAgo = new Date(now);
   oneWeekAgo.setDate(now.getDate() - 7);
 
+  // In this case, one year ago on Feb 29 would be Mar 1
   const oneYearAgo = new Date(now);
   oneYearAgo.setFullYear(now.getFullYear() - 1);
 

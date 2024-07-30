@@ -82,38 +82,32 @@ export const generateProof = async (
   serializedPaystubPOD: string,
   serializedProofRequest: string
 ) => {
-  try {
-    if (!serializedIDPOD) {
-      throw new Error("ID POD field cannot be empty!");
-    }
-    if (!serializedPaystubPOD) {
-      throw new Error("Paystub POD field cannot be empty!");
-    }
-    if (!serializedProofRequest) {
-      throw new Error("Proof quest field cannot be empty!");
-    }
-
-    const idPOD = POD.deserialize(serializedIDPOD);
-    const paystubPOD = POD.deserialize(serializedPaystubPOD);
-
-    // You can also use deserializeGPCProofConfig to deserialize the proofConfig,
-    // and underlyingly it uses json-bigint like what we are doing here.
-    // https://docs.pcd.team/functions/_pcd_gpc.deserializeGPCProofConfig.html
-    const proofRequest = jsonBigSerializer.parse(serializedProofRequest);
-
-    const proofResult = await prove(identity, idPOD, paystubPOD, proofRequest);
-
-    // You can also use serializeGPCBoundConfig to serialize the boundConfig,
-    // and use serializeGPCRevealedClaims to serialize the revealedClaims,
-    // and underlyingly they use json-bigint like we do here.
-    // https://docs.pcd.team/functions/_pcd_gpc.serializeGPCBoundConfig.html
-    // https://docs.pcd.team/functions/_pcd_gpc.serializeGPCRevealedClaims.html
-    return JSONBig.stringify(proofResult, null, 2);
-  } catch (e) {
-    alert("Error generating proof");
-    console.log(e);
+  if (!serializedIDPOD) {
+    throw new Error("ID POD field cannot be empty!");
   }
-  return null;
+  if (!serializedPaystubPOD) {
+    throw new Error("Paystub POD field cannot be empty!");
+  }
+  if (!serializedProofRequest) {
+    throw new Error("Proof quest field cannot be empty!");
+  }
+
+  const idPOD = POD.deserialize(serializedIDPOD);
+  const paystubPOD = POD.deserialize(serializedPaystubPOD);
+
+  // You can also use deserializeGPCProofConfig to deserialize the proofConfig,
+  // and underlyingly it uses json-bigint like what we are doing here.
+  // https://docs.pcd.team/functions/_pcd_gpc.deserializeGPCProofConfig.html
+  const proofRequest = jsonBigSerializer.parse(serializedProofRequest);
+
+  const proofResult = await prove(identity, idPOD, paystubPOD, proofRequest);
+
+  // You can also use serializeGPCBoundConfig to serialize the boundConfig,
+  // and use serializeGPCRevealedClaims to serialize the revealedClaims,
+  // and underlyingly they use json-bigint like we do here.
+  // https://docs.pcd.team/functions/_pcd_gpc.serializeGPCBoundConfig.html
+  // https://docs.pcd.team/functions/_pcd_gpc.serializeGPCRevealedClaims.html
+  return JSONBig.stringify(proofResult, null, 2);
 };
 
 export default generateProof;
