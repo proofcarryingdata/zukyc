@@ -97,7 +97,7 @@ export const generateProof = async (
     const paystubPOD = POD.deserialize(serializedPaystubPOD);
 
     // You can also use deserializeGPCProofConfig to deserialize the proofConfig,
-    // and underlyingly it uses json-bitint like what we are doing here.
+    // and underlyingly it uses json-bigint like what we are doing here.
     // https://docs.pcd.team/functions/_pcd_gpc.deserializeGPCProofConfig.html
     const proofRequest = jsonBigSerializer.parse(serializedProofRequest);
 

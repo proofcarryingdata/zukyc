@@ -26,7 +26,7 @@ export const useSerializedProofRequest = () => {
 
   return useMemo(() => {
     // You can also use serializeGPCProofConfig to serialize the proofConfig,
-    // and underlyingly it uses json-bitint like what we are doing here.
+    // and underlyingly it uses json-bigint like what we are doing here.
     // https://docs.pcd.team/functions/_pcd_gpc.serializeGPCProofConfig.html
     return jsonBigSerializer.stringify(request.proofRequest, null, 2);
   }, [request]);
