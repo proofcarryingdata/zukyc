@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import JSONBig from "json-bigint";
 import { gpcBindConfig } from "@pcd/gpc";
-import { proofRequest } from "@/util/proofRequest";
+import { makeProofRequest } from "@/util/proofRequest";
 
 const jsonBigSerializer = JSONBig({
   useNativeBigInt: true,
@@ -11,6 +11,8 @@ const jsonBigSerializer = JSONBig({
 export const useProofRequest = () => {
   // We need to memorize the proof request because some fields uses "new Date()" for time.
   return useMemo(() => {
+    const proofRequest = makeProofRequest(new Date());
+
     return {
       proofRequest,
       // Checks, binds, and canonicalizes a GPCProofConfig so it can be reused for multiple proofs.
