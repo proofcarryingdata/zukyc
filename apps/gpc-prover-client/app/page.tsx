@@ -21,14 +21,19 @@ export default function Prover() {
       return;
     }
 
-    const proof = await generateProof(
-      identity,
-      idPODStr,
-      paystubPODStr,
-      proofRequestStr
-    );
-
-    setProofResult(proof);
+    try {
+      const proof = await generateProof(
+        identity,
+        idPODStr,
+        paystubPODStr,
+        proofRequestStr
+      );
+      setProofResult(proof);
+    } catch (e) {
+      alert(`Error generating proof. \n${(e as Error).message}`);
+      console.log(e);
+      setProofResult(null);
+    }
   };
 
   const reset = useCallback(() => {

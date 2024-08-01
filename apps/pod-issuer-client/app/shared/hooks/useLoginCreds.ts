@@ -9,6 +9,7 @@ import useStore from "@/shared/hooks/useStore";
 // In practice, need to implement sign up process
 const useLoginCreds = () => {
   const email = useStore((state) => state.email);
+  const setEmail = useStore((state) => state.setEmail);
 
   return useMemo(() => {
     const chance = new Chance();
@@ -22,13 +23,14 @@ const useLoginCreds = () => {
       }
       const name = names.join(".").toLowerCase();
       loginEmail = `${name}@zoo.com`;
+      setEmail(loginEmail);
     }
 
     return {
       email: loginEmail,
       password: `zoo${chance.string({ length: 6 })}`
     };
-  }, [email]);
+  }, [email, setEmail]);
 };
 
 export default useLoginCreds;

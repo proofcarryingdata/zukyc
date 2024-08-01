@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import { useSerializedProofRequest } from "@/hooks/useProofRequest";
+import { useProofRequest } from "@/hooks/useProofRequest";
 import VerifyProof from "@/components/VerifyProof";
 
 export default function Verifier() {
@@ -18,7 +18,7 @@ export default function Verifier() {
     return true;
   }, []);
 
-  const proofRequest = useSerializedProofRequest();
+  const { proofRequest, boundConfig, serializedRequest } = useProofRequest();
 
   return (
     <main className="p-6 m-0 mb-16 flex flex-col gap-4">
@@ -60,13 +60,18 @@ export default function Verifier() {
           <button
             className="p-2 m-1 text-sm bg-transparent border-none hover:bg-gray-100"
             onClick={() => {
-              navigator.clipboard.writeText(proofRequest);
+              navigator.clipboard.writeText(serializedRequest);
             }}
           >
             📋
           </button>
         </div>
-        <textarea rows={24} value={proofRequest} readOnly id="proof-request" />
+        <textarea
+          rows={24}
+          value={serializedRequest}
+          readOnly
+          id="proof-request"
+        />
       </div>
 
       <h3 className="font-bold">Step 2: verify your proof</h3>
@@ -80,7 +85,7 @@ export default function Verifier() {
       <p>
         Your loan will be approved if we can successfully verify your proof.
       </p>
-      <VerifyProof />
+      <VerifyProof proofRequest={proofRequest} boundConfig={boundConfig} />
     </main>
   );
 }
