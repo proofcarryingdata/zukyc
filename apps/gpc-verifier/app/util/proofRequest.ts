@@ -131,7 +131,7 @@ export const makeProofRequest = (now: Date): ProofRequest => {
   // to a specific use case to avoid reuse.
   // Here we use the current timestamp. Also because it is good to know when this proof request
   // is created. Since in the proof config, we are checking the govID POD dateOfBirth entry is
-  // <= the timestamp of eight years ago from the current timestamp.
+  // <= the timestamp of eighteen years ago from the current timestamp.
   const watermark: PODValue = {
     type: "string",
     value: now.toISOString()
