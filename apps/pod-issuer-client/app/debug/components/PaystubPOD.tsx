@@ -177,7 +177,7 @@ export default function PaystubPOD() {
           <textarea
             className="border-none"
             readOnly
-            rows={10}
+            rows={18}
             value={data}
             id="paystub-pod"
           />

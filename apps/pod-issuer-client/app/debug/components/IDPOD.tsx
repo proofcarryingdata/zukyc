@@ -156,7 +156,7 @@ export default function IDPOD() {
           <textarea
             className="border-none"
             readOnly
-            rows={10}
+            rows={18}
             value={data}
             id="id-pod"
           />
