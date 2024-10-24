@@ -60,7 +60,8 @@ deel.post("/issue", (0, express_jwt_1.expressjwt)({
                 value: BigInt(inputs.semaphoreCommitment)
             }
         }, process.env.DEEL_EDDSA_PRIVATE_KEY);
-        const serializedPOD = pod.serialize();
+        const jsonPOD = pod.toJSON();
+        const serializedPOD = JSON.stringify(jsonPOD, null, 2);
         res.status(200).json({ pod: serializedPOD });
     }
     catch (e) {

@@ -10,8 +10,8 @@
     "localenv": "cp .env.example .env.local"
   },
   "dependencies": {
-    "@pcd/gpc": "^0.1.0",
-    "@pcd/pod": "^0.2.0",
+    "@pcd/gpc": "^0.3.0",
+    "@pcd/pod": "^0.4.0",
     "@vercel/kv": "^2.0.0",
     "json-bigint": "^1.0.0",
     "lodash": "^4.17.21",
@@ -26,6 +26,7 @@
     "@repo/typescript-config": "*",
     "@types/eslint": "^8.56.5",
     "@types/json-bigint": "^1.0.4",
+    "@types/lodash": "^4.17.12",
     "@types/node": "^20.11.24",
     "@types/react": "^18.2.61",
     "@types/react-dom": "^18.2.19",

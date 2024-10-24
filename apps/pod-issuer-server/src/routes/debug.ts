@@ -54,7 +54,9 @@ debug.post("/id/issue", (req: Request, res: Response) => {
       } satisfies PODEntries,
       process.env.GOV_EDDSA_PRIVATE_KEY as string
     );
-    const serializedPOD = pod.serialize();
+
+    const jsonPOD = pod.toJSON();
+    const serializedPOD = JSON.stringify(jsonPOD, null, 2);
     res.status(200).json({ pod: serializedPOD });
   } catch (e) {
     console.error(e);
@@ -117,7 +119,9 @@ debug.post("/paystub/issue", (req: Request, res: Response) => {
       } satisfies PODEntries,
       process.env.DEEL_EDDSA_PRIVATE_KEY as string
     );
-    const serializedPOD = pod.serialize();
+
+    const jsonPOD = pod.toJSON();
+    const serializedPOD = JSON.stringify(jsonPOD, null, 2);
     res.status(200).json({ pod: serializedPOD });
   } catch (e) {
     console.error(e);

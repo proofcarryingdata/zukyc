@@ -5,7 +5,9 @@ import {
   gpcProve,
   GPCProofInputs,
   GPCProofConfig,
-  PODMembershipLists
+  PODMembershipLists,
+  boundConfigToJSON,
+  revealedClaimsToJSON
 } from "@pcd/gpc";
 import { Identity } from "@semaphore-protocol/identity";
 
@@ -92,22 +94,30 @@ export const generateProof = async (
     throw new Error("Proof quest field cannot be empty!");
   }
 
-  const idPOD = POD.deserialize(serializedIDPOD);
-  const paystubPOD = POD.deserialize(serializedPaystubPOD);
+  const idPOD = POD.fromJSON(JSON.parse(serializedIDPOD));
+  const paystubPOD = POD.fromJSON(JSON.parse(serializedPaystubPOD));
 
   // You can also use deserializeGPCProofConfig to deserialize the proofConfig,
   // and underlyingly it uses json-bigint like what we are doing here.
   // https://docs.pcd.team/functions/_pcd_gpc.deserializeGPCProofConfig.html
   const proofRequest = jsonBigSerializer.parse(serializedProofRequest);
 
-  const proofResult = await prove(identity, idPOD, paystubPOD, proofRequest);
+  const { proof, boundConfig, revealedClaims } = await prove(
+    identity,
+    idPOD,
+    paystubPOD,
+    proofRequest
+  );
 
-  // You can also use serializeGPCBoundConfig to serialize the boundConfig,
-  // and use serializeGPCRevealedClaims to serialize the revealedClaims,
-  // and underlyingly they use json-bigint like we do here.
-  // https://docs.pcd.team/functions/_pcd_gpc.serializeGPCBoundConfig.html
-  // https://docs.pcd.team/functions/_pcd_gpc.serializeGPCRevealedClaims.html
-  return JSONBig.stringify(proofResult, null, 2);
+  return JSON.stringify(
+    {
+      proof: proof,
+      boundConfig: boundConfigToJSON(boundConfig),
+      revealedClaims: revealedClaimsToJSON(revealedClaims)
+    },
+    null,
+    2
+  );
 };
 
 export default generateProof;

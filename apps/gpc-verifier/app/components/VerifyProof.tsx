@@ -1,21 +1,14 @@
 import { useState } from "react";
 import verifyProof from "@/util/verifyProof";
 import { ProofRequest } from "@/util/proofRequest";
-import { GPCBoundConfig } from "@pcd/gpc";
 
-const VerifyProof = ({
-  proofRequest,
-  boundConfig
-}: {
-  proofRequest: ProofRequest;
-  boundConfig: GPCBoundConfig;
-}) => {
+const VerifyProof = ({ proofRequest }: { proofRequest: ProofRequest }) => {
   const [proofStr, setProofStr] = useState("");
   const [verified, setVerified] = useState(false);
 
   const verify = async () => {
     try {
-      const valid = await verifyProof(proofRequest, boundConfig, proofStr);
+      const valid = await verifyProof(proofRequest, proofStr);
       setVerified(valid);
     } catch (e) {
       alert(`Error verifying proof. \n${(e as Error).message}`);

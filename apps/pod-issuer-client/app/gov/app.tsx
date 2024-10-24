@@ -80,7 +80,7 @@ export default function Gov() {
           <textarea
             className="border-none"
             readOnly
-            rows={10}
+            rows={14}
             value={idPOD}
             id="id-pod"
           />

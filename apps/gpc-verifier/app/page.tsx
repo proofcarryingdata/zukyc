@@ -18,7 +18,7 @@ export default function Verifier() {
     return true;
   }, []);
 
-  const { proofRequest, boundConfig, serializedRequest } = useProofRequest();
+  const { proofRequest, serializedRequest } = useProofRequest();
 
   return (
     <main className="p-6 m-0 mb-16 flex flex-col gap-4">
@@ -85,7 +85,7 @@ export default function Verifier() {
       <p>
         Your loan will be approved if we can successfully verify your proof.
       </p>
-      <VerifyProof proofRequest={proofRequest} boundConfig={boundConfig} />
+      <VerifyProof proofRequest={proofRequest} />
     </main>
   );
 }
