@@ -84,7 +84,7 @@ export default function Deel() {
           <textarea
             className="border-none"
             readOnly
-            rows={10}
+            rows={16}
             value={paystubPOD}
             id="paystub-pod"
           />

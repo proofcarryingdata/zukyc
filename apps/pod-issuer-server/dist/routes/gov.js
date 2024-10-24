@@ -33,7 +33,7 @@ gov.post("/issue", (0, express_jwt_1.expressjwt)({
         // We already issued ID POD for this user, return the POD
         const podStr = await (0, gov_1.getIDPODByEmail)(email);
         if (podStr !== null) {
-            const pod = pod_1.POD.deserialize(podStr);
+            const pod = pod_1.POD.fromJSON(JSON.parse(podStr));
             const owner = pod.content.asEntries().owner.value;
             if (owner !== BigInt(inputs.semaphoreCommitment)) {
                 res
@@ -66,7 +66,8 @@ gov.post("/issue", (0, express_jwt_1.expressjwt)({
                 value: BigInt(inputs.semaphoreCommitment)
             }
         }, process.env.GOV_EDDSA_PRIVATE_KEY);
-        const serializedPOD = pod.serialize();
+        const jsonPOD = pod.toJSON();
+        const serializedPOD = JSON.stringify(jsonPOD, null, 2);
         await (0, gov_1.saveIDPOD)(email, serializedPOD);
         res.status(200).json({ pod: serializedPOD });
     }

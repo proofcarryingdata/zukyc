@@ -1,6 +1,12 @@
 import JSONBig from "json-bigint";
 import _ from "lodash";
-import { GPCBoundConfig, gpcArtifactDownloadURL, gpcVerify } from "@pcd/gpc";
+import {
+  GPCBoundConfig,
+  boundConfigFromJSON,
+  gpcArtifactDownloadURL,
+  gpcVerify,
+  revealedClaimsFromJSON
+} from "@pcd/gpc";
 import { ProofRequest } from "@/util/proofRequest";
 import { tryRecordNullifierHash } from "@/util/persistence";
 
@@ -11,19 +17,16 @@ const jsonBigSerializer = JSONBig({
 
 export const verifyProof = async (
   proofRequest: ProofRequest,
-  proofRequestBoundConfig: GPCBoundConfig,
   proofStr: string
 ) => {
   if (!proofStr) {
     throw new Error("Proof cannot be empty!");
   }
 
-  // You can also use deserializeGPCBoundConfig to deserialize the boundConfig,
-  // and use deserializeGPCRevealedClaims to deserialize the revealedClaims,
-  // and underlyingly they use json-bigint like we do here.
-  // https://docs.pcd.team/functions/_pcd_gpc.deserializeGPCBoundConfig.html
-  // https://docs.pcd.team/functions/_pcd_gpc.deserializeGPCRevealedClaims.html
-  const proofObj = jsonBigSerializer.parse(proofStr);
+  // Deserializing also validates their structure, though not (yet) the correctness of the proof.
+  const proofJson = JSON.parse(proofStr);
+  const boundConfig = boundConfigFromJSON(proofJson.boundConfig);
+  const revealedClaims = revealedClaimsFromJSON(proofJson.revealedClaims);
 
   // We need to make sure the proof is generated with the proofConfig provided in
   // our proofRequest. So here we force the verifier to use the bound proofConfig in our proofRequest
@@ -32,8 +35,8 @@ export const verifyProof = async (
   // Note that gpcBindConfig might not always pick the same circuit as gpcProve, since it doesn't know
   // the size of the inputs. so here we would like to use the circuitIdentifier returned by gpcProve.
   const vConfig = {
-    ...proofRequestBoundConfig,
-    circuitIdentifier: proofObj.boundConfig.circuitIdentifier
+    ...proofRequest.proofConfig,
+    circuitIdentifier: boundConfig.circuitIdentifier
   };
 
   // We need to make sure the proof is generated with the membershipLists provided in our proofRequest.
@@ -41,7 +44,7 @@ export const verifyProof = async (
   // revealed claims, with the understanding that it will force the verification to fail
   // if this membershipLists is not the one used to generate the proof.
   const vClaims = {
-    ...proofObj.revealedClaims,
+    ...revealedClaims,
     membershipLists: proofRequest.membershipLists
   };
 
@@ -53,7 +56,7 @@ export const verifyProof = async (
   // This is the core functionality which verifies the proof produced by gpcProve.
   // https://docs.pcd.team/functions/_pcd_gpc.gpcVerify.html
   const isValid = await gpcVerify(
-    proofObj.proof,
+    proofJson.proof,
     vConfig,
     vClaims,
     artifactsURL
@@ -95,7 +98,10 @@ export const verifyProof = async (
   // This check has side-effects (recording the nullifierHash which indicates that the
   // user got a loan). Therefore it should be the last thing to happen after all the
   // other checks are successful.
-  if (!(await tryRecordNullifierHash(vClaims.owner?.nullifierHash))) {
+  if (vClaims.owner?.nullifierHashV3 === undefined) {
+    throw new Error(`Nullfier hash should not be empty`);
+  }
+  if (!(await tryRecordNullifierHash(vClaims.owner?.nullifierHashV3))) {
     throw new Error(
       `Your proof is valid. But we've got a proof from you before. You cannot get more than one loan. See ${window.location.origin}/debug.`
     );

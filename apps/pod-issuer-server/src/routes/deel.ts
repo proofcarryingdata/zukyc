@@ -72,7 +72,8 @@ deel.post(
         process.env.DEEL_EDDSA_PRIVATE_KEY!
       );
 
-      const serializedPOD = pod.serialize();
+      const jsonPOD = pod.toJSON();
+      const serializedPOD = JSON.stringify(jsonPOD, null, 2);
       res.status(200).json({ pod: serializedPOD });
     } catch (e) {
       console.error(e);

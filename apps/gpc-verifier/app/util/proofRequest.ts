@@ -62,7 +62,7 @@ const makeProofConfig = (now: Date): GPCProofConfig => {
           socialSecurityNumber: { isRevealed: false },
           // Prove the presence of an entry called "owner", hide its value, and prove
           // that I own the corresponding Semaphore identity secrets.
-          owner: { isRevealed: false, isOwnerID: true }
+          owner: { isRevealed: false, isOwnerID: "SemaphoreV3" }
         }
       },
       paystub: {
@@ -103,7 +103,7 @@ const makeProofConfig = (now: Date): GPCProofConfig => {
           },
           // Prove the presence of an entry called "owner", hide its value, and prove
           // that I own the corresponding Semaphore identity secrets.
-          owner: { isRevealed: false, isOwnerID: true }
+          owner: { isRevealed: false, isOwnerID: "SemaphoreV3" }
         }
       }
     }
