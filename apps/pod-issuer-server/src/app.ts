@@ -1,4 +1,4 @@
-import express, { Express, Response } from "express";
+import express, { Express, Response, Request, NextFunction } from "express";
 import cors from "cors";
 import debug from "./routes/debug";
 import deel from "./routes/deel";
@@ -15,6 +15,10 @@ app.use("/debug", debug);
 
 app.get("/", (_, res: Response) => {
   res.send("Zukyc Pod Issuer Server");
+});
+
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  res.status(err.status).send(err);
 });
 
 export default app;
