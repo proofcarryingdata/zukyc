@@ -1,7 +1,5 @@
-import JSONBig from "json-bigint";
 import _ from "lodash";
 import {
-  GPCBoundConfig,
   boundConfigFromJSON,
   gpcArtifactDownloadURL,
   gpcVerify,
@@ -9,11 +7,6 @@ import {
 } from "@pcd/gpc";
 import { ProofRequest } from "@/util/proofRequest";
 import { tryRecordNullifierHash } from "@/util/persistence";
-
-const jsonBigSerializer = JSONBig({
-  useNativeBigInt: true,
-  alwaysParseAsBig: true
-});
 
 export const verifyProof = async (
   proofRequest: ProofRequest,

@@ -13,7 +13,6 @@
     "@pcd/gpc": "^0.3.0",
     "@pcd/pod": "^0.4.0",
     "@semaphore-protocol/identity": "^3.15.2",
-    "json-bigint": "^1.0.0",
     "next": "^14.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

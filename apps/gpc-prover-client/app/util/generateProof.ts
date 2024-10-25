@@ -1,5 +1,4 @@
-import JSONBig from "json-bigint";
-import { POD, PODValue } from "@pcd/pod";
+import { POD, PODValue, podValueFromJSON } from "@pcd/pod";
 import {
   gpcArtifactDownloadURL,
   gpcProve,
@@ -7,7 +6,9 @@ import {
   GPCProofConfig,
   PODMembershipLists,
   boundConfigToJSON,
-  revealedClaimsToJSON
+  revealedClaimsToJSON,
+  proofConfigFromJSON,
+  podMembershipListsFromJSON
 } from "@pcd/gpc";
 import { Identity } from "@semaphore-protocol/identity";
 
@@ -73,11 +74,6 @@ const prove = async (
   return await gpcProve(proofRequest.proofConfig, proofInputs, artifactsURL);
 };
 
-const jsonBigSerializer = JSONBig({
-  useNativeBigInt: true,
-  alwaysParseAsBig: true
-});
-
 export const generateProof = async (
   identity: Identity,
   serializedIDPOD: string,
@@ -97,10 +93,15 @@ export const generateProof = async (
   const idPOD = POD.fromJSON(JSON.parse(serializedIDPOD));
   const paystubPOD = POD.fromJSON(JSON.parse(serializedPaystubPOD));
 
-  // You can also use deserializeGPCProofConfig to deserialize the proofConfig,
-  // and underlyingly it uses json-bigint like what we are doing here.
-  // https://docs.pcd.team/functions/_pcd_gpc.deserializeGPCProofConfig.html
-  const proofRequest = jsonBigSerializer.parse(serializedProofRequest);
+  const jsonProofRequest = JSON.parse(serializedProofRequest);
+  const proofRequest = {
+    proofConfig: proofConfigFromJSON(jsonProofRequest.proofConfig),
+    membershipLists: podMembershipListsFromJSON(
+      jsonProofRequest.membershipLists
+    ),
+    externalNullifier: podValueFromJSON(jsonProofRequest.externalNullifier),
+    watermark: podValueFromJSON(jsonProofRequest.watermark)
+  };
 
   const { proof, boundConfig, revealedClaims } = await prove(
     identity,
