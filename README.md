@@ -4,11 +4,11 @@ This is an example app using POD (Provable Object Data) & GPC (General Purpose C
 
 POD & GPC allows developers to issue verifiable data, and make privacy-preserving (zero knowledge) proofs about that data. For details about POD & GPC, see [this doc](https://zupass.org/pod).
 
-## Example use cas
+## Example use case
 
 This example app demonstrates an end to end use case for POD & GPC. The story goes, Gerry the giraffe would like to borrow some money, so he goes to [ZooLender](https://zukyc-gpc-verifier.vercel.app). ZooLender wants him to prove that he has a valid ID, and has annual income over $20,000 amount among other things. Gerry doesn't know ZooLender well. He doesn't feel comfortable to send him his ID and paystubs. So they decide to use [ZooKyc](https://zukyc-gpc-prover-client.vercel.app) (KYC stands for [Know Your Customer](https://en.wikipedia.org/wiki/Know_your_customer)).
 
-ZooKyc manages the user's identity (e.g. [Semaphore identity](https://docs.semaphore.pse.dev/V3/guides/identities)), PODs, and generate proofs upon requests.
+ZooKyc manages the user's identity (e.g. [Semaphore identity](https://docs.semaphore.pse.dev/guides/identities)), PODs, and generate proofs upon requests.
 
 To use ZooKyc, Gerry first goes to [ZooGov](https://zukyc-issuer-client.vercel.app/gov) (a govenment website), and ZooGov issues him a govenment ID POD signed by ZooGov. Gerry then goes to [ZooDeel](https://zukyc-issuer-client.vercel.app/deel) (a payroll service provider website), and ZooDeel issues him a paystub POD signed by ZooDeel. All the PODs have a owner field with Gerry's Semaphore public identity.
 

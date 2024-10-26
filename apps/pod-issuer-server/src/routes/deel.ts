@@ -3,7 +3,7 @@ import { expressjwt, Request as JWTRequest } from "express-jwt";
 import { POD, PODEntries } from "@pcd/pod";
 import { getDeelUserByEmail } from "../stores/deel";
 import { handleLogin } from "./util/loginHelper";
-import { checkSemaphoreCommitment } from "../stores/shared";
+import { checkSemaphorePublicKey } from "../stores/shared";
 
 const deel = express.Router();
 
@@ -28,16 +28,16 @@ deel.post(
     // own the semaphore identity secret corresponding to this
     // semaphore identity commiment.
     const inputs: {
-      semaphoreCommitment: string;
+      semaphorePublicKey: string;
     } = req.body;
 
-    if (!inputs.semaphoreCommitment) {
+    if (!inputs.semaphorePublicKey) {
       res.status(400).send("Missing query parameter");
       return;
     }
 
     try {
-      if (!checkSemaphoreCommitment(email, inputs.semaphoreCommitment)) {
+      if (!checkSemaphorePublicKey(email, inputs.semaphorePublicKey)) {
         res
           .status(400)
           .send("Semaphore commitment does not match what is on the record.");
@@ -65,8 +65,8 @@ deel.post(
             value: user.socialSecurityNumber
           },
           owner: {
-            type: "cryptographic",
-            value: BigInt(inputs.semaphoreCommitment)
+            type: "eddsa_pubkey",
+            value: inputs.semaphorePublicKey
           }
         } satisfies PODEntries,
         process.env.DEEL_EDDSA_PRIVATE_KEY!

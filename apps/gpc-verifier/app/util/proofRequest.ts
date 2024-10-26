@@ -2,7 +2,8 @@ import {
   GPCProofConfig,
   PODMembershipLists,
   proofConfigToJSON,
-  podMembershipListsToJSON
+  podMembershipListsToJSON,
+  SEMAPHORE_V4
 } from "@pcd/gpc";
 import { POD_INT_MIN, POD_INT_MAX, PODValue, podValueToJSON } from "@pcd/pod";
 
@@ -67,7 +68,7 @@ const makeProofConfig = (now: Date): GPCProofConfig => {
           socialSecurityNumber: { isRevealed: false },
           // Prove the presence of an entry called "owner", hide its value, and prove
           // that I own the corresponding Semaphore identity secrets.
-          owner: { isRevealed: false, isOwnerID: "SemaphoreV3" }
+          owner: { isRevealed: false, isOwnerID: SEMAPHORE_V4 }
         }
       },
       paystub: {
@@ -108,7 +109,7 @@ const makeProofConfig = (now: Date): GPCProofConfig => {
           },
           // Prove the presence of an entry called "owner", hide its value, and prove
           // that I own the corresponding Semaphore identity secrets.
-          owner: { isRevealed: false, isOwnerID: "SemaphoreV3" }
+          owner: { isRevealed: false, isOwnerID: SEMAPHORE_V4 }
         }
       }
     }

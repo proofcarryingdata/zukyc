@@ -27,10 +27,10 @@ gov.post(
     // own the semaphore identity secret corresponding to this
     // semaphore identity commiment.
     const inputs: {
-      semaphoreCommitment: string;
+      semaphorePublicKey: string;
     } = req.body;
 
-    if (!inputs.semaphoreCommitment) {
+    if (!inputs.semaphorePublicKey) {
       res.status(400).send("Missing query parameter");
       return;
     }
@@ -41,7 +41,7 @@ gov.post(
       if (podStr !== null) {
         const pod = POD.fromJSON(JSON.parse(podStr));
         const owner = pod.content.asEntries().owner.value;
-        if (owner !== BigInt(inputs.semaphoreCommitment)) {
+        if (owner !== BigInt(inputs.semaphorePublicKey)) {
           res
             .status(400)
             .send(
@@ -73,8 +73,8 @@ gov.post(
             value: user.socialSecurityNumber
           },
           owner: {
-            type: "cryptographic",
-            value: BigInt(inputs.semaphoreCommitment)
+            type: "eddsa_pubkey",
+            value: inputs.semaphorePublicKey
           }
         } satisfies PODEntries,
         process.env.GOV_EDDSA_PRIVATE_KEY!

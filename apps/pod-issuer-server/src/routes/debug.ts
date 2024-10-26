@@ -10,7 +10,7 @@ debug.post("/id/issue", (req: Request, res: Response) => {
     lastName: string;
     dateOfBirth: number;
     socialSecurityNumber: string;
-    semaphoreCommitment: string;
+    semaphorePublicKey: string;
   } = req.body;
 
   if (
@@ -19,7 +19,7 @@ debug.post("/id/issue", (req: Request, res: Response) => {
     !inputs.lastName ||
     !inputs.dateOfBirth ||
     !inputs.socialSecurityNumber ||
-    !inputs.semaphoreCommitment
+    !inputs.semaphorePublicKey
   ) {
     res.status(400).send("Missing query parameter");
     return;
@@ -48,8 +48,8 @@ debug.post("/id/issue", (req: Request, res: Response) => {
           value: inputs.socialSecurityNumber
         },
         owner: {
-          type: "cryptographic",
-          value: BigInt(inputs.semaphoreCommitment)
+          type: "eddsa_pubkey",
+          value: inputs.semaphorePublicKey
         }
       } satisfies PODEntries,
       process.env.GOV_EDDSA_PRIVATE_KEY as string
@@ -72,7 +72,7 @@ debug.post("/paystub/issue", (req: Request, res: Response) => {
     startDate: number;
     annualSalary: number;
     socialSecurityNumber: string;
-    semaphoreCommitment: string;
+    semaphorePublicKey: string;
   } = req.body;
 
   if (
@@ -82,7 +82,7 @@ debug.post("/paystub/issue", (req: Request, res: Response) => {
     !inputs.startDate ||
     !inputs.annualSalary ||
     !inputs.socialSecurityNumber ||
-    !inputs.semaphoreCommitment
+    !inputs.semaphorePublicKey
   ) {
     res.status(400).send("Missing query parameter");
     return;
@@ -113,8 +113,8 @@ debug.post("/paystub/issue", (req: Request, res: Response) => {
           value: inputs.socialSecurityNumber
         },
         owner: {
-          type: "cryptographic",
-          value: BigInt(inputs.semaphoreCommitment)
+          type: "eddsa_pubkey",
+          value: inputs.semaphorePublicKey
         }
       } satisfies PODEntries,
       process.env.DEEL_EDDSA_PRIVATE_KEY as string

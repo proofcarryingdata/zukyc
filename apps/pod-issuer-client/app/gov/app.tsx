@@ -28,7 +28,7 @@ export default function Gov() {
   const issuePOD = useCallback(
     (data: FieldValues) => {
       issueIDPOD({
-        semaphoreCommitment: data.semaphoreCommitment
+        semaphorePublicKey: data.semaphorePublicKey
       });
     },
     [issueIDPOD]

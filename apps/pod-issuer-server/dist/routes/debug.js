@@ -13,7 +13,7 @@ debug.post("/id/issue", (req, res) => {
         !inputs.lastName ||
         !inputs.dateOfBirth ||
         !inputs.socialSecurityNumber ||
-        !inputs.semaphoreCommitment) {
+        !inputs.semaphorePublicKey) {
         res.status(400).send("Missing query parameter");
         return;
     }
@@ -37,8 +37,8 @@ debug.post("/id/issue", (req, res) => {
                 value: inputs.socialSecurityNumber
             },
             owner: {
-                type: "cryptographic",
-                value: BigInt(inputs.semaphoreCommitment)
+                type: "eddsa_pubkey",
+                value: inputs.semaphorePublicKey
             }
         }, process.env.GOV_EDDSA_PRIVATE_KEY);
         const jsonPOD = pod.toJSON();
@@ -58,7 +58,7 @@ debug.post("/paystub/issue", (req, res) => {
         !inputs.startDate ||
         !inputs.annualSalary ||
         !inputs.socialSecurityNumber ||
-        !inputs.semaphoreCommitment) {
+        !inputs.semaphorePublicKey) {
         res.status(400).send("Missing query parameter");
         return;
     }
@@ -84,8 +84,8 @@ debug.post("/paystub/issue", (req, res) => {
                 value: inputs.socialSecurityNumber
             },
             owner: {
-                type: "cryptographic",
-                value: BigInt(inputs.semaphoreCommitment)
+                type: "eddsa_pubkey",
+                value: inputs.semaphorePublicKey
             }
         }, process.env.DEEL_EDDSA_PRIVATE_KEY);
         const jsonPOD = pod.toJSON();

@@ -15,9 +15,9 @@ export default function Deel() {
 
   const token = useStore((state) => state.deelToken);
   const paystubPOD = useStore((state) => state.paystubPOD);
-  const semaphoreCommitment = useStore((state) => state.semaphoreCommitment);
-  const setSemaphoreCommitment = useStore(
-    (state) => state.setSemaphoreCommitment
+  const semaphorePublicKey = useStore((state) => state.semaphorePublicKey);
+  const setsemaphorePublicKey = useStore(
+    (state) => state.setsemaphorePublicKey
   );
 
   const { mutate: login, error: loginError } = useLogin();
@@ -31,15 +31,15 @@ export default function Deel() {
   const { mutate: issuePaystubPOD, error: issueError } = useIssuePaystubPOD();
   const issuePOD = useCallback(
     (data: FieldValues) => {
-      if (!semaphoreCommitment) {
-        setSemaphoreCommitment(data.semaphoreCommitment);
+      if (!semaphorePublicKey) {
+        setsemaphorePublicKey(data.semaphorePublicKey);
       }
-      const commitment = semaphoreCommitment || data.semaphoreCommitment;
+      const publicKey = semaphorePublicKey || data.semaphorePublicKey;
       issuePaystubPOD({
-        semaphoreCommitment: commitment
+        semaphorePublicKey: publicKey
       });
     },
-    [semaphoreCommitment, setSemaphoreCommitment, issuePaystubPOD]
+    [semaphorePublicKey, setsemaphorePublicKey, issuePaystubPOD]
   );
 
   if (!hasHydrated) {

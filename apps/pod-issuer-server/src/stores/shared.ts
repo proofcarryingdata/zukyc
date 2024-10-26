@@ -26,17 +26,17 @@ export async function getSSNByEmail(email: string) {
   return ssn;
 }
 
-export async function checkSemaphoreCommitment(
+export async function checkSemaphorePublicKey(
   email: string,
-  semaphoreCommitment: string
+  semaphorePublicKey: string
 ) {
-  const savedCommitment = await podIssuerKV.hget<string>(
+  const savedPublicKey = await podIssuerKV.hget<string>(
     email,
-    "semaphoreCommitment"
+    "semaphorePublicKey"
   );
-  if (savedCommitment === null) {
-    await podIssuerKV.hset(email, { semaphoreCommitment: semaphoreCommitment });
+  if (savedPublicKey === null) {
+    await podIssuerKV.hset(email, { semaphorePublicKey: semaphorePublicKey });
     return true;
   }
-  return savedCommitment === semaphoreCommitment;
+  return savedPublicKey === semaphorePublicKey;
 }

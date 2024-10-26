@@ -10,7 +10,7 @@ import {
   proofConfigFromJSON,
   podMembershipListsFromJSON
 } from "@pcd/gpc";
-import { Identity } from "@semaphore-protocol/identity";
+import { Identity } from "semaphore-identity-v4";
 
 // Proof request specifies what we want to prove, which can be sent to the prover
 // to request a proof.
@@ -41,9 +41,7 @@ const prove = async (
       // The user's private identity info. It's never revealed in the
       // proof, but used to prove the correctness of the `owner` entry as
       // specified in the config.
-      // Note: we have to use semaphoreV3, e.g. "@semaphore-protocol/identity": "^3.15.2",
-      // the most recent version V4 changed the semphoreIdentity definition.
-      semaphoreV3: identity,
+      semaphoreV4: identity,
       // We can optionally ask to generate a nullifier, which is tied to the user's
       // identity and to the external nullifier value here. This can be used
       // to identify duplicate proofs without de-anonymizing.

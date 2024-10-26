@@ -91,10 +91,10 @@ export const verifyProof = async (
   // This check has side-effects (recording the nullifierHash which indicates that the
   // user got a loan). Therefore it should be the last thing to happen after all the
   // other checks are successful.
-  if (vClaims.owner?.nullifierHashV3 === undefined) {
+  if (vClaims.owner?.nullifierHashV4 === undefined) {
     throw new Error(`Nullfier hash should not be empty`);
   }
-  if (!(await tryRecordNullifierHash(vClaims.owner?.nullifierHashV3))) {
+  if (!(await tryRecordNullifierHash(vClaims.owner?.nullifierHashV4))) {
     throw new Error(
       `Your proof is valid. But we've got a proof from you before. You cannot get more than one loan. See ${window.location.origin}/debug.`
     );

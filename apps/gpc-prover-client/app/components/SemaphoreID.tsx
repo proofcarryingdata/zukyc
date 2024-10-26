@@ -1,5 +1,6 @@
 import { Tooltip } from "react-tooltip";
 import useIdentity from "@/hooks/useIdentity";
+import { encodePublicKey } from "@pcd/pod";
 
 const SemaphoreID = () => {
   const identity = useIdentity();
@@ -10,24 +11,26 @@ const SemaphoreID = () => {
         <h2 className="text-lg font-bold">Identity</h2>
         <p className="title-tooltip-anchor">❗</p>
         <Tooltip anchorSelect=".title-tooltip-anchor">
-          We use Semaphore V3. GPC proofs checks POD ownership via Semaphore V3
-          by default.
+          We use Semaphore V4. GPC proofs checks POD ownership via Semaphore
+          identity.
         </Tooltip>
       </div>
       <p className="text-sm">This is used to prove PODs ownership.</p>
 
       <div className="flex flex-col">
         <div className="flex flex-1 gap-1 items-center">
-          <span>Public identifier</span>
+          <span>Public key</span>
           <span className="text-sm">
-            (You can use this as the public identifier when requesting PODs on
-            ZooGov or ZooDeel.)
+            (You can use this encoded public key when requesting PODs on ZooGov
+            or ZooDeel.)
           </span>
           {identity && (
             <button
               className="p-2 m-1 text-sm bg-transparent border-none hover:bg-gray-100"
               onClick={() => {
-                navigator.clipboard.writeText(identity?.commitment.toString());
+                navigator.clipboard.writeText(
+                  encodePublicKey(identity.publicKey)
+                );
               }}
             >
               📋
@@ -38,20 +41,20 @@ const SemaphoreID = () => {
           className="border-none"
           readOnly
           rows={1}
-          value={identity?.commitment.toString()}
+          value={identity && encodePublicKey(identity.publicKey)}
           id="identity-commitment"
         />
       </div>
 
       <div className="flex flex-col">
         <div className="flex flex-1 gap-1 items-center">
-          <span>Private secret</span>
+          <span>Private key</span>
           <span className="text-sm">(Please keep it safe)</span>
           {identity && (
             <button
               className="p-2 m-1 text-sm bg-transparent border-none hover:bg-gray-100"
               onClick={() => {
-                navigator.clipboard.writeText(identity?.toString());
+                navigator.clipboard.writeText(identity?.export());
               }}
             >
               📋
@@ -62,7 +65,7 @@ const SemaphoreID = () => {
           className="border-none"
           readOnly
           rows={1}
-          value={identity?.toString()}
+          value={identity?.export()}
           id="identity"
         />
       </div>

@@ -36,5 +36,5 @@ export interface IIssueDebugIDPODArgs {
   lastName: string;
   dateOfBirth: number;
   socialSecurityNumber: string;
-  semaphoreCommitment: string;
+  semaphorePublicKey: string;
 }

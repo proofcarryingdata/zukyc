@@ -26,12 +26,12 @@ deel.post("/issue", (0, express_jwt_1.expressjwt)({
     // own the semaphore identity secret corresponding to this
     // semaphore identity commiment.
     const inputs = req.body;
-    if (!inputs.semaphoreCommitment) {
+    if (!inputs.semaphorePublicKey) {
         res.status(400).send("Missing query parameter");
         return;
     }
     try {
-        if (!(0, shared_1.checkSemaphoreCommitment)(email, inputs.semaphoreCommitment)) {
+        if (!(0, shared_1.checkSemaphorePublicKey)(email, inputs.semaphorePublicKey)) {
             res
                 .status(400)
                 .send("Semaphore commitment does not match what is on the record.");
@@ -56,8 +56,8 @@ deel.post("/issue", (0, express_jwt_1.expressjwt)({
                 value: user.socialSecurityNumber
             },
             owner: {
-                type: "cryptographic",
-                value: BigInt(inputs.semaphoreCommitment)
+                type: "eddsa_pubkey",
+                value: inputs.semaphorePublicKey
             }
         }, process.env.DEEL_EDDSA_PRIVATE_KEY);
         const jsonPOD = pod.toJSON();

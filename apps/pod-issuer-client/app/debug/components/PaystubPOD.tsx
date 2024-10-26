@@ -29,7 +29,7 @@ export default function PaystubPOD() {
         startDate: Date.parse(data.startDate),
         annualSalary: parseInt(data.annualSalary),
         socialSecurityNumber: data.ssn,
-        semaphoreCommitment: data.semaphoreCommitment
+        semaphorePublicKey: data.semaphorePublicKey
       });
     },
     [issueDebugPaystubPOD]
@@ -136,20 +136,16 @@ export default function PaystubPOD() {
         )}
 
         <input
-          {...register("semaphoreCommitment", {
-            required: "This is required.",
-            pattern: {
-              value: /\d+/,
-              message: "Entered value should be bigint."
-            }
+          {...register("semaphorePublicKey", {
+            required: "This is required."
           })}
-          type="number"
+          type="text"
           className="form-input px-4 py-3 rounded"
-          placeholder="Public identifier (Semaphore identity commiment)"
+          placeholder="Public key (encoded Semaphore public key)"
         />
-        {errors.semaphoreCommitment && (
+        {errors.semaphorePublicKey && (
           <p className="text-red-500">
-            {errors.semaphoreCommitment.message as string}
+            {errors.semaphorePublicKey.message as string}
           </p>
         )}
 
