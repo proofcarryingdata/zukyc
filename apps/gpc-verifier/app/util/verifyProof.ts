@@ -1,5 +1,6 @@
 import _ from "lodash";
 import {
+  GPCBoundConfig,
   boundConfigFromJSON,
   gpcArtifactDownloadURL,
   gpcVerify,
@@ -10,6 +11,7 @@ import { tryRecordNullifierHash } from "@/util/persistence";
 
 export const verifyProof = async (
   proofRequest: ProofRequest,
+  proofRequestBoundConfig: GPCBoundConfig,
   proofStr: string
 ) => {
   if (!proofStr) {
@@ -28,7 +30,7 @@ export const verifyProof = async (
   // Note that gpcBindConfig might not always pick the same circuit as gpcProve, since it doesn't know
   // the size of the inputs. so here we would like to use the circuitIdentifier returned by gpcProve.
   const vConfig = {
-    ...proofRequest.proofConfig,
+    ...proofRequestBoundConfig,
     circuitIdentifier: boundConfig.circuitIdentifier
   };
 
