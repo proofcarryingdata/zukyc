@@ -28,7 +28,7 @@ export default function Gov() {
   const issuePOD = useCallback(
     (data: FieldValues) => {
       issueIDPOD({
-        semaphoreCommitment: data.semaphoreCommitment
+        semaphorePublicKey: data.semaphorePublicKey
       });
     },
     [issueIDPOD]
@@ -80,7 +80,7 @@ export default function Gov() {
           <textarea
             className="border-none"
             readOnly
-            rows={10}
+            rows={14}
             value={idPOD}
             id="id-pod"
           />

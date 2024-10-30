@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
-import { Identity } from "@semaphore-protocol/identity";
+import { Identity } from "semaphore-identity-v4";
 
 const useIdentity = () => {
   const [identity, setIdentity] = useState<Identity>();
 
   useEffect(() => {
-    const id = localStorage.getItem("semaphoreID");
-    if (id) {
-      setIdentity(new Identity(id));
+    const privatekey = localStorage.getItem("semaphorePrivateKey");
+    if (privatekey) {
+      setIdentity(Identity.import(privatekey));
     } else {
       // generate new identity
       const id = new Identity();
       setIdentity(id);
-      localStorage.setItem("semaphoreID", id.toString());
+      localStorage.setItem("semaphorePrivateKey", id.export());
     }
   }, []);
 

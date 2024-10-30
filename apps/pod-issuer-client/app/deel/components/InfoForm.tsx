@@ -9,7 +9,7 @@ const InfoForm = ({
 }: {
   onSubmitInfo: (_data: FieldValues) => void;
 }) => {
-  const semaphoreCommitment = useStore((state) => state.semaphoreCommitment);
+  const semaphorePublicKey = useStore((state) => state.semaphorePublicKey);
 
   const {
     register,
@@ -22,37 +22,32 @@ const InfoForm = ({
       onSubmit={handleSubmit((data) => onSubmitInfo(data))}
       className="flex flex-col gap-4"
     >
-      {!semaphoreCommitment && (
+      {!semaphorePublicKey && (
         <>
           <p className="text-lg">
-            Please provide your public identifier (e.g.
-            <a href="https://docs.semaphore.pse.dev/V3/guides/identities">
-              Semaphore identity commitment
+            Please provide your public key (e.g. encoded{" "}
+            <a href="https://docs.semaphore.pse.dev/guides/identities">
+              Semaphore public key
             </a>
-            ). We'll issue your Paystub POD to this public identifier.
+            ). We'll issue your Paystub POD to this public key.
             <span className="info-tooltip-anchor">❗</span>
             <Tooltip anchorSelect=".info-tooltip-anchor">
               You can get this from{" "}
               {process.env.NEXT_PUBLIC_GPC_PROVER_CLIENT_URL}, see "Identity,
-              Public identifier".
+              Public key".
             </Tooltip>
           </p>
           <input
-            {...register("semaphoreCommitment", {
-              required: "This is required.",
-              pattern: {
-                value: /\d+/,
-                message:
-                  "Entered value does not match semaphore commitment format."
-              }
+            {...register("semaphorePublicKey", {
+              required: "This is required."
             })}
-            type="number"
+            type="text"
             className="form-input px-4 py-3 rounded"
-            placeholder="Public identifier (Semaphore identity commiment)"
+            placeholder="Public key (encoded Semaphore public key)"
           />
-          {errors.semaphoreCommitment && (
+          {errors.semaphorePublicKey && (
             <p className="text-red-500">
-              {errors.semaphoreCommitment.message as string}
+              {errors.semaphorePublicKey.message as string}
             </p>
           )}
         </>

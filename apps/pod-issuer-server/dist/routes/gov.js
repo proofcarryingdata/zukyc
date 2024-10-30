@@ -25,7 +25,7 @@ gov.post("/issue", (0, express_jwt_1.expressjwt)({
     // own the semaphore identity secret corresponding to this
     // semaphore identity commiment.
     const inputs = req.body;
-    if (!inputs.semaphoreCommitment) {
+    if (!inputs.semaphorePublicKey) {
         res.status(400).send("Missing query parameter");
         return;
     }
@@ -33,9 +33,9 @@ gov.post("/issue", (0, express_jwt_1.expressjwt)({
         // We already issued ID POD for this user, return the POD
         const podStr = await (0, gov_1.getIDPODByEmail)(email);
         if (podStr !== null) {
-            const pod = pod_1.POD.deserialize(podStr);
+            const pod = pod_1.POD.fromJSON(JSON.parse(podStr));
             const owner = pod.content.asEntries().owner.value;
-            if (owner !== BigInt(inputs.semaphoreCommitment)) {
+            if (owner !== BigInt(inputs.semaphorePublicKey)) {
                 res
                     .status(400)
                     .send("Already issued POD for this user, but Semaphore Commitment doesn't match.");
@@ -62,11 +62,12 @@ gov.post("/issue", (0, express_jwt_1.expressjwt)({
                 value: user.socialSecurityNumber
             },
             owner: {
-                type: "cryptographic",
-                value: BigInt(inputs.semaphoreCommitment)
+                type: "eddsa_pubkey",
+                value: inputs.semaphorePublicKey
             }
         }, process.env.GOV_EDDSA_PRIVATE_KEY);
-        const serializedPOD = pod.serialize();
+        const jsonPOD = pod.toJSON();
+        const serializedPOD = JSON.stringify(jsonPOD, null, 2);
         await (0, gov_1.saveIDPOD)(email, serializedPOD);
         res.status(200).json({ pod: serializedPOD });
     }

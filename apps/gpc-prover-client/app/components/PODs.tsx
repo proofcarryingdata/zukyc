@@ -21,7 +21,7 @@ const PODs = () => {
           </a>
         </span>
         <textarea
-          rows={10}
+          rows={14}
           value={idPODStr}
           placeholder="Past your ID POD here!"
           onChange={(e) => setIdPODStr(e.target.value.trim())}
@@ -41,7 +41,7 @@ const PODs = () => {
           </a>
         </span>
         <textarea
-          rows={10}
+          rows={14}
           value={paystubPODStr}
           placeholder="Past your Paystub POD here!"
           onChange={(e) => setPaystubPODStr(e.target.value.trim())}

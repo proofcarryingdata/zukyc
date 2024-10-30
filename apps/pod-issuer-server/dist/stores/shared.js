@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkSemaphoreCommitment = exports.getSSNByEmail = exports.podIssuerKV = exports.jsonBigSerializer = exports.chance = void 0;
+exports.checkSemaphorePublicKey = exports.getSSNByEmail = exports.podIssuerKV = exports.jsonBigSerializer = exports.chance = void 0;
 const chance_1 = __importDefault(require("chance"));
 const json_bigint_1 = __importDefault(require("json-bigint"));
 const kv_1 = require("@vercel/kv");
@@ -28,12 +28,12 @@ async function getSSNByEmail(email) {
     return ssn;
 }
 exports.getSSNByEmail = getSSNByEmail;
-async function checkSemaphoreCommitment(email, semaphoreCommitment) {
-    const savedCommitment = await exports.podIssuerKV.hget(email, "semaphoreCommitment");
-    if (savedCommitment === null) {
-        await exports.podIssuerKV.hset(email, { semaphoreCommitment: semaphoreCommitment });
+async function checkSemaphorePublicKey(email, semaphorePublicKey) {
+    const savedPublicKey = await exports.podIssuerKV.hget(email, "semaphorePublicKey");
+    if (savedPublicKey === null) {
+        await exports.podIssuerKV.hset(email, { semaphorePublicKey: semaphorePublicKey });
         return true;
     }
-    return savedCommitment === semaphoreCommitment;
+    return savedPublicKey === semaphorePublicKey;
 }
-exports.checkSemaphoreCommitment = checkSemaphoreCommitment;
+exports.checkSemaphorePublicKey = checkSemaphorePublicKey;

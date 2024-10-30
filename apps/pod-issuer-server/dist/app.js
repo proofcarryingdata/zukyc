@@ -17,4 +17,7 @@ app.use("/debug", debug_1.default);
 app.get("/", (_, res) => {
     res.send("Zukyc Pod Issuer Server");
 });
+app.use((err, req, res, next) => {
+    res.status(err.status).send(err);
+});
 exports.default = app;

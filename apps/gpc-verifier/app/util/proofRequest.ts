@@ -1,5 +1,11 @@
-import { GPCProofConfig, PODMembershipLists } from "@pcd/gpc";
-import { POD_INT_MIN, POD_INT_MAX, PODValue } from "@pcd/pod";
+import {
+  GPCProofConfig,
+  PODMembershipLists,
+  proofConfigToJSON,
+  podMembershipListsToJSON,
+  SEMAPHORE_V4
+} from "@pcd/gpc";
+import { POD_INT_MIN, POD_INT_MAX, PODValue, podValueToJSON } from "@pcd/pod";
 
 // This proof request specifies what we want to prove, which can be sent to the
 // prover to request a proof.
@@ -62,7 +68,7 @@ const makeProofConfig = (now: Date): GPCProofConfig => {
           socialSecurityNumber: { isRevealed: false },
           // Prove the presence of an entry called "owner", hide its value, and prove
           // that I own the corresponding Semaphore identity secrets.
-          owner: { isRevealed: false, isOwnerID: true }
+          owner: { isRevealed: false, isOwnerID: SEMAPHORE_V4 }
         }
       },
       paystub: {
@@ -103,7 +109,7 @@ const makeProofConfig = (now: Date): GPCProofConfig => {
           },
           // Prove the presence of an entry called "owner", hide its value, and prove
           // that I own the corresponding Semaphore identity secrets.
-          owner: { isRevealed: false, isOwnerID: true }
+          owner: { isRevealed: false, isOwnerID: SEMAPHORE_V4 }
         }
       }
     }
@@ -143,4 +149,17 @@ export const makeProofRequest = (now: Date): ProofRequest => {
     externalNullifier,
     watermark
   };
+};
+
+export const serializeProofRequest = (proofRequest: ProofRequest): string => {
+  return JSON.stringify(
+    {
+      proofConfig: proofConfigToJSON(proofRequest.proofConfig),
+      membershipLists: podMembershipListsToJSON(proofRequest.membershipLists),
+      externalNullifier: podValueToJSON(proofRequest.externalNullifier),
+      watermark: podValueToJSON(proofRequest.watermark)
+    },
+    null,
+    2
+  );
 };

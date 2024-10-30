@@ -1,13 +1,16 @@
-import JSONBig from "json-bigint";
-import { POD, PODValue } from "@pcd/pod";
+import { POD, PODValue, podValueFromJSON } from "@pcd/pod";
 import {
   gpcArtifactDownloadURL,
   gpcProve,
   GPCProofInputs,
   GPCProofConfig,
-  PODMembershipLists
+  PODMembershipLists,
+  boundConfigToJSON,
+  revealedClaimsToJSON,
+  proofConfigFromJSON,
+  podMembershipListsFromJSON
 } from "@pcd/gpc";
-import { Identity } from "@semaphore-protocol/identity";
+import { Identity } from "semaphore-identity-v4";
 
 // Proof request specifies what we want to prove, which can be sent to the prover
 // to request a proof.
@@ -38,9 +41,7 @@ const prove = async (
       // The user's private identity info. It's never revealed in the
       // proof, but used to prove the correctness of the `owner` entry as
       // specified in the config.
-      // Note: we have to use semaphoreV3, e.g. "@semaphore-protocol/identity": "^3.15.2",
-      // the most recent version V4 changed the semphoreIdentity definition.
-      semaphoreV3: identity,
+      semaphoreV4: identity,
       // We can optionally ask to generate a nullifier, which is tied to the user's
       // identity and to the external nullifier value here. This can be used
       // to identify duplicate proofs without de-anonymizing.
@@ -71,11 +72,6 @@ const prove = async (
   return await gpcProve(proofRequest.proofConfig, proofInputs, artifactsURL);
 };
 
-const jsonBigSerializer = JSONBig({
-  useNativeBigInt: true,
-  alwaysParseAsBig: true
-});
-
 export const generateProof = async (
   identity: Identity,
   serializedIDPOD: string,
@@ -92,22 +88,35 @@ export const generateProof = async (
     throw new Error("Proof quest field cannot be empty!");
   }
 
-  const idPOD = POD.deserialize(serializedIDPOD);
-  const paystubPOD = POD.deserialize(serializedPaystubPOD);
+  const idPOD = POD.fromJSON(JSON.parse(serializedIDPOD));
+  const paystubPOD = POD.fromJSON(JSON.parse(serializedPaystubPOD));
 
-  // You can also use deserializeGPCProofConfig to deserialize the proofConfig,
-  // and underlyingly it uses json-bigint like what we are doing here.
-  // https://docs.pcd.team/functions/_pcd_gpc.deserializeGPCProofConfig.html
-  const proofRequest = jsonBigSerializer.parse(serializedProofRequest);
+  const jsonProofRequest = JSON.parse(serializedProofRequest);
+  const proofRequest = {
+    proofConfig: proofConfigFromJSON(jsonProofRequest.proofConfig),
+    membershipLists: podMembershipListsFromJSON(
+      jsonProofRequest.membershipLists
+    ),
+    externalNullifier: podValueFromJSON(jsonProofRequest.externalNullifier),
+    watermark: podValueFromJSON(jsonProofRequest.watermark)
+  };
 
-  const proofResult = await prove(identity, idPOD, paystubPOD, proofRequest);
+  const { proof, boundConfig, revealedClaims } = await prove(
+    identity,
+    idPOD,
+    paystubPOD,
+    proofRequest
+  );
 
-  // You can also use serializeGPCBoundConfig to serialize the boundConfig,
-  // and use serializeGPCRevealedClaims to serialize the revealedClaims,
-  // and underlyingly they use json-bigint like we do here.
-  // https://docs.pcd.team/functions/_pcd_gpc.serializeGPCBoundConfig.html
-  // https://docs.pcd.team/functions/_pcd_gpc.serializeGPCRevealedClaims.html
-  return JSONBig.stringify(proofResult, null, 2);
+  return JSON.stringify(
+    {
+      proof: proof,
+      boundConfig: boundConfigToJSON(boundConfig),
+      revealedClaims: revealedClaimsToJSON(revealedClaims)
+    },
+    null,
+    2
+  );
 };
 
 export default generateProof;

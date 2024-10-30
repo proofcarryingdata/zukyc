@@ -14,11 +14,11 @@ export const useIssueIDPOD = () => {
       }
       return issuePOD("gov", token, args);
     },
+    onMutate: () => {
+      setIdPOD(null);
+    },
     onSuccess: (data) => {
       setIdPOD(data);
-    },
-    onError: () => {
-      setIdPOD(null);
     }
   });
 };
