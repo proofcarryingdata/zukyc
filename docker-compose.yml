@@ -13,7 +13,7 @@ services:
   serverless-redis-http:
     ports:
       - "8079:80"
-    image: vzheng41/serverless-redis-http-cors
+    image: vzheng41/serverless-redis-http-enable-cors
     environment:
       SRH_MODE: env
       SRH_TOKEN: example_token # This is your local Vercel KV instance's API token (KV_REST_API_TOKEN), and you can change it to anything or keep it as is for development
