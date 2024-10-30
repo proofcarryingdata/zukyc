@@ -43,9 +43,15 @@ export const verifyProof = async (
     membershipLists: proofRequest.membershipLists
   };
 
-  // We need a URL for downloading GPC artifacts depending on the configuration in the browser.
-  // https://docs.pcd.team/functions/_pcd_gpc.gpcArtifactDownloadURL.html
-  const artifactsURL = gpcArtifactDownloadURL("unpkg", "prod", undefined);
+  // We need a URL for downloading GPC artifacts.
+  // There are two options here:
+  // 1. You can serve the artifacts in your own server, this is the best if you want to control
+  //    availability.
+  // 2. Using unpkg (or jsdelivr) is easier for testing, but could be subject to downtime and
+  //    rate limits. See https://docs.pcd.team/functions/_pcd_gpc.gpcArtifactDownloadURL.html
+  const artifactsURL =
+    process.env.NEXT_PUBLIC_GPC_ARTIFACTS_URL ||
+    gpcArtifactDownloadURL("unpkg", "prod", undefined);
   console.log("download artifacts from", artifactsURL);
 
   // This is the core functionality which verifies the proof produced by gpcProve.

@@ -62,9 +62,16 @@ const prove = async (
     watermark: proofRequest.watermark
   };
 
-  // We need a URL for downloading GPC artifacts depending on the configuration in the browser.
+  // We need a URL for downloading GPC artifacts.
+  // There are two options here:
+  // 1. You can serve the artifacts in your own server, this is the best if you want to control
+  //    availability.
+  // 2. Using unpkg (or jsdelivr) is easier for testing, but could be subject to downtime and
+  //    rate limits.
   // https://docs.pcd.team/functions/_pcd_gpc.gpcArtifactDownloadURL.html
-  const artifactsURL = gpcArtifactDownloadURL("unpkg", "prod", undefined);
+  const artifactsURL =
+    process.env.NEXT_PUBLIC_GPC_ARTIFACTS_URL ||
+    gpcArtifactDownloadURL("unpkg", "prod", undefined);
   console.log("download artifacts from", artifactsURL);
 
   // This is the core functionality which generates the proof.
