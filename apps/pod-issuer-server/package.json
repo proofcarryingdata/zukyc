@@ -12,7 +12,7 @@
     "localenv": "cp .env.example .env"
   },
   "dependencies": {
-    "@pcd/pod": "^0.4.0",
+    "@pcd/pod": "^0.5.0",
     "@vercel/kv": "^2.0.0",
     "chance": "^1.1.12",
     "cors": "^2.8.5",
