@@ -34,3 +34,6 @@ yarn-error.log*
 # Misc
 .DS_Store
 *.pem
+
+# Artifacts folder
+apps/gpc-prover-client/public/artifacts

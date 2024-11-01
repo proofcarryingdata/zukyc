@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+const path = require("path");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   transpilePackages: ["@repo/ui"],
@@ -17,8 +19,38 @@ module.exports = {
         ),
         process: "process/browser"
       };
+      config.plugins.push(
+        new CopyWebpackPlugin({
+          patterns: [
+            {
+              from: "../../node_modules/@pcd/proto-pod-gpc-artifacts",
+              to: path.resolve(__dirname, "public", "artifacts")
+            }
+          ]
+        })
+      );
     }
 
     return config;
+  },
+  async headers() {
+    return [
+      {
+        source: "/artifacts/(.*)",
+        headers: [
+          { key: "Access-Control-Allow-Credentials", value: "true" },
+          { key: "Access-Control-Allow-Origin", value: "*" },
+          {
+            key: "Access-Control-Allow-Methods",
+            value: "GET,DELETE,PATCH,POST,PUT"
+          },
+          {
+            key: "Access-Control-Allow-Headers",
+            value:
+              "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
+          }
+        ]
+      }
+    ];
   }
 };
