@@ -586,7 +586,7 @@
   resolved "https://registry.npmjs.org/@rushstack/eslint-patch/-/eslint-patch-1.10.3.tgz"
   integrity sha512-qC/xYId4NMebE6w/V33Fh9gWxLgURiNYgVNObbJl2LZv0GUUItCcCqC5axQSwRaAgaxl2mELq1rMzlswaQ0Zxg==
 
-"@semaphore-protocol/core@4.5.0", "@semaphore-protocol/core@^4.5.0":
+"@semaphore-protocol/core@^4.5.0":
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/@semaphore-protocol/core/-/core-4.5.0.tgz#889da9f4f8b7868c80dc8db1f070f5a17e2d7eab"
   integrity sha512-DQNLJIS4YGYnkDDtywpLf1gbQLWRhNm3X3dYGxODujApaATYQaPsFo6HHgHycMRIVgxrQwiAzSCAkTR8SNNgRg==

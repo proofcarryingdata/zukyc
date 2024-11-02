@@ -10,7 +10,7 @@ import {
   proofConfigFromJSON,
   podMembershipListsFromJSON
 } from "@pcd/gpc";
-import { Identity } from "@semaphore-protocol/core";
+import { Identity } from "@semaphore-protocol/identity";
 
 // Proof request specifies what we want to prove, which can be sent to the prover
 // to request a proof.

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Identity } from "@semaphore-protocol/core";
+import { Identity } from "@semaphore-protocol/identity";
 
 const useIdentity = () => {
   const [identity, setIdentity] = useState<Identity>();

@@ -13,7 +13,7 @@
     "@pcd/gpc": "^0.4.0",
     "@pcd/pod": "^0.5.0",
     "@pcd/proto-pod-gpc-artifacts": "^0.13.0",
-    "@semaphore-protocol/core": "4.5.0",
+    "@semaphore-protocol/identity": "4.5.0",
     "next": "^14.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
