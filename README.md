@@ -79,6 +79,15 @@ This Turborepo includes the following apps (inside the `apps/` folder):
 
 ## Local development
 
+### Prerequisites
+
+You'll need to install some developer tools to run the local version. If you don't already have these, you can follow the instructions below.
+
+- Docker: Install the desktop client [here](https://www.docker.com/products/docker-desktop/).
+- NVM: Recommended for installing Node.js. Install script [here](https://www.docker.com/products/docker-desktop/).
+- Node.js + NPM: To install default version via NVM, run `nvm install`.
+- Yarn (Classic): To install using NPM, run `npm install --global yarn`.
+
 ### Running the project
 
 In the root of this project, execute the following commands locally.
