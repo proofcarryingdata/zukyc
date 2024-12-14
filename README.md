@@ -79,6 +79,15 @@ This Turborepo includes the following apps (inside the `apps/` folder):
 
 ## Local development
 
+### Prerequisites
+
+You'll need to install some developer tools to run the local version. If you don't already have these, you can follow the instructions below.
+
+- Docker: Install the [Docker Engine](https://docs.docker.com/engine/install/) or [Docker Desktop](https://docs.docker.com/desktop/) as appropriate for your platform, and make sure it's running.
+- NVM: Recommended for installing Node.js. Install script [here](https://github.com/nvm-sh/nvm?tab=readme-ov-file#install--update-script).
+- Node.js + NPM: To install default version via NVM, run `nvm install node`.
+- Yarn (Classic): To install using NPM, run `npm install --global yarn`.
+
 ### Running the project
 
 In the root of this project, execute the following commands locally.
@@ -91,7 +100,7 @@ yarn
 yarn localenv
 
 # this will run a docker image for Vercel KV store (a durable Redis database) local development
-# you need to install docker first and make sure it is running, see this: https://docs.docker.com/engine/install/
+# you need to install docker first and make sure it is running, see above
 # the Vercel KV store is currently used by `pod-issuer-server` `gov` and `deel` routes, as well as
 # `gpc-verifier` for storing nullifier hash.
 yarn localdb
