@@ -6,7 +6,7 @@ export type GovUser = {
   // hashedpassword: string;
   firstName: string;
   lastName: string;
-  dateOfBirth: bigint;
+  dateOfBirth: number;
   idNumber: string;
   socialSecurityNumber: string;
 };
@@ -31,7 +31,7 @@ export async function getGovUserByEmail(
     email,
     firstName: _.upperFirst(names[0]),
     lastName: _.upperFirst(names[1]),
-    dateOfBirth: BigInt(dateOfBirth.getTime()),
+    dateOfBirth: dateOfBirth.getTime(),
     idNumber: `G${idNumber}`,
     socialSecurityNumber: ssn
   };

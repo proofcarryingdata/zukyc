@@ -22,7 +22,7 @@ async function getGovUserByEmail(email) {
         email,
         firstName: lodash_1.default.upperFirst(names[0]),
         lastName: lodash_1.default.upperFirst(names[1]),
-        dateOfBirth: BigInt(dateOfBirth.getTime()),
+        dateOfBirth: dateOfBirth.getTime(),
         idNumber: `G${idNumber}`,
         socialSecurityNumber: ssn
     };
