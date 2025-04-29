@@ -31,19 +31,21 @@ gov.post("/issue", (0, express_jwt_1.expressjwt)({
     }
     try {
         // We already issued ID POD for this user, return the POD
-        const podStr = await (0, gov_1.getIDPODByEmail)(email);
-        if (podStr !== null) {
-            const pod = pod_1.POD.fromJSON(JSON.parse(podStr));
-            const owner = pod.content.asEntries().owner.value;
-            if (owner !== BigInt(inputs.semaphorePublicKey)) {
-                res
-                    .status(400)
-                    .send("Already issued POD for this user, but Semaphore Commitment doesn't match.");
-                return;
-            }
-            res.status(200).json({ pod: podStr });
-            return;
-        }
+        // const podStr = await getIDPODByEmail(email);
+        // if (podStr !== null) {
+        //   const pod = POD.fromJSON(JSON.parse(podStr));
+        //   const owner = pod.content.asEntries().owner.value;
+        //   if (owner !== inputs.semaphorePublicKey) {
+        //     res
+        //       .status(400)
+        //       .send(
+        //         "Already issued POD for this user, but Semaphore Commitment doesn't match."
+        //       );
+        //     return;
+        //   }
+        //   res.status(200).json({ pod: podStr });
+        //   return;
+        // }
         const user = await (0, gov_1.getGovUserByEmail)(email);
         if (user === null) {
             res.status(404).send("User not found");
@@ -56,7 +58,7 @@ gov.post("/issue", (0, express_jwt_1.expressjwt)({
             idNumber: { type: "string", value: user.idNumber },
             firstName: { type: "string", value: user.firstName },
             lastName: { type: "string", value: user.lastName },
-            dateOfBirth: { type: "int", value: user.dateOfBirth },
+            dateOfBirth: { type: "date", value: new Date(user.dateOfBirth) },
             socialSecurityNumber: {
                 type: "string",
                 value: user.socialSecurityNumber

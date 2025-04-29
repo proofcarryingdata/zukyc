@@ -31,7 +31,7 @@ debug.post("/id/issue", (req, res) => {
             idNumber: { type: "string", value: inputs.idNumber },
             firstName: { type: "string", value: inputs.firstName },
             lastName: { type: "string", value: inputs.lastName },
-            dateOfBirth: { type: "int", value: BigInt(inputs.dateOfBirth) },
+            dateOfBirth: { type: "date", value: new Date(inputs.dateOfBirth) },
             socialSecurityNumber: {
                 type: "string",
                 value: inputs.socialSecurityNumber
