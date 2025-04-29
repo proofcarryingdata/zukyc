@@ -41,7 +41,7 @@ gov.post(
       if (podStr !== null) {
         const pod = POD.fromJSON(JSON.parse(podStr));
         const owner = pod.content.asEntries().owner.value;
-        if (owner !== BigInt(inputs.semaphorePublicKey)) {
+        if (owner !== inputs.semaphorePublicKey) {
           res
             .status(400)
             .send(

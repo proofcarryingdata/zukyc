@@ -35,7 +35,7 @@ gov.post("/issue", (0, express_jwt_1.expressjwt)({
         if (podStr !== null) {
             const pod = pod_1.POD.fromJSON(JSON.parse(podStr));
             const owner = pod.content.asEntries().owner.value;
-            if (owner !== BigInt(inputs.semaphorePublicKey)) {
+            if (owner !== inputs.semaphorePublicKey) {
                 res
                     .status(400)
                     .send("Already issued POD for this user, but Semaphore Commitment doesn't match.");
