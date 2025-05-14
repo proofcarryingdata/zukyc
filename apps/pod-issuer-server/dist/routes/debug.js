@@ -76,9 +76,9 @@ debug.post("/paystub/issue", (req, res) => {
             firstName: { type: "string", value: inputs.firstName },
             lastName: { type: "string", value: inputs.lastName },
             currentEmployer: { type: "string", value: inputs.currentEmployer },
-            startDate: { type: "int", value: BigInt(inputs.startDate) },
+            startDate: { type: "date", value: new Date(inputs.startDate) },
             annualSalary: { type: "int", value: BigInt(inputs.annualSalary) },
-            issueDate: { type: "int", value: BigInt(new Date().getTime()) },
+            issueDate: { type: "date", value: new Date() },
             socialSecurityNumber: {
                 type: "string",
                 value: inputs.socialSecurityNumber

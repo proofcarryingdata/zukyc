@@ -11,7 +11,7 @@ export type DeelUser = {
   // hashedpassword: string;
   firstName: string;
   lastName: string;
-  startDate: bigint;
+  startDate: number;
   annualSalary: bigint;
   socialSecurityNumber: string;
 };
@@ -22,10 +22,10 @@ export async function getDeelUserByEmail(
   // randomly generate DeelUser fields
   // In practice, look up the user in the database
 
-  const user = await podIssuerKV.hget<string>(email, "deelUser");
-  if (user !== null) {
-    return jsonBigSerializer.parse(user);
-  }
+  // const user = await podIssuerKV.hget<string>(email, "deelUser");
+  // if (user !== null) {
+  //   return jsonBigSerializer.parse(user);
+  // }
 
   const names = email.replace(/@zoo.com$/, "").split(".");
   if (names.length < 2) {
@@ -42,12 +42,12 @@ export async function getDeelUserByEmail(
     email,
     firstName: _.upperFirst(names[0]),
     lastName: _.upperFirst(names[1]),
-    startDate: BigInt(startDate.getTime()),
+    startDate: startDate.getTime(),
     annualSalary: BigInt(annualSalary),
     socialSecurityNumber: ssn
   };
-  await podIssuerKV.hset(email, {
-    deelUser: jsonBigSerializer.stringify(deelUser)
-  });
+  // await podIssuerKV.hset(email, {
+  //   deelUser: jsonBigSerializer.stringify(deelUser)
+  // });
   return deelUser;
 }

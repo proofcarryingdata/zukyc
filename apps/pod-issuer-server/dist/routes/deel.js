@@ -48,8 +48,8 @@ deel.post("/issue", (0, express_jwt_1.expressjwt)({
             firstName: { type: "string", value: user.firstName },
             lastName: { type: "string", value: user.lastName },
             currentEmployer: { type: "string", value: "ZooPark" },
-            startDate: { type: "int", value: user.startDate },
-            issueDate: { type: "int", value: BigInt(new Date().getTime()) },
+            startDate: { type: "date", value: new Date(user.startDate) },
+            issueDate: { type: "date", value: new Date() },
             annualSalary: { type: "int", value: BigInt(user.annualSalary) },
             socialSecurityNumber: {
                 type: "string",
