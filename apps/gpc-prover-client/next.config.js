@@ -19,6 +19,9 @@ module.exports = {
         ),
         process: "process/browser"
       };
+
+      // Deploys GPC artifacts into a public dir where they can be downloaded
+      // by browsers.
       config.plugins.push(
         new CopyWebpackPlugin({
           patterns: [
@@ -35,6 +38,10 @@ module.exports = {
   },
   async headers() {
     return [
+      // Makes the GPC artifacts directory downloadable, including by pages
+      // running on a different origin URL.  This is specifically to allow the
+      // verifier to also download the same artifacts.  The "Origin" of *
+      // allows htis, but could be narrower if desired for security.
       {
         source: "/artifacts/(.*)",
         headers: [
