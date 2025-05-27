@@ -1,13 +1,7 @@
 import Chance from "chance";
-import JSONBig from "json-bigint";
 import { createClient } from "@vercel/kv";
 
 export const chance = new Chance();
-
-export const jsonBigSerializer = JSONBig({
-  useNativeBigInt: true,
-  alwaysParseAsBig: true
-});
 
 export const podIssuerKV = createClient({
   url: process.env.KV_REST_API_URL,

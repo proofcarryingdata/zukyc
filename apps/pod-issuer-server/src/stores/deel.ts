@@ -1,10 +1,5 @@
 import _ from "lodash";
-import {
-  jsonBigSerializer,
-  podIssuerKV,
-  chance,
-  getSSNByEmail
-} from "./shared";
+import { chance, getSSNByEmail } from "./shared";
 
 export type DeelUser = {
   email: string;
